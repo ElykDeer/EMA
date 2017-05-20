@@ -1,4 +1,5 @@
 #include "dataStructure.h"
+#include <iostream>
 using namespace std;
 
 //This is the map that is based on type, where one can:
@@ -15,13 +16,15 @@ void byType::insert(Entity* const entity)
 
 void byType::remove(Entity* const entity)
 {
-    delete byTypeMap[typeid(*entity).hash_code()][entity];
+    Enticap* enticapP = byTypeMap[typeid(*entity).hash_code()][entity];
+    byTypeMap[typeid(*entity).hash_code()].erase(entity); //Calls enticap destuc
+    delete enticapP; //Deletes the enticap
 }
 
 byType::~byType()
 {
     //Delete all entities
-    for(auto& pair : byTypeMap) //Different type
+    for(auto& pair : byTypeMap) //Every Different type
         for(const auto& thing : pair.second) //Every single element
             delete thing.second; //Delete all enticaps, since they in turn delete their entities
 

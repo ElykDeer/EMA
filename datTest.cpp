@@ -31,6 +31,7 @@ int main()
     {
         flower.thingy = 1;
         flower.otherThingy();
+        bin.remove(&flower);
     }
 
     //Check all flowers

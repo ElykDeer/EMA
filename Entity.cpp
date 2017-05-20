@@ -5,4 +5,4 @@ using namespace std;
 Entity::Entity(const int x, const int y) : x(x), y(y) { }
 
 //Deconstructor for derived classes
-Entity::~Entity() {}
+Entity::~Entity() { }
