@@ -2,9 +2,8 @@
 #define SIM_BINS 1
 
 #include "Entity.h"
-//#include <vector>
+#include "datTestTypes.h" // - BAD
 #include <map>
-#include <string>
 #include <functional>
 
 //This is the map that is based on type, where one can:
@@ -53,55 +52,70 @@ public:
     template<class C> //Fuckin shit this is going to make the binary massive
     class byTypeIter
     {
+      friend bool operator!=(const byTypeIter<C>& lhs, const byTypeIter<C>& rhs)
+      {
+          return lhs.iter != rhs.iter;
+      }
     public:
-        byTypeIter(std::map<const Entity*, Enticap*>::const_iterator iter) : iter(iter) {}
+        byTypeIter(std::map<const Entity*, Enticap*>::const_iterator iter,
+                   const std::map< const std::size_t, std::map<const Entity*, Enticap*> >* byTypeMapP) : iter(iter), byTypeMapP(byTypeMapP) {}
 
-        C& operator*()
+        const C& operator*()
         {
-            return (*iter).first;
+          return *static_cast<const C*>(iter->first);
         }
 
-        C& operator++()
+        byTypeIter<C>& operator++()
         {
-            return ++iter;
+            ++iter;
+            return *this;
         }
 
-        C operator++(int)
+        /*
+        auto begin(byTypeIter<C>&)
         {
-            return iter++;
+            return byTypeMap.at( typeid(C).hash_code() ).begin();
         }
+
+        auto end(byTypeIter<C>&)
+        {
+            return byTypeMap.at( typeid(C).hash_code() ).end();
+        }
+        */
+
+        byTypeIter<C> begin() const
+        {
+            return byTypeIter(byTypeMapP->at( typeid(C).hash_code() ).begin(), byTypeMapP);
+        }
+
+        byTypeIter<C> end() const
+        {
+            return byTypeIter(byTypeMapP->at( typeid(C).hash_code() ).end(), byTypeMapP);
+        }
+        //
 
     private:
         std::map<const Entity*, Enticap*>::const_iterator iter;
+        const std::map< const std::size_t, std::map<const Entity*, Enticap*> >* byTypeMapP;
     };
 
-    /*template<class C>
-    auto begin(byTypeIter<C>&)
-    {
-        return byTypeMap.at( typeid(C).hash_code() ).begin();
-    }
-
-    template<class C>
-    auto end(byTypeIter<C>&)
-    {
-        return byTypeMap.at( typeid(C).hash_code() ).end();
-    }*/
-
-    auto begin(byTypeIter<Dog>&)
-    {
-        return byTypeMap.at( typeid(Dog).hash_code() ).begin();
-    }
-
-    auto end(byTypeIter<Dog>&)
-    {
-        return byTypeMap.at( typeid(Dog).hash_code() ).end();
-    }
+    // template<class C>
+    // byTypeIter<C> begin(byTypeIter<C>&)
+    // {
+    //     return byTypeMap.at( typeid(C).hash_code() ).begin();
+    // }
+    //
+    // template<class C>
+    // byTypeIter<C> end(byTypeIter<C>&)
+    // {
+    //     return byTypeMap.at( typeid(C).hash_code() ).end();
+    // }
 
     //This returna an interatable object
     template<class C>
     byTypeIter<C> getAllOfType() const
     {
-        return byTypeIter<C>(byTypeMap.at( typeid(C).hash_code() ).begin());
+        return byTypeIter<C>(byTypeMap.at( typeid(C).hash_code() ).begin(), &byTypeMap);
     }
 };
 

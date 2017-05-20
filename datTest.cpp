@@ -25,8 +25,11 @@ int main()
     for(const auto& dog : bin.getAllOfTyp<Dog>())
         static_cast<const Dog*>(dog.first)->bark();
 
-    //auto thing = bin.getAllOfType<Dog>();
+  //  byType::byTypeIter<Dog> thing = bin.getAllOfType<Dog>();
 
-    for(const auto& dog : bin.getAllOfType<Dog>())
-        dog.bark();
+    for(auto dog : bin.getAllOfType<Dog>())
+      dog.bark(); //cout << typeid(*dog).name() << " ";
+
+    for(auto flower : bin.getAllOfType<Flower>())
+      {}//flower.bark(); //doesn't work.. Wonder why
 }
