@@ -2,7 +2,7 @@
 #define SIM_BINS 1
 
 #include "Entity.h"
-#include "datTestTypes.h" // - BAD
+#include "datTestTypes.h" // - need to figure this out.. Thinking of a "common types" .h file that's auto generated
 #include <map>
 #include <functional>
 
@@ -20,7 +20,9 @@ public:
     ~byType();
 
 private:
-    //Wrapper for an entity..adds a "unique identifier" and list of all things near me
+    //Wrapper for an entity..adds
+      //a "unique identifier" and
+      //list of all things near me - not yet implimented
     class Enticap
     {
     public:
@@ -38,31 +40,101 @@ private:
     };
 
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
-    std::map< const std::size_t, std::map<const Entity*, Enticap*> > byTypeMap;
+    std::map< const std::size_t, std::map<Entity* const, Enticap*> > byTypeMap;
 
-//Iterstuff
+//Iterstuff - const ////////////////////////////////////////////////////////////
 public:
-    //This should probably return a interatable object
+    /*
+    This was removed as to force the user to use our provided iterators, which
+      hide the internals of this data structure
     template<class C>
     const auto& getAllOfTyp() const
     {
-        return byTypeMap.at(typeid(C).hash_code()); //at = const op[] for maps
+        return byTypeMap.at(typeid(C).hash_code());
     }
 
-    template<class C> //Fuckin shit this is going to make the binary massive
+    This would have been used as such:
+    for(auto& flo : bin.getAllOfTyp<Flower>())
+        static_cast<Flower*>(flo.first)->thingy = 1;
+    for(auto& flo : bin.getAllOfTyp<Flower>())
+        cout << static_cast<Flower*>(flo.first)->thingy << " ";
+    */
+
+    //If this is deleted it still works... Consider deleting this in the future
+    template<class C>
+    class byTypeConstIter
+    {
+        //So the iterator can compare to beginning and end
+        friend bool operator!=(
+            const byTypeConstIter<C>& lhs,
+            const byTypeConstIter<C>& rhs)
+        {
+            return lhs.iter != rhs.iter;
+        }
+    public:
+        byTypeConstIter(
+            const std::map<Entity* const, Enticap*>::const_iterator& iter,
+            const std::map< const std::size_t,
+            std::map<Entity* const, Enticap*> >* const byTypeMapP)
+            :iter(iter), byTypeMapP(byTypeMapP) {}
+
+        const C& operator*() const //I don't like casting, but I know no alt.
+        {
+            return *static_cast<const C*>(iter->first);
+        }
+
+        byTypeConstIter<C>& operator++()
+        {
+            ++iter;
+            return *this;
+        }
+
+        byTypeConstIter<C> begin() const
+        {
+            return byTypeConstIter<C>(
+                byTypeMapP->at(typeid(C).hash_code()).begin(), byTypeMapP);
+        }
+
+        byTypeConstIter<C> end() const
+        {
+            return byTypeConstIter<C>(
+                byTypeMapP->at(typeid(C).hash_code()).end(), byTypeMapP);
+        }
+
+    private:
+        std::map<Entity* const, Enticap*>::const_iterator iter;
+        const std::map< const std::size_t, std::map<Entity* const, Enticap*> >*
+            const byTypeMapP;
+    };
+
+    //This returns a const interatable object over a const object
+    template<class C>
+    byTypeConstIter<C> getAllOfType() const
+    {
+        return byTypeConstIter<C>(byTypeMap.at( typeid(C).hash_code() ).begin(),
+            &byTypeMap);
+    }
+
+//Iterstuff - non-const ////////////////////////////////////////////////////////
+    template<class C>
     class byTypeIter
     {
-      friend bool operator!=(const byTypeIter<C>& lhs, const byTypeIter<C>& rhs)
-      {
-          return lhs.iter != rhs.iter;
-      }
-    public:
-        byTypeIter(std::map<const Entity*, Enticap*>::const_iterator iter,
-                   const std::map< const std::size_t, std::map<const Entity*, Enticap*> >* byTypeMapP) : iter(iter), byTypeMapP(byTypeMapP) {}
-
-        const C& operator*()
+        //So the iterator can compare to beginning and end
+        friend bool operator!=(
+            const byTypeIter<C>& lhs,
+            const byTypeIter<C>& rhs)
         {
-          return *static_cast<const C*>(iter->first);
+            return lhs.iter != rhs.iter;
+        }
+    public:
+        byTypeIter(const std::map<Entity* const, Enticap*>::iterator iter,
+                   std::map<const std::size_t,
+                    std::map<Entity* const, Enticap*> >* const byTypeMapP)
+                   :iter(iter), byTypeMapP(byTypeMapP) {}
+
+        C& operator*() //I don't like casting, but I know no alternative
+        {
+          return *static_cast<C*>((iter)->first);
         }
 
         byTypeIter<C>& operator++()
@@ -71,51 +143,30 @@ public:
             return *this;
         }
 
-        /*
-        auto begin(byTypeIter<C>&)
-        {
-            return byTypeMap.at( typeid(C).hash_code() ).begin();
-        }
-
-        auto end(byTypeIter<C>&)
-        {
-            return byTypeMap.at( typeid(C).hash_code() ).end();
-        }
-        */
-
         byTypeIter<C> begin() const
         {
-            return byTypeIter(byTypeMapP->at( typeid(C).hash_code() ).begin(), byTypeMapP);
+            return byTypeIter<C>(byTypeMapP->at(typeid(C).hash_code()).begin(),
+                byTypeMapP);
         }
 
         byTypeIter<C> end() const
         {
-            return byTypeIter(byTypeMapP->at( typeid(C).hash_code() ).end(), byTypeMapP);
+            return byTypeIter<C>(byTypeMapP->at(typeid(C).hash_code()).end(),
+                byTypeMapP);
         }
-        //
 
     private:
-        std::map<const Entity*, Enticap*>::const_iterator iter;
-        const std::map< const std::size_t, std::map<const Entity*, Enticap*> >* byTypeMapP;
+        std::map<Entity* const, Enticap*>::iterator iter;
+        std::map< const std::size_t, std::map<Entity* const, Enticap*> >*
+            const byTypeMapP;
     };
 
-    // template<class C>
-    // byTypeIter<C> begin(byTypeIter<C>&)
-    // {
-    //     return byTypeMap.at( typeid(C).hash_code() ).begin();
-    // }
-    //
-    // template<class C>
-    // byTypeIter<C> end(byTypeIter<C>&)
-    // {
-    //     return byTypeMap.at( typeid(C).hash_code() ).end();
-    // }
-
-    //This returna an interatable object
+    //This returns an interatable object over a non-constant object
     template<class C>
-    byTypeIter<C> getAllOfType() const
+    byTypeIter<C> getAllOfType()
     {
-        return byTypeIter<C>(byTypeMap.at( typeid(C).hash_code() ).begin(), &byTypeMap);
+        return byTypeIter<C>(byTypeMap[typeid(C).hash_code()].begin(),
+            &byTypeMap);
     }
 };
 

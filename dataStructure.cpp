@@ -1,5 +1,4 @@
 #include "dataStructure.h"
-#include <iostream> //- debug only
 using namespace std;
 
 //This is the map that is based on type, where one can:
@@ -26,7 +25,7 @@ byType::~byType()
         for(const auto& thing : pair.second) //Every single element
             delete thing.second; //Delete all enticaps, since they in turn delete their entities
 
-    //Alernative way, without const:
+    //Alernative way, without auto:
     //for(std::pair< const std::size_t, std::map<const Entity*, Enticap*> >& pair : byTypeMap) //Different type
         //for(const std::pair<const Entity*, Enticap*>& thing : pair.second) //Every single element
 }

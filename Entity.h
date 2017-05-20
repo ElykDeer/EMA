@@ -11,7 +11,7 @@ public:
     virtual ~Entity();
 
 protected:
-    // X/Y Locations //and a unique identifier// - no uid
+    // X/Y Locations
     int x;
     int y;
 };
