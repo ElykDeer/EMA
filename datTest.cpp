@@ -1,12 +1,14 @@
 // "Walk Of Life" Data Structure Test
-#include "dataStructure.h" // no need to include our testTypes since the main on needs ours
+//Only ever include the data structure - insures only registered plugins work
+#include "dataStructure.h"
 #include <random>
 #include <iostream>
 using namespace std;
 
 int main()
 {
-    //Bin bin;
+    ////////////////////////////////////////////////////////////////////////////
+    cout << "/////////////////////// byType tests ///////////////////////\n";
     byType bin;
 
     //Random number stuff
@@ -42,4 +44,22 @@ int main()
         cout << flower.thingy2 << " ";
     }
     cout << endl;
+
+    ////////////////////////////////////////////////////////////////////////////
+    cout << "/////////////////////// byLocal tests ///////////////////////\n";
+    byLocal binl(500, 500, 50);
+
+    Flower* myHeapFlower = new Flower(100, 100);
+    binl.insert(myHeapFlower);
+    //binl.remove(myHeapFlower);
+
+    //Make 100 random dogs and flowers
+    for(int numOfNodes = 0; numOfNodes < 100; ++numOfNodes)
+    {
+        binl.insert(new Flower(randRange(gen), randRange(gen)));
+        binl.insert(new Dog(randRange(gen), randRange(gen)));
+    }
+
+    auto thingything = binl.getNear(myHeapFlower);
+    cout << thingything.size() << endl;
 }

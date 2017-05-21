@@ -7,8 +7,20 @@ public:
     //Simple Constructor
     Entity(const int x, const int y);
 
+    virtual void update() = 0;
+
     //Deconstructor for derived classes
     virtual ~Entity();
+
+    int getX()
+    {
+        return x;
+    }
+
+    int getY()
+    {
+        return y;
+    }
 
 protected:
     // X/Y Locations

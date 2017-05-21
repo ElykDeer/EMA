@@ -7,6 +7,7 @@ class Flower : public Entity
 {
 public:
     using Entity::Entity;
+    void update() override {} //Required, but not in use
 
     //The following three things are for const testing
     void otherThingy()
@@ -21,6 +22,7 @@ class Dog : public Entity
 {
 public:
     using Entity::Entity;
+    void update() override {} //Required, but not in use
     void bark() const;
 };
 

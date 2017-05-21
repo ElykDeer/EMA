@@ -2,9 +2,13 @@
 #define SIM_BINS 1
 
 #include "Entity.h"
-#include "datTestTypes.h" // - need to figure this out.. Thinking of a "common types" .h file that's auto generated
+
+//All Active Plugins need to be registered in this file
+#include "pluginTypes.h"
+
 #include <map>
 #include <functional>
+#include <vector>
 
 //This is the map that is based on type, where one can:
   //insert entities
@@ -170,17 +174,54 @@ public:
     }
 };
 
-/*
+//This is the map that is based on position, where one can:
+  //insert entities
+  //remove entities
+  //get a list of nearby entities in constant time
 class byLocal
 {
 public:
+    //This data structure is closely bound inn deffinition with the size of the map
+    byLocal(const unsigned int, const unsigned int, const unsigned int);
+
+    void insert(Entity* const entity);
+
+    void remove(Entity* const entity);
+
+    //Get a list of something to all objects near me
+    std::vector<Entity*> getNear(Entity* object);
+
+    ~byLocal();
 
 private:
+    //Wrapper for an entity..adds
+      //a "unique identifier" and
+      //list of all things near me - not yet implimented
+    class Enticap
+    {
+    public:
+        Enticap(Entity* const newEntity);
 
+        ~Enticap();
+
+        const Entity* UID() const;
+
+        const std::size_t TUID() const;
+
+    private:
+        Entity* const entityP;
+        std::vector<Enticap*> nearMe; //For the other one
+    };
+
+    const unsigned int width;
+    const unsigned int height;
+    const unsigned int binSize;
+    std::vector<std::vector<std::map<Entity*, Enticap*>>> bins;
+    //std::vector< std::vector< std::vector< Entity* const >>> binsies;
 };
 
-
-class Bin : public byType, public byLocal
+/*
+class Bin// : public byType, public byLocal
 {
 public:
     Bin()
@@ -189,16 +230,10 @@ public:
     }
 
     //How else do we put things in this monstrosity?
-    void insert(Entity& newObject)
-    {
-
-    }
+    void insert(Entity* const entity);
 
     //Delete an object
-    void remove(Entity& oldObject)
-    {
-
-    }
+    void remove(Entity* const entity);
 
     //Get a list of something to all objects near me
     std::vector<Entity> getNear(Entity& object)
@@ -206,6 +241,9 @@ public:
         return {};
     }
 private:
+    vector<Entity* const> allEntities;
+    byType allEntitesByType;
+    byLocal allEntitesByLocal;
 
 };*/
 
