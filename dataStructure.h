@@ -32,7 +32,8 @@ private:
     public:
         Enticap(Entity* const newEntity);
 
-        ~Enticap();
+        ~Enticap(); //be careful with this fellow... Changing how it works could
+                    //be really really bad (memory leaks)
 
         const Entity* UID() const;
 
@@ -181,14 +182,16 @@ public:
 class byLocal
 {
 public:
-    //This data structure is closely bound inn deffinition with the size of the map
+    //This data structure needs to know the level size in the game
     byLocal(const unsigned int, const unsigned int, const unsigned int);
 
+    //Add entities and organize them in the structure
     void insert(Entity* const entity);
 
+    //Remove the entity from the data structure and delete it
     void remove(Entity* const entity);
 
-    //Get a list of something to all objects near me
+    //Get a list of all objects near me
     std::vector<Entity*> getNear(Entity* object);
 
     ~byLocal();
@@ -196,13 +199,14 @@ public:
 private:
     //Wrapper for an entity..adds
       //a "unique identifier" and
-      //list of all things near me - not yet implimented
+      //a list of all things near me - not yet utilized
     class Enticap
     {
     public:
         Enticap(Entity* const newEntity);
 
-        ~Enticap();
+        ~Enticap(); //be careful with this fellow... Changing how it works could
+                    //be really really bad (memory leaks)
 
         const Entity* UID() const;
 

@@ -27,7 +27,7 @@ byType::~byType()
     //Delete all entities
     for(auto& pair : byTypeMap) //Every Different type
         for(auto& thing : pair.second) //Every single element
-            delete thing.second; //Delete all enticaps, since they in turn delete their entities
+            delete thing.second; //Delete enticaps, since they delete the entity
 
     //Alernative way, without auto:
     //for(std::pair< const std::size_t, std::map<const Entity*, Enticap*> >& pair : byTypeMap) //Different type
@@ -41,7 +41,7 @@ byType::Enticap::~Enticap()
     delete entityP;
 }
 
-const Entity* byType::Enticap::UID() const //UDI for this entity = mem addr on heap
+const Entity* byType::Enticap::UID() const //UDI for entity = mem addr on heap
 {
     return entityP;
 }
@@ -52,35 +52,46 @@ const size_t byType::Enticap::TUID() const //Type Identifier
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-byLocal::byLocal(const unsigned int width, const unsigned int height, const unsigned int binSize)
- :width(width), height(height), binSize(binSize),
- //Initalize the x, then the y, of empty maps
+byLocal::byLocal(const unsigned int width,
+                 const unsigned int height,
+                 const unsigned int binSize)
+: width(width),
+  height(height),
+  binSize(binSize),
+ //Initalize the x, then the y, of empty maps:
  bins(width/binSize, vector<map<Entity*, Enticap*>>(height/binSize)) {}
 
 void byLocal::insert(Entity* const entity)
 {
-    bins[entity->getX()/binSize][entity->getY()/binSize][entity] = new Enticap(entity);
+    bins[entity->getX()/binSize][entity->getY()/binSize][entity]
+        new Enticap(entity);
 }
 
 void byLocal::remove(Entity* const entity)
 {
     //Save where the enticap is
-    Enticap* enticapP = bins[entity->getX()/binSize][entity->getY()/binSize][entity];
-    bins[entity->getX()/binSize][entity->getY()/binSize].erase(entity); //Calls enticap destuctor
+    Enticap* enticapP
+        = bins[entity->getX()/binSize][entity->getY()/binSize][entity];
+    //Calls enticap destuctor
+    bins[entity->getX()/binSize][entity->getY()/binSize].erase(entity);
     delete enticapP; //Deletes the enticap
 }
 
+//For right now this returns fomr the 3x3 bin area around/including our bin
 vector<Entity*> byLocal::getNear(Entity* entity)
 {
+    //Our bin position - bins[col][row]
     size_t col = entity->getX()/binSize;
     size_t row = entity->getY()/binSize;
 
-    vector<Entity*> nearMes;
+    //Build the list of bins around us
+    vector<Entity*> nearMes; //The vector of what's around us
     for(int colOffset = -1; colOffset < 2; ++colOffset)
         for(int rowOffset = -1; rowOffset < 2; ++rowOffset)
             for(auto& pair : bins[col+colOffset][row+rowOffset])
                 nearMes.push_back(pair.first);
 
+    //Return list
     return nearMes;
 }
 
@@ -90,7 +101,7 @@ byLocal::~byLocal()
     for(auto& col : bins)
         for(auto& row : col)
             for(auto& pair : row)
-                delete pair.second; //Delete all enticaps, since they in turn delete their entities
+                delete pair.second; //Delete enticaps, they delete the entity
 }
 
 //Duplicate:
@@ -101,7 +112,7 @@ byLocal::Enticap::~Enticap()
     delete entityP;
 }
 
-const Entity* byLocal::Enticap::UID() const //UDI for this entity = mem addr on heap
+const Entity* byLocal::Enticap::UID() const //UDI for entity = mem addr on heap
 {
     return entityP;
 }
