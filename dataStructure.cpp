@@ -63,7 +63,7 @@ byLocal::byLocal(const unsigned int width,
 
 void byLocal::insert(Entity* const entity)
 {
-    bins[entity->getX()/binSize][entity->getY()/binSize][entity]
+    bins[entity->getX()/binSize][entity->getY()/binSize][entity] = 
         new Enticap(entity);
 }
 
