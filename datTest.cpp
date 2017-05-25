@@ -61,5 +61,54 @@ int main()
     }
 
     auto thingything = binl.getNear(myHeapFlower);
-    cout << thingything.size() << endl;
+    cout << "Nearby flowers: " << thingything.size() << endl;
+
+    ////////////////////////////////////////////////////////////////////////////
+    cout << "/////////////////////// Bin tests ///////////////////////\n";
+    cout << "byType tests:\n";
+    Bin theBin(500, 500, 50);
+    //Make 100 random dogs and flowers
+    for(int numOfNodes = 0; numOfNodes < 100; ++numOfNodes)
+    {
+        theBin.insert(new Flower(randRange(gen), randRange(gen)));
+        theBin.insert(new Dog(randRange(gen), randRange(gen)));
+    }
+
+    //Make every dog bark
+    cout << "Doggie Chior:\n";
+    for(const Dog& dog : theBin.getAllOfType<Dog>())
+        dog.bark();
+
+    //Change somethings about every flower
+    for(Flower& flower : theBin.getAllOfType<Flower>())
+    {
+        flower.thingy = 1;
+        flower.otherThingy();
+        //theBin.remove(&flower);
+    }
+
+    //Check all flowers
+    cout << "\nFlower values:\n";
+    for(const Flower& flower : theBin.getAllOfType<Flower>())
+    {
+        cout << flower.thingy << " ";
+        cout << flower.thingy2 << " ";
+    }
+    cout << endl;
+
+    cout << "\nbyLocal tests:\n";
+
+    myHeapFlower = new Flower(100, 100);
+    theBin.insert(myHeapFlower);
+    //theBin.remove(myHeapFlower);
+
+    //Make 100 random dogs and flowers
+    for(int numOfNodes = 0; numOfNodes < 100; ++numOfNodes)
+    {
+        theBin.insert(new Flower(randRange(gen), randRange(gen)));
+        theBin.insert(new Dog(randRange(gen), randRange(gen)));
+    }
+
+    thingything = theBin.getNear(myHeapFlower);
+    cout << "Nearby flowers: " << thingything.size() << endl;
 }
