@@ -60,4 +60,6 @@ int main()
 
     auto thingything = bin.getNear(myHeapFlower);
     cout << "Nearby flowers: " << thingything.size() << endl;
+
+    cout << "All done!\n";
 }
