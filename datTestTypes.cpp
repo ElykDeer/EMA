@@ -2,7 +2,11 @@
 #include <iostream>
 using namespace std;
 
-//Notice flower doesn't have anything.. Still works.
+//The following three things are for const testing
+void Flower::otherThingy()
+{
+  thingy2 = 11;
+}
 
 void Dog::bark() const
 {

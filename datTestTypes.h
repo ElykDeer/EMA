@@ -10,10 +10,7 @@ public:
     void update() override {} //Required, but not in use
 
     //The following three things are for const testing
-    void otherThingy()
-    {
-      thingy2 = 11;
-    }
+    void otherThingy();
     int thingy = 0;
     int thingy2 = 10;
 };
