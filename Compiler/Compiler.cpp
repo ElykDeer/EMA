@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string.h>
 #include <vector>
+#include <unordered_set>
 using namespace std;
 
 //c++17
@@ -103,11 +104,11 @@ vector<string> readPlugins()
 void help()
 {
   string helpScript =
-  "-enable <pluginName>  - enables the plugin with specified name\n"
-  "-disable <pluginName> - disables the plugin with specified name\n"
+  "enable <pluginName>  - enables the plugin with specified name\n"
+  "disable <pluginName> - disables the plugin with specified name\n"
   "list \t- lists all plugins\n"
-  "-listD\t- lists disabled plugins\n"
-  "-listE\t- lists enabled plugins\n"
+  "listD\t- lists disabled plugins\n"
+  "listE\t- lists enabled plugins\n"
   "-compile\t- compiles the program\n"
   "-save \t- saves the list of enabled plugins\n"
   "exit \t- exits the program, discarding unsaved changes\n"
@@ -123,13 +124,15 @@ int main()
   //Initialize the list of plugins
   vector<string> plugins = readPlugins();
 
-  //Change these two to be sets?
   //Initialize list of plugins that have already been enabled
-  vector<string> enabledPlugins;// = readFile(Plugins/enabledPlugins.txt);
+  unordered_set<string> enabledPlugins;// = readFile(Plugins/enabledPlugins.txt);
+
   //Initialize list of plugins that have yet to be enabled,
     //the difference of the last two lists
-  vector<string> disabledPlugins;// = readFile(Plugins/enabledPlugins.txt);
-
+  unordered_set<string> disabledPlugins;// = readFile(Plugins/enabledPlugins.txt);
+  for (string pluginName : plugins)
+    if(enabledPlugins.count(pluginName) == 0)
+      disabledPlugins.insert(pluginName);
 
   //User prompt
   startPaint(3);
@@ -149,35 +152,85 @@ int main()
   while(cin >> command && command != "exit")
   {
     if (command == "enable")
-      cin >> command;
+    {
+        //Get name of plugin
+        cin >> command;
+
+        //Check if plugin exists
+        bool pluginExists = false;
+        for (string pluginName : plugins)
+          if (pluginName == command)
+          {
+            pluginExists = true;
+            enabledPlugins.insert(command);
+            disabledPlugins.erase(command);
+            break;
+          }
+        if (!pluginExists)
+          cerr << "The plugin '" << command << "' is not availible.\n";
+    }
 
     else if (command == "disable")
-      cin >> command;
+    {
+        //Get name of plugin
+        cin >> command;
+
+        //Check if plugin exists
+        bool pluginExists = false;
+        for (string pluginName : plugins)
+          if (pluginName == command)
+          {
+            pluginExists = true;
+            disabledPlugins.insert(command);
+            enabledPlugins.erase(command);
+            break;
+          }
+        if (!pluginExists)
+          cerr << "The plugin '" << command << "' is not availible.\n";
+    }
 
     else if (command == "list")
+    {
       for(string& pluginName : plugins)
         cout << pluginName << endl;
+    }
 
     else if (command == "listD")
-      for(string& pluginName : disabledPlugins)
+    {
+      for(string pluginName : disabledPlugins)
         cout << pluginName << endl;
+    }
 
     else if (command == "listE")
-      for(string& pluginName : enabledPlugins)
+    {
+      for(string pluginName : enabledPlugins)
         cout << pluginName << endl;
+    }
 
-    else if (command == "compile") {}
+    else if (command == "compile")
+    {
 
-    else if (command == "save") {}
+    }
+
+    else if (command == "save")
+    {
+
+    }
 
     else if(command == "exit")
-    break;
+    {
+        break;
+    }
 
     else if(command == "help")
-      help();
+    {
+        help();
+    }
 
     else
-      cerr << "Unknown command.\n";
+    {
+        cerr << "Unknown command.\n";
+    }
 
     //Write out prompt, in green
     startPaint(2);
