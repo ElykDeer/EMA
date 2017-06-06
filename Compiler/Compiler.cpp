@@ -150,6 +150,7 @@ void help()
   string helpScript =
   "enable <pluginName>  - enables the plugin with specified name\n"
   "disable <pluginName> - disables the plugin with specified name\n"
+  "clear\t- disables all plugins\n"
   "list \t- lists all plugins\n"
   "listD\t- lists disabled plugins\n"
   "listE\t- lists enabled plugins\n"
@@ -250,6 +251,14 @@ int main()
     {
       for(string pluginName : enabledPlugins)
         cout << pluginName << endl;
+    }
+
+    else if (command == "clear")
+    {
+      enabledPlugins.clear();
+
+      for (const string& pluginName : plugins)
+        disabledPlugins.insert(pluginName);
     }
 
     else if (command == "compile")
