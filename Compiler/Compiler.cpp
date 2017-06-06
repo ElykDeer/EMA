@@ -39,6 +39,7 @@ namespace fs = std::experimental::filesystem;
 
 unordered_set<string> load()
 {
+    //open the file
     string filename = "Compiler/enabledPlugins.conf";
     ifstream file(filename);
     while (!file)
@@ -79,6 +80,7 @@ unordered_set<string> load()
 
 void save(const unordered_set<string>& enabledPlugins)
 {
+    //Open the save file
     string filename = "Compiler/enabledPlugins.conf";
     ofstream file(filename);
     while (!file)
@@ -162,6 +164,58 @@ void help()
   "";
 
   cout << helpScript;
+}
+
+
+void compile(const unordered_set<string>& plugins)
+{
+    //Open the save file
+    string filename = "Compiler/pluginTypes.h";
+    ofstream file(filename);
+    while (!file)
+    {
+      //Prompt for another file, or not
+      char tryAgain;
+      startPaint(1);
+      cerr << filename << " failed to open. Would you like to try another file? (Y/n) ";
+      endPaint();
+      cin >> tryAgain;
+
+      //If no, exit program
+      if (tryAgain == 'n' || tryAgain == 'N')
+      {
+        startPaint(1);
+        cerr << "No alternate file provided. Cannot continue, closing program.\n";
+        endPaint();
+        exit(1);
+      }
+
+      //Otherwise, get a new file
+      cout << "Filename: ";
+      cin >> filename;
+      file.open(filename);
+    }
+
+    //Beginning and end of the file
+    string begin =
+    "#ifndef SIM_PLUGIN_TYPES\n"
+    "#define SIM_PLUGIN_TYPES 1\n\n";
+
+    string end =
+    "\n#endif\n";
+
+    //Write header to file
+    file << begin;
+
+    //Write Includes
+    for (const string& pluginName : plugins)
+        file << "#include " << '"' << pluginName << "Types.h" << '"' << endl;
+
+    //Write endif
+    file << end;
+
+    //Close File
+    file.close();
 }
 
 
@@ -263,7 +317,7 @@ int main()
 
     else if (command == "compile")
     {
-
+        compile(enabledPlugins);
     }
 
     else if (command == "save")
