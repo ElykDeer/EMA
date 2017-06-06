@@ -37,34 +37,78 @@ namespace fs = std::experimental::filesystem;
 #endif
 
 
-//Open a file
-void readFile(string filename) //Copy, so can be changed
+unordered_set<string> load()
 {
-  ifstream file(filename);
-  while (!file)
-  {
-    //Prompt for another file, or not
-    char tryAgain;
-    startPaint(1);
-    cerr << filename << " failed to open. Would you like to try another file? (Y/n) ";
-    endPaint();
-    cin >> tryAgain;
-
-    //If no, exit program
-    if (tryAgain == 'n' || tryAgain == 'N')
+    string filename = "Compiler/enabledPlugins.conf";
+    ifstream file(filename);
+    while (!file)
     {
+      //Prompt for another file, or not
+      char tryAgain;
       startPaint(1);
-      cerr << "No alternate file provided. Cannot continue, closing program.\n";
+      cerr << filename << " failed to open. Would you like to try another file? (Y/n) ";
       endPaint();
-      exit(1);
+      cin >> tryAgain;
+
+      //If no, exit program
+      if (tryAgain == 'n' || tryAgain == 'N')
+      {
+        startPaint(1);
+        cerr << "No alternate file provided. Cannot continue, closing program.\n";
+        endPaint();
+        exit(1);
+      }
+
+      //Otherwise, get a new file
+      cout << "Filename: ";
+      cin >> filename;
+      file.open(filename);
     }
 
-    //Otherwise, get a new file
-    cout << "Filename: ";
-    cin >> filename;
-    file.open(filename);
-  }
-  file.close(); //temporary ////////////////////////////////////////////////////
+    //Raed into set and return
+    string pluginName;
+    unordered_set<string> enabledPlugins;
+    while(file >> pluginName)
+        enabledPlugins.insert(pluginName);
+
+    file.close();
+
+    return enabledPlugins;
+}
+
+
+void save(const unordered_set<string>& enabledPlugins)
+{
+    string filename = "Compiler/enabledPlugins.conf";
+    ofstream file(filename);
+    while (!file)
+    {
+      //Prompt for another file, or not
+      char tryAgain;
+      startPaint(1);
+      cerr << filename << " failed to open. Would you like to try another file? (Y/n) ";
+      endPaint();
+      cin >> tryAgain;
+
+      //If no, exit program
+      if (tryAgain == 'n' || tryAgain == 'N')
+      {
+        startPaint(1);
+        cerr << "No alternate file provided. Cannot continue, closing program.\n";
+        endPaint();
+        exit(1);
+      }
+
+      //Otherwise, get a new file
+      cout << "Filename: ";
+      cin >> filename;
+      file.open(filename);
+    }
+
+    for (const string& pluginName : enabledPlugins)
+        file << pluginName << endl;
+
+    file.close();
 }
 
 
@@ -119,13 +163,14 @@ void help()
   cout << helpScript;
 }
 
+
 int main()
 {
   //Initialize the list of plugins
   vector<string> plugins = readPlugins();
 
   //Initialize list of plugins that have already been enabled
-  unordered_set<string> enabledPlugins;// = readFile(Plugins/enabledPlugins.txt);
+  unordered_set<string> enabledPlugins = load();
 
   //Initialize list of plugins that have yet to be enabled,
     //the difference of the last two lists
@@ -214,7 +259,7 @@ int main()
 
     else if (command == "save")
     {
-
+        save(enabledPlugins);
     }
 
     else if(command == "exit")
