@@ -5,3 +5,7 @@ Compiler: Compiler/Compiler.cpp
 
 clean:
 	rm compiler
+
+cleanAll:
+	rm compiler
+	rm main

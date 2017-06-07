@@ -81,30 +81,13 @@ unordered_set<string> load()
 void save(const unordered_set<string>& enabledPlugins)
 {
     //Open the save file
-    string filename = "Compiler/enabledPlugins.conf";
-    ofstream file(filename);
-    while (!file)
+    ofstream file("Compiler/enabledPlugins.conf");
+    if (!file)
     {
-      //Prompt for another file, or not
-      char tryAgain;
-      startPaint(1);
-      cerr << filename << " failed to open. Would you like to try another file? (Y/n) ";
-      endPaint();
-      cin >> tryAgain;
-
-      //If no, exit program
-      if (tryAgain == 'n' || tryAgain == 'N')
-      {
         startPaint(1);
-        cerr << "No alternate file provided. Cannot continue, closing program.\n";
+        cerr << "Could not create file.\n";
         endPaint();
-        exit(1);
-      }
-
-      //Otherwise, get a new file
-      cout << "Filename: ";
-      cin >> filename;
-      file.open(filename);
+        return;
     }
 
     for (const string& pluginName : enabledPlugins)
@@ -167,11 +150,11 @@ void help()
 }
 
 
-void compile(const unordered_set<string>& plugins)
+string getDependencies(const string& pluginName)
 {
-    //Open the save file
-    string filename = "Compiler/pluginTypes.h";
-    ofstream file(filename);
+    //open the file
+    string filename = pluginName + "/depend.txt";
+    ifstream file(filename);
     while (!file)
     {
       //Prompt for another file, or not
@@ -187,13 +170,35 @@ void compile(const unordered_set<string>& plugins)
         startPaint(1);
         cerr << "No alternate file provided. Cannot continue, closing program.\n";
         endPaint();
-        exit(1);
+        return "";
       }
 
       //Otherwise, get a new file
       cout << "Filename: ";
       cin >> filename;
       file.open(filename);
+    }
+
+    //Get all dependiencies and make a string of them
+    string dependency;  //Each one
+    string dependencies;  //All of them
+    while(file >> dependency)
+        dependencies += pluginName + '/' + dependency + ' ';
+
+    return dependencies;
+}
+
+
+void compile(const unordered_set<string>& plugins)
+{
+    //Open the types file
+    ofstream typesFile("Compiler/pluginTypes.h");
+    if (!typesFile)
+    {
+        startPaint(1);
+        cerr << "Could not create file.\n";
+        endPaint();
+        return;
     }
 
     //Beginning and end of the file
@@ -205,18 +210,43 @@ void compile(const unordered_set<string>& plugins)
     "\n#endif\n";
 
     //Write header to file
-    file << begin;
-
+    typesFile << begin;
     //Write Includes
     for (const string& pluginName : plugins)
-        file << "#include " << '"' << pluginName << "Types.h" << '"' << endl;
+        typesFile << "#include " << "\"../Plugins/" << pluginName << '/' << pluginName << "Types.h" << '"' << endl;
 
-    //Write endif
-    file << end;
+    typesFile << end;  //Write end portion
+    typesFile.close();  //Close File
 
-    //Close File
-    file.close();
+    //Create the make command
+    string dependencies = getDependencies("Main");;  //List of the main dependencies
+    for (const string& dep : plugins)
+        dependencies += getDependencies("Plugins/" + dep);
+
+    string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
+    string links = "";  //Linker dependencies
+
+    string command =
+    "g++ " + gccOptions + dependencies + "-o main" + links;
+
+    startPaint(1);
+    cout << "Command: " << command;
+    endPaint();
+    cout << endl;
+
+    //The rest of this is modified from "stackoverflow.com/questions/478898"
+    array<char, 128> buffer;
+    shared_ptr<FILE> pipe(popen(command.c_str(), "r"), pclose);
+    if (!pipe) //If it fails
+    {
+        cerr << "\nCould not run command.  Command is: \n" << command << endl;
+        return;
+    }
+    while (!feof(pipe.get()))
+        if (fgets(buffer.data(), 128, pipe.get()) != NULL)
+            cout << buffer.data();
 }
+
 
 
 int main()
