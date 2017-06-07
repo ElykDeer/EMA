@@ -57,7 +57,7 @@ unordered_set<string> load()
         startPaint(1);
         cerr << "No alternate file provided. Cannot continue, closing program.\n";
         endPaint();
-        exit(1);
+        return unordered_set<string>();
       }
 
       //Otherwise, get a new file
