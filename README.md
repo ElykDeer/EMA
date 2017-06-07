@@ -1,7 +1,7 @@
 # EMA
 E.xtremely M.odular A.PI
 
-How to compile this project:
+### How to compile this project:
 
 If this is being compiled on the Bash For Windows Subsystem, make sure to follow [these](https://solarianprogrammer.com/2017/05/04/building-gcc-wsl-windows-subsystem-linux/) steps.
 If this is being compiled on linux, change "g++-7.1" in the Makefile to "g++"
