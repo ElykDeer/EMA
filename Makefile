@@ -1,7 +1,11 @@
-all: datTest
+all: Compiler
 
-datTest: dataStructure.cpp dataStructure.h Entity.cpp Entity.h pluginTypes.h datTestTypes.cpp datTestTypes.h datTest.cpp
-	g++ -Wall -std=c++1y Entity.cpp dataStructure.cpp datTest.cpp datTestTypes.cpp -o datTest
+Compiler: Compiler/Compiler.cpp
+	g++-7.1 -Wall -Wextra -pedantic -std=c++1z Compiler/Compiler.cpp -o compiler -lstdc++fs
 
 clean:
-	rm datTest
+	rm compiler
+
+cleanAll:
+	rm compiler
+	rm main

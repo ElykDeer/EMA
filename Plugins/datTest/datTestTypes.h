@@ -1,6 +1,6 @@
 #ifndef TESTTYPES
 #define TESTTYPES 1
-#include "Entity.h"
+#include "../../Main/Entity.h"
 
 //Just two basic derived types to serve testing purposes
 class Flower : public Entity

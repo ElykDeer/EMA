@@ -4,7 +4,7 @@
 #include "Entity.h"
 
 //All Active Plugins need to be registered in this file
-#include "pluginTypes.h"
+#include "../Compiler/pluginTypes.h"
 
 #include <map>
 #include <set>
