@@ -51,8 +51,8 @@ int main()
     bin.insert(myHeapFlower);
     //bin.remove(myHeapFlower);
 
-    //Make 100 random dogs and flowers
-    for(int numOfNodes = 0; numOfNodes < 100; ++numOfNodes)
+    //Make more random dogs and flowers
+    for(int numOfNodes = 0; numOfNodes < 1000; ++numOfNodes)
     {
         bin.insert(new Flower(randRange(gen), randRange(gen)));
         bin.insert(new Dog(randRange(gen), randRange(gen)));
