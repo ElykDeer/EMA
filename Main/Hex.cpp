@@ -10,22 +10,22 @@ Hex::Hex(const unsigned int x, const unsigned int y, const double hexRadius) :
   col(x),
   row(y) {}
 
-int Hex::getX()
+unsigned int Hex::getX() const
 {
     return x;
 }
 
-int Hex::getY()
+unsigned int Hex::getY() const
 {
     return y;
 }
 
-int Hex::getCol()
+unsigned int Hex::getCol() const
 {
     return col;
 }
 
-int Hex::getRow()
+unsigned int Hex::getRow() const
 {
     return row;
 }

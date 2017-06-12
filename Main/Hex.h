@@ -9,23 +9,23 @@ public:
 
     void update();
 
-    int getX();
+    unsigned int getX() const;
 
-    int getY();
+    unsigned int getY() const;
 
-    int getCol();
+    unsigned int getCol() const;
 
-    int getRow();
+    unsigned int getRow() const;
 
 private:
     // X/Y Locations
-    const int x;
-    const int y;
+    const unsigned int x;
+    const unsigned int y;
     const double hexRadius;
 
     //Where in the grid that it is located
-    int col;
-    int row;
+    const unsigned int col;
+    const unsigned int row;
 };
 
 #endif
