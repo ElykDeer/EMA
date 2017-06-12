@@ -38,7 +38,7 @@ public:
     ~Bin();
 private:
 
-    std::vector<unsigned int> hexCord(const unsigned int x, const unsigned int y) const;
+    std::vector<unsigned int> hexOffsetCord(const unsigned int x, const unsigned int y) const;
 
     //Wrapper for an entity..adds
       //a "unique identifier"
