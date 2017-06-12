@@ -21,8 +21,8 @@ class Bin// : public byType, public byLocal
 {
 public:
     //This data structure needs to know the level size in the game
-    //Width, height, binSize
-    Bin(const unsigned int, const unsigned int, const unsigned int);
+    //Width, height, hexRadius
+    Bin(const double, const double, const double);
 
     //How else do we put things in this monstrosity?
     void insert(Entity* const entity);
@@ -47,9 +47,9 @@ private:
         ~Enticap(); //be careful with this fellow... Changing how it works could
                     //be really really bad (memory leaks)
 
-        const Entity* UID() const;
+        Entity* UID() const;
 
-        const std::size_t TUID() const;
+        std::size_t TUID() const;
 
     private:
         Entity* const entityP;
@@ -57,9 +57,9 @@ private:
     };
 
     //For the bins:
-    const unsigned int width;
-    const unsigned int height;
-    const unsigned int binSize;
+    const double width;
+    const double height;
+    const double hexRadius;
     std::vector<std::vector<std::set<Entity*>>> bins;
 
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >

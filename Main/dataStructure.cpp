@@ -1,4 +1,5 @@
 #include "dataStructure.h"
+#include <cmath>  //Because hexagons
 #include <iostream> //- debug only
 using namespace std;
 
@@ -9,22 +10,23 @@ using namespace std;
   //get a list of elements with nearby x/y coordinates
 
 //This data structure needs to know the level size in the game
-//Width, height, binSize
-Bin::Bin(const unsigned int width,
-                 const unsigned int height,
-                 const unsigned int binSize)
+//Width, height, hexRadius
+Bin::Bin(const double width,
+                 const double height,
+                 const double hexRadius)
 : width(width),
   height(height),
-  binSize(binSize),
+  hexRadius(hexRadius),
  //Initalize the x, then the y, of empty maps:
- bins(width/binSize, vector<set<Entity*>>(height/binSize)) {}
+ bins(ceil( (width+(hexRadius*0.5)) / (1.5*hexRadius)),
+    vector<set<Entity*>>( ceil((height+hexRadius) / (sqrt(3)*hexRadius)) )) {}
 
 //How else do we put things in this monstrosity?
 void Bin::insert(Entity* const entity)
 {
     //byLocal
     //structure: [col][row][Entity*]
-    bins[entity->getX()/binSize][entity->getY()/binSize].insert(entity);
+    bins[entity->getX()/hexRadius][entity->getY()/hexRadius].insert(entity);
 
     //byType
     //structure: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
@@ -35,7 +37,7 @@ void Bin::insert(Entity* const entity)
 void Bin::remove(Entity* const entity)
 {
     //remove from byLocal
-    bins[entity->getX()/binSize][entity->getY()/binSize].erase(entity);
+    bins[entity->getX()/hexRadius][entity->getY()/hexRadius].erase(entity);
 
     //remove from byType
     Enticap* enticapP = byTypeMap[typeid(*entity).hash_code()][entity];
@@ -47,8 +49,8 @@ void Bin::remove(Entity* const entity)
 vector<Entity*> Bin::getNear(Entity* entity)
 {
     //Our bin position - bins[col][row]
-    size_t col = entity->getX()/binSize;
-    size_t row = entity->getY()/binSize;
+    size_t col = entity->getX()/hexRadius;
+    size_t row = entity->getY()/hexRadius;
 
     //Build the list of bins around us
     vector<Entity*> nearMes; //The vector of what's around us
@@ -79,12 +81,12 @@ Bin::Enticap::~Enticap()
     delete entityP;
 }
 
-const Entity* Bin::Enticap::UID() const //UDI for entity = mem addr on heap
+Entity* Bin::Enticap::UID() const //UDI for entity = mem addr on heap
 {
     return entityP;
 }
 
-const size_t Bin::Enticap::TUID() const //Type Identifier
+size_t Bin::Enticap::TUID() const //Type Identifier
 {
     return typeid(*entityP).hash_code();
 }
