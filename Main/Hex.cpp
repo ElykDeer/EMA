@@ -6,7 +6,9 @@ using namespace std;
 Hex::Hex(const unsigned int x, const unsigned int y, const double hexRadius) :
   x(hexRadius * 1.5 * x),
   y(hexRadius * sqrt(3) * (y - (0.5*(x&1))) ),
-  hexRadius(hexRadius) {}
+  hexRadius(hexRadius),
+  col(x),
+  row(y) {}
 
 int Hex::getX()
 {
@@ -16,4 +18,14 @@ int Hex::getX()
 int Hex::getY()
 {
     return y;
+}
+
+int Hex::getCol()
+{
+    return col;
+}
+
+int Hex::getRow()
+{
+    return row;
 }

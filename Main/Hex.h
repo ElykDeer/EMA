@@ -13,11 +13,19 @@ public:
 
     int getY();
 
+    int getCol();
+
+    int getRow();
+
 private:
     // X/Y Locations
     const int x;
     const int y;
     const double hexRadius;
+
+    //Where in the grid that it is located
+    int col;
+    int row;
 };
 
 #endif
