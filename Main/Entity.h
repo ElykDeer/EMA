@@ -12,15 +12,9 @@ public:
     //Deconstructor for derived classes
     virtual ~Entity();
 
-    int getX()
-    {
-        return x;
-    }
+    int getX();
 
-    int getY()
-    {
-        return y;
-    }
+    int getY();
 
 protected:
     // X/Y Locations
