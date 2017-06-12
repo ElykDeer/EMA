@@ -2,6 +2,7 @@
 #define SIM_BINS 1
 
 #include "Entity.h"
+#include "Hex.h"
 
 //All Active Plugins need to be registered in this file
 #include "../Compiler/pluginTypes.h"
@@ -10,6 +11,7 @@
 #include <set>
 #include <functional>
 #include <vector>
+#include <cmath>  //Because hexagons
 
 
 //Ability to:
@@ -36,9 +38,10 @@ public:
     ~Bin();
 private:
 
+    std::vector<unsigned int> hexCord(const unsigned int x, const unsigned int y) const;
+
     //Wrapper for an entity..adds
-      //a "unique identifier" and
-      //a list of all things near me - not yet utilized
+      //a "unique identifier"
     class Enticap
     {
     public:
@@ -47,9 +50,9 @@ private:
         ~Enticap(); //be careful with this fellow... Changing how it works could
                     //be really really bad (memory leaks)
 
-        Entity* UID() const;
+        //Entity* UID() const;
 
-        std::size_t TUID() const;
+        //std::size_t TUID() const;
 
     private:
         Entity* const entityP;
@@ -66,6 +69,12 @@ private:
     std::map< const std::size_t, std::map<Entity* const, Enticap*> > byTypeMap;
 
     // vector<Entity* const> allEntities; - have another list of everything?
+
+    //For converting from pixel-hex:
+    double guessBinWidth;
+    double guessBinHeight;
+
+    std::vector< std::vector< std::vector<Hex*> >> guessGrid;
 
 //Iterstuff - const
 public:

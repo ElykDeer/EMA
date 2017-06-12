@@ -1,5 +1,4 @@
 #include "dataStructure.h"
-#include <cmath>  //Because hexagons
 #include <iostream> //- debug only
 using namespace std;
 
@@ -17,16 +16,31 @@ Bin::Bin(const double width,
 : width(width),
   height(height),
   hexRadius(hexRadius),
- //Initalize the x, then the y, of empty maps:
- bins(ceil( (width+(hexRadius*0.5)) / (1.5*hexRadius)),
-    vector<set<Entity*>>( ceil((height+hexRadius) / (sqrt(3)*hexRadius)) )) {}
+
+  //Initalize the x, then the y, of empty maps:
+  bins(ceil( (width+(hexRadius*0.5)) / (1.5*hexRadius)),
+    vector<set<Entity*>>( ceil((height+hexRadius) / (sqrt(3)*hexRadius)) )), ////////////////////change to hex*
+
+  guessBinWidth(hexRadius/4),
+  guessBinHeight( (sqrt(3)*hexRadius) /4),
+  guessGrid(width/guessBinWidth, vector<vector<Hex*>>( height/guessBinHeight ))
+  {
+      //Set up the guessGrid
+
+      //for (int row = 0; row < guessGrid[0].size(); row++) {  }
+
+      //guessGrid
+  }
 
 //How else do we put things in this monstrosity?
 void Bin::insert(Entity* const entity)
 {
+    //First Convert coordinates
+    vector<unsigned int> cords = hexCord(entity->getX(), entity->getX());
+
     //byLocal
     //structure: [col][row][Entity*]
-    bins[entity->getX()/hexRadius][entity->getY()/hexRadius].insert(entity);
+    bins[cords[0]][cords[1]].insert(entity);
 
     //byType
     //structure: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
@@ -36,8 +50,11 @@ void Bin::insert(Entity* const entity)
 //Delete an object
 void Bin::remove(Entity* const entity)
 {
+    //First Convert coordinates
+    vector<unsigned int> cords = hexCord(entity->getX(), entity->getX());
+
     //remove from byLocal
-    bins[entity->getX()/hexRadius][entity->getY()/hexRadius].erase(entity);
+    bins[cords[0]][cords[1]].erase(entity);
 
     //remove from byType
     Enticap* enticapP = byTypeMap[typeid(*entity).hash_code()][entity];
@@ -48,9 +65,12 @@ void Bin::remove(Entity* const entity)
 //For right now this returns fomr the 3x3 bin area around/including our bin
 vector<Entity*> Bin::getNear(Entity* entity)
 {
+    //First Convert coordinates
+    vector<unsigned int> cords = hexCord(entity->getX(), entity->getX());
+
     //Our bin position - bins[col][row]
-    size_t col = entity->getX()/hexRadius;
-    size_t row = entity->getY()/hexRadius;
+    size_t col = cords[0];
+    size_t row = cords[1];
 
     //Build the list of bins around us
     vector<Entity*> nearMes; //The vector of what's around us
@@ -73,6 +93,16 @@ Bin::~Bin()
     //All heap elements are deleted, now the deconstructor will remove pointers
 }
 
+vector<unsigned int> Bin::hexCord(const unsigned int x, const unsigned int y) const
+{
+    //int guessBinX =
+    //int guessBinY
+    if (0)
+      cout << x << " " << y << endl;
+
+    return {1, 1};
+}
+
 //Enticap
 Bin::Enticap::Enticap(Entity* const newEntity) : entityP(newEntity) {}
 
@@ -81,6 +111,7 @@ Bin::Enticap::~Enticap()
     delete entityP;
 }
 
+/*
 Entity* Bin::Enticap::UID() const //UDI for entity = mem addr on heap
 {
     return entityP;
@@ -89,4 +120,4 @@ Entity* Bin::Enticap::UID() const //UDI for entity = mem addr on heap
 size_t Bin::Enticap::TUID() const //Type Identifier
 {
     return typeid(*entityP).hash_code();
-}
+}*/
