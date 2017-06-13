@@ -55,6 +55,12 @@ Bin::Bin(const double width,
                   guessGrid[col][row].push_back(bins[leftGridX][leftGridY]);
                   guessGrid[col][row].push_back(bins[rightGridX][rightGridY]);
 
+                  cerr << "Binsize: " << guessGrid[col][row].size() << "\n";
+
+                  if (guessGrid[col][row].size()>2)
+                        exit(1);
+
+
                   //set next double
                   if (nextDouble&1) //if next double if odd
                       nextDouble += 5;
@@ -80,6 +86,8 @@ Bin::Bin(const double width,
           else if ((row+1) % 2 == 0)
               rightGridY++;
       }
+
+      cerr << "//////////////////////////////////////////////\n";
   }
 
 //How else do we put things in this monstrosity?
@@ -87,7 +95,7 @@ void Bin::insert(Entity* const entity)
 {
     //First Convert coordinates
     vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getX());
-    
+
     //byLocal
     //structure: [col][row][Entity*]
     bins[cords[0]][cords[1]]->insert(entity);
@@ -154,6 +162,8 @@ vector<unsigned int> Bin::hexOffsetCord(const unsigned int x, const unsigned int
 
     //Grab Guess
     const vector<Hex*>& guessBin = guessGrid[guessBinX][guessBinY];
+
+    cerr << "Binsize: " << guessBin.size() << "\n";
 
     //71% chance for there to only be one thing to do..
     if (guessBin.size() == 1)
