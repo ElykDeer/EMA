@@ -36,7 +36,7 @@ Bin::Bin(const double width,
 void Bin::insert(Entity* const entity)
 {
     //First Convert coordinates
-    vector<unsigned int> cords = hexCord(entity->getX(), entity->getX());
+    vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getX());
 
     //byLocal
     //structure: [col][row][Entity*]
@@ -51,7 +51,7 @@ void Bin::insert(Entity* const entity)
 void Bin::remove(Entity* const entity)
 {
     //First Convert coordinates
-    vector<unsigned int> cords = hexCord(entity->getX(), entity->getX());
+    vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getX());
 
     //remove from byLocal
     bins[cords[0]][cords[1]].erase(entity);
@@ -66,7 +66,7 @@ void Bin::remove(Entity* const entity)
 vector<Entity*> Bin::getNear(Entity* entity)
 {
     //First Convert coordinates
-    vector<unsigned int> cords = hexCord(entity->getX(), entity->getX());
+    vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getX());
 
     //Our bin position - bins[col][row]
     size_t col = cords[0];
@@ -93,14 +93,31 @@ Bin::~Bin()
     //All heap elements are deleted, now the deconstructor will remove pointers
 }
 
-vector<unsigned int> Bin::hexCord(const unsigned int x, const unsigned int y) const
+vector<unsigned int> Bin::hexOffsetCord(const unsigned int x, const unsigned int y) const
 {
-    //int guessBinX =
-    //int guessBinY
-    if (0)
-      cout << x << " " << y << endl;
+    //Generate the guess
+    const unsigned int guessBinX = x/guessBinWidth;
+    const unsigned int guessBinY = y/guessBinHeight;
 
-    return {1, 1};
+    //Grab Guess
+    const vector<Hex*>& guessBin = guessGrid[guessBinX][guessBinY];
+
+    //71% chance for there to only be one thing to do..
+    if (guessBin.size() == 1)
+        return {guessBin[0]->getCol(), guessBin[0]->getRow()};
+
+    //Calculate distances
+    double dist1 =
+    sqrt(pow((guessBin[0]->getX() - x), 2) + pow((guessBin[0]->getY() - y), 2));
+    double dist2 =
+    sqrt(pow((guessBin[1]->getX() - x), 2) + pow((guessBin[1]->getY() - y), 2));
+
+    //If closer to one, return one
+    if(dist1 < dist2)
+        return {guessBin[0]->getCol(), guessBin[0]->getRow()};
+
+    //Otherwise return the other
+    return {guessBin[1]->getCol(), guessBin[1]->getRow()};
 }
 
 //Enticap
