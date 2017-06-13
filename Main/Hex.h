@@ -1,6 +1,8 @@
 #ifndef SIM_HEX
 #define SIM_HEX 1
 
+#include "Entity.h"
+
 class Hex
 {
 public:
@@ -8,6 +10,9 @@ public:
     Hex(const unsigned int x, const unsigned int y, const double hexRadius);
 
     void update();
+
+    void insert(Entity*) {}
+    void erase(Entity*) {}
 
     unsigned int getX() const;
 

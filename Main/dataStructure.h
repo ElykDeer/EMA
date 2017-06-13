@@ -63,7 +63,7 @@ private:
     const double width;
     const double height;
     const double hexRadius;
-    std::vector<std::vector<std::set<Entity*>>> bins;
+    std::vector<std::vector<Hex*>> bins;
 
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     std::map< const std::size_t, std::map<Entity* const, Enticap*> > byTypeMap;

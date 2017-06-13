@@ -19,17 +19,67 @@ Bin::Bin(const double width,
 
   //Initalize the x, then the y, of empty maps:
   bins(ceil( (width+(hexRadius*0.5)) / (1.5*hexRadius)),
-    vector<set<Entity*>>( ceil((height+hexRadius) / (sqrt(3)*hexRadius)) )), ////////////////////change to hex*
+    vector<Hex*>( ceil((height+hexRadius) / (sqrt(3)*hexRadius)), nullptr )), ////////////////////change to hex*
 
   guessBinWidth(hexRadius/4),
   guessBinHeight( (sqrt(3)*hexRadius) /4),
   guessGrid(width/guessBinWidth, vector<vector<Hex*>>( height/guessBinHeight ))
   {
-      //Set up the guessGrid
+      //Populate hex grid:
+      for (size_t col = 0; col < bins.size(); col++)
+        for (size_t row = 0; row < bins[col].size(); row++)
+            bins[col][row] = new Hex(col, row, hexRadius);
 
-      //for (int row = 0; row < guessGrid[0].size(); row++) {  }
 
-      //guessGrid
+      //Set up the guessGrid:
+      //For each row
+      int leftGridX = 0;
+      int leftGridY = 0;
+
+      int rightGridX = 1;
+      int rightGridY = 0;
+
+      for (size_t row = 0; row < guessGrid[0].size(); row++)
+      {
+          //For each collumn
+          unsigned int nextDouble;
+          if (row&1) //odd row
+              nextDouble = 4;
+          else //even rows
+              nextDouble = 5;
+
+          for (size_t col = 0; col < guessGrid.size(); col++)
+          {
+              if (col == nextDouble) //If an odd row
+              {
+                  guessGrid[col][row].push_back(bins[leftGridX][leftGridY]);
+                  guessGrid[col][row].push_back(bins[rightGridX][rightGridY]);
+
+                  //set next double
+                  if (nextDouble&1) //if next double if odd
+                      nextDouble += 5;
+                  else //is even
+                      nextDouble += 7;
+
+                  //Set next pairing at that double
+                  leftGridX++;
+                  rightGridX++;
+              }
+              else
+              {
+                  guessGrid[col][row].push_back(bins[leftGridX][leftGridY]);
+              }
+          }
+          //reset x of the doubles
+          leftGridX = 0;
+          rightGridX = 1;
+
+          //Adjust the y of the doubles
+          if ((row+1) % 4 == 0)
+              leftGridY++;
+          else if ((row+1) % 2 == 0)
+              rightGridY++;
+      }
   }
 
 //How else do we put things in this monstrosity?
@@ -37,10 +87,10 @@ void Bin::insert(Entity* const entity)
 {
     //First Convert coordinates
     vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getX());
-
+    
     //byLocal
     //structure: [col][row][Entity*]
-    bins[cords[0]][cords[1]].insert(entity);
+    bins[cords[0]][cords[1]]->insert(entity);
 
     //byType
     //structure: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
@@ -54,7 +104,7 @@ void Bin::remove(Entity* const entity)
     vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getX());
 
     //remove from byLocal
-    bins[cords[0]][cords[1]].erase(entity);
+    bins[cords[0]][cords[1]]->erase(entity);
 
     //remove from byType
     Enticap* enticapP = byTypeMap[typeid(*entity).hash_code()][entity];
@@ -72,13 +122,16 @@ vector<Entity*> Bin::getNear(Entity* entity)
     size_t col = cords[0];
     size_t row = cords[1];
 
+    if (0)
+        cerr << col << row;
+
     //Build the list of bins around us
     vector<Entity*> nearMes; //The vector of what's around us
-    for(int colOffset = -1; colOffset < 2; ++colOffset)
+/*    for(int colOffset = -1; colOffset < 2; ++colOffset)
         for(int rowOffset = -1; rowOffset < 2; ++rowOffset)
             for(auto& element : bins[col+colOffset][row+rowOffset])
                 nearMes.push_back(element);
-
+*/
     //Return list
     return nearMes;
 }
