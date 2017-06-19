@@ -55,11 +55,10 @@ Bin::Bin(const double width,
                   guessGrid[col][row].push_back(bins[leftGridX][leftGridY]);
                   guessGrid[col][row].push_back(bins[rightGridX][rightGridY]);
 
-                  cerr << "Binsize: " << guessGrid[col][row].size() << "\n";
-
                   if (guessGrid[col][row].size()>2)
                         exit(1);
-
+                  if (guessGrid[col][row].size()==0)
+                        exit(1);
 
                   //set next double
                   if (nextDouble&1) //if next double if odd
@@ -75,6 +74,8 @@ Bin::Bin(const double width,
               {
                   guessGrid[col][row].push_back(bins[leftGridX][leftGridY]);
               }
+
+              //cerr << "Binsize: " << guessGrid[col][row].size() << "\n";
           }
           //reset x of the doubles
           leftGridX = 0;
@@ -163,7 +164,8 @@ vector<unsigned int> Bin::hexOffsetCord(const unsigned int x, const unsigned int
     //Grab Guess
     const vector<Hex*>& guessBin = guessGrid[guessBinX][guessBinY];
 
-    cerr << "Binsize: " << guessBin.size() << "\n";
+    if (guessBinX == 39)
+        cerr << "Binsize: " << guessBin.size() << ", x: " << guessBinX << ", y:" << guessBinY << "\n";
 
     //71% chance for there to only be one thing to do..
     if (guessBin.size() == 1)
