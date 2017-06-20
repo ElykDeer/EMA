@@ -1,3 +1,4 @@
 main.cpp
 dataStructure.cpp
 Entity.cpp
+Hex.cpp
