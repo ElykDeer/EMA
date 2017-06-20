@@ -13,8 +13,8 @@ int main()
     uniform_real_distribution<double> randRange(0.0, 500.0);
 
     cout << "/////////////////////// Bin tests ///////////////////////\n";
-    cout << "byType tests:\n";
     Bin bin(500, 500, 50);
+    cout << "byType tests:\n";
 
     //Make 100 random dogs and flowers
     for(int numOfNodes = 0; numOfNodes < 100; ++numOfNodes)

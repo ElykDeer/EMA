@@ -23,8 +23,15 @@ Bin::Bin(const double width,
 
   guessBinWidth(hexRadius/4),
   guessBinHeight( (sqrt(3)*hexRadius) /4),
-  guessGrid(width/guessBinWidth, vector<vector<Hex*>>( height/guessBinHeight ))
+  guessGrid(ceil(width/guessBinWidth), vector<vector<Hex*>>( ceil(height/guessBinHeight) ))
   {
+      cerr << "################################################\n";
+      cerr << "guessBinWidth: " << guessBinWidth << " guessBinHeight: " << guessBinHeight << endl;
+      cerr << "guessBinsRow: " << guessGrid[0].size() << ", guessBinsCol: " << guessGrid.size() << endl;
+      cerr << "BinsRow: " << bins[0].size() << ", BinsCol: " << bins.size() << endl;
+      cerr << "max X: " << guessBinWidth*guessGrid.size() << ", max Y: " << guessBinHeight*guessGrid[0].size() << endl;
+      cerr << "################################################\n";
+
       //Populate hex grid:
       for (size_t col = 0; col < bins.size(); col++)
         for (size_t row = 0; row < bins[col].size(); row++)
@@ -71,11 +78,7 @@ Bin::Bin(const double width,
                   rightGridX++;
               }
               else
-              {
                   guessGrid[col][row].push_back(bins[leftGridX][leftGridY]);
-              }
-
-              //cerr << "Binsize: " << guessGrid[col][row].size() << "\n";
           }
           //reset x of the doubles
           leftGridX = 0;
@@ -87,15 +90,13 @@ Bin::Bin(const double width,
           else if ((row+1) % 2 == 0)
               rightGridY++;
       }
-
-      cerr << "//////////////////////////////////////////////\n";
   }
 
 //How else do we put things in this monstrosity?
 void Bin::insert(Entity* const entity)
 {
     //First Convert coordinates
-    vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getX());
+    vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getY());
 
     //byLocal
     //structure: [col][row][Entity*]
@@ -110,7 +111,7 @@ void Bin::insert(Entity* const entity)
 void Bin::remove(Entity* const entity)
 {
     //First Convert coordinates
-    vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getX());
+    vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getY());
 
     //remove from byLocal
     bins[cords[0]][cords[1]]->erase(entity);
@@ -163,9 +164,6 @@ vector<unsigned int> Bin::hexOffsetCord(const unsigned int x, const unsigned int
 
     //Grab Guess
     const vector<Hex*>& guessBin = guessGrid[guessBinX][guessBinY];
-
-    if (guessBinX == 39)
-        cerr << "Binsize: " << guessBin.size() << ", x: " << guessBinX << ", y:" << guessBinY << "\n";
 
     //71% chance for there to only be one thing to do..
     if (guessBin.size() == 1)
