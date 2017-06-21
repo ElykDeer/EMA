@@ -24,7 +24,7 @@ class Bin// : public byType, public byLocal
 public:
     //This data structure needs to know the level size in the game
     //Width, height, hexRadius
-    Bin(const double, const double, const double);
+    Bin(const unsigned int, const unsigned int, const double);
 
     //How else do we put things in this monstrosity?
     void insert(Entity* const entity);
@@ -60,8 +60,8 @@ private:
     };
 
     //For the bins:
-    const double width;
-    const double height;
+    const unsigned int width;
+    const unsigned int height;
     const double hexRadius;
     std::vector<std::vector<Hex*>> bins;
 

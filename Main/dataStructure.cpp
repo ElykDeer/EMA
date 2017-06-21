@@ -10,8 +10,8 @@ using namespace std;
 
 //This data structure needs to know the level size in the game
 //Width, height, hexRadius
-Bin::Bin(const double width,
-                 const double height,
+Bin::Bin(const unsigned int width,
+                 const unsigned int height,
                  const double hexRadius)
 : width(width),
   height(height),
@@ -95,11 +95,17 @@ Bin::Bin(const double width,
 //How else do we put things in this monstrosity?
 void Bin::insert(Entity* const entity)
 {
+    if (entity->getX() >= width)
+        entity->x = entity->x % width;
+
+    if (entity->getY() >= height)
+        entity->y = entity->y % height;
+
     //First Convert coordinates
     vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getY());
 
     //byLocal
-    //structure: [col][row][Entity*]
+    //structure: [col][row][Hex*]
     bins[cords[0]][cords[1]]->insert(entity);
 
     //byType

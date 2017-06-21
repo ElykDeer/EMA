@@ -2,17 +2,17 @@
 using namespace std;
 
 //Simple Constructor
-Entity::Entity(const int x, const int y) : x(x), y(y) { }
+Entity::Entity(const unsigned int x, const unsigned int y) : x(x), y(y) { }
 
 //Deconstructor for derived classes
 Entity::~Entity() { }
 
-int Entity::getX() const
+unsigned int Entity::getX() const
 {
     return x;
 }
 
-int Entity::getY() const
+unsigned int Entity::getY() const
 {
     return y;
 }
