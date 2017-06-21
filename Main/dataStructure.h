@@ -149,7 +149,7 @@ public:
             &byTypeMap);
     }
 
-//Iterstuff - non-const
+//Iterstuff - non-const - byType
     template<class C>
     class byTypeIter
     {
@@ -201,6 +201,67 @@ public:
     {
         return byTypeIter<C>(byTypeMap[typeid(C).hash_code()].begin(),
             &byTypeMap);
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+    //Iterstuff - non-const - byType
+    class globalIter
+    {
+        //So the iterator can compare to beginning and end
+        friend bool operator!=(
+            const globalIter& lhs,
+            const globalIter& rhs)
+        {
+            return lhs.innerIter != rhs.innerIter;
+        }
+    public:
+        globalIter(const std::map<Entity* const, Enticap*>::iterator innerIter,
+                   std::map<const std::size_t, std::map<Entity* const, Enticap*>>::iterator outerIter,
+                   std::map<const std::size_t, std::map<Entity* const, Enticap*> >* const byTypeMapP)
+                   :innerIter(innerIter), outerIter(outerIter),
+                   byTypeMapP(byTypeMapP) {}
+
+        Entity& operator*() //I don't like casting, but I know no alternative
+        {
+          return *(innerIter)->first;
+        }
+
+        globalIter& operator++()
+        {
+            ++innerIter;
+
+            if(innerIter == outerIter->second.end() &&
+               innerIter != byTypeMapP->rbegin()->second.end())
+            {
+                ++outerIter;
+                innerIter = outerIter->second.begin();
+            }
+
+            return *this;
+        }
+
+        globalIter begin() const
+        {
+            return globalIter(byTypeMapP->begin()->second.begin(), byTypeMapP->begin(), byTypeMapP);
+        }
+
+        globalIter end() const
+        {
+            return globalIter(byTypeMapP->rbegin()->second.end(), byTypeMapP->end(), byTypeMapP);
+        }
+
+    private:
+        std::map<Entity* const, Enticap*>::iterator innerIter;
+        std::map<const std::size_t, std::map<Entity* const, Enticap*>>::iterator
+            outerIter;
+        std::map< const std::size_t, std::map<Entity* const, Enticap*> >*
+            const byTypeMapP;
+    };
+
+    //This returns an interatable object over a non-constant object
+    globalIter getAll()
+    {
+        return globalIter(byTypeMap.begin()->second.begin(), byTypeMap.begin(), &byTypeMap);
     }
 
 };

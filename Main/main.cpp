@@ -61,5 +61,11 @@ int main()
     auto thingything = bin.getNear(myHeapFlower);
     cout << "Nearby flowers: " << thingything.size() << endl;
 
+    cout << "/////////////////////// Everything test ///////////////////////\n";
+    int entityCount = 0;
+    for (auto& thing : bin.getAll())
+        ++entityCount;
+    cout << "There are " << entityCount << " entities in the bin!\n";
+
     cout << "All done!\n";
 }
