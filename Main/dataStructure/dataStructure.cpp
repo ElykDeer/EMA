@@ -1,4 +1,4 @@
-#include "dataStructure.h"
+#include "../dataStructure.h"
 #include <cmath>
 #include <iostream> //- debug only
 using namespace std;
@@ -26,12 +26,12 @@ Bin::Bin(const unsigned int width,
   guessBinHeight( (sqrt(3)*hexRadius) /4),
   guessGrid(ceil(width/guessBinWidth), vector<vector<Hex*>>( ceil(height/guessBinHeight) ))
   {
-      cerr << "################################################\n";
-      cerr << "guessBinWidth: " << guessBinWidth << " guessBinHeight: " << guessBinHeight << endl;
-      cerr << "guessBinsRow: " << guessGrid[0].size() << ", guessBinsCol: " << guessGrid.size() << endl;
-      cerr << "BinsRow: " << bins[0].size() << ", BinsCol: " << bins.size() << endl;
-      cerr << "max X: " << guessBinWidth*guessGrid.size() << ", max Y: " << guessBinHeight*guessGrid[0].size() << endl;
-      cerr << "################################################\n";
+      cerr << "#################################################\n";
+      cerr << "# guessBinWidth: " << guessBinWidth << ",\tguessBinHeight:\t" << guessBinHeight << "\t#" << endl;
+      cerr << "# guessBinsRows: " << guessGrid[0].size() << ",\tguessBinsCols:\t" << guessGrid.size() << "\t#" << endl;
+      cerr << "# Bin's Rows:\t " << bins[0].size() << ",\tBin's Cols:\t" << bins.size() << "\t#" << endl;
+      cerr << "# max X:\t " << guessBinWidth*guessGrid.size() << ",\tmax Y:\t\t" << guessBinHeight*guessGrid[0].size() << "\t#" << endl;
+      cerr << "#################################################\n";
 
       //Populate hex grid:
       for (size_t col = 0; col < bins.size(); col++)
@@ -175,70 +175,6 @@ vector<unsigned int> Bin::hexOffsetCord(const unsigned int x, const unsigned int
     return {guessBin[1]->getCol(), guessBin[1]->getRow()};
 }
 
-//Enticap
-Bin::Enticap::Enticap(Entity* const newEntity, Hex* hexP)
-            : entityP(newEntity), hexP(hexP) {}
+#include "Enticap.cpp"
 
-Bin::Hex* Bin::Enticap::getHexP() const
-{
-    return hexP;
-}
-
-Bin::Enticap::~Enticap()
-{
-    delete entityP;
-}
-
-/*
-Entity* Bin::Enticap::UID() const //UDI for entity = mem addr on heap
-{
-    return entityP;
-}
-
-size_t Bin::Enticap::TUID() const //Type Identifier
-{
-    return typeid(*entityP).hash_code();
-}*/
-
-//Give it the matrix coordinates, and it will generate pixel coordinates
-Bin::Hex::Hex(const unsigned int x, const unsigned int y, const double hexRadius) :
-  x(hexRadius * 1.5 * x),
-  y(hexRadius * sqrt(3) * (y - (0.5*(x&1))) ),
-  hexRadius(hexRadius),
-  col(x),
-  row(y) {}
-
-//Update enviornment stuff only, do not update entities inside
-void Bin::Hex::update() {}
-
-void Bin::Hex::insert(Entity* const entity, Enticap* enticap)
-{
-    //Insert into our map structure:
-      //<typeid.HashCode: <pointerToEntity:pointerToEnticap> >
-    byTypeMap[typeid(*entity).hash_code()][entity] = enticap;
-}
-
-void Bin::Hex::remove(Entity* const entity)
-{
-    byTypeMap[typeid(*entity).hash_code()].erase(entity);
-}
-
-unsigned int Bin::Hex::getX() const
-{
-    return x;
-}
-
-unsigned int Bin::Hex::getY() const
-{
-    return y;
-}
-
-unsigned int Bin::Hex::getCol() const
-{
-    return col;
-}
-
-unsigned int Bin::Hex::getRow() const
-{
-    return row;
-}
+#include "Hex.cpp"

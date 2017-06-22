@@ -12,8 +12,8 @@ int main()
     mt19937 gen(seed());
     uniform_real_distribution<double> randRange(0.0, 500.0);
 
-    cout << "/////////////////////// Bin tests ///////////////////////\n";
     Bin bin(500, 500, 50);
+    cout << "/////////////////////// Bin tests ///////////////////////\n";
     cout << "byType tests:\n";
 
     //Make 100 random dogs and flowers

@@ -1,7 +1,7 @@
 #ifndef SIM_HEX
 #define SIM_HEX 1
 
-#include "Entity.h"
+#include "../Entity.h"
 #include <map>
 
 class Hex
