@@ -35,6 +35,9 @@ public:
     //Get a list of all objects near me
     std::vector<Entity*> getNear(Entity* object);
 
+    //Update All Entities In The Structure
+    void updateEntities();
+
     ~Bin();
 private:
 

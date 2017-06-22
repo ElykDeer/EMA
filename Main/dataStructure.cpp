@@ -152,6 +152,13 @@ vector<Entity*> Bin::getNear(Entity* entity)
     return nearMes;
 }
 
+//Update All Entities In The Structure
+void Bin::updateEntities()
+{
+    for(auto& entity : getAll())
+        entity.update();
+}
+
 Bin::~Bin()
 {
     //Cycle through all Entities/Enticaps and delete them

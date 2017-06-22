@@ -6,8 +6,7 @@ E.xtremely M.odular A.PI
 If this is being compiled on the Bash For Windows Subsystem, make sure to follow [these](https://solarianprogrammer.com/2017/05/04/building-gcc-wsl-windows-subsystem-linux/) steps.
 If this is being compiled on linux, change "g++-7.1" in the Makefile to "g++"
 
-This is also dependent on the libreadline-dev package (or equivalent)
-On Debian-based systems, or similar, use:
+This is also dependent on the libreadline-dev package (or equivalent). On Debian-based systems, or similar, use:
 ```sudo apt-get install libreadline-dev```
 
 First, clone the repo.  From inside EMA/, run the command "make", this will build the PluginManager/Compiler, which will assist in building the rest of the game.
