@@ -38,12 +38,14 @@ int main()
 
     //Check all flowers
     cout << "\nFlower values:\n";
+    int countOfFlowers = 0;
     for(const Flower& flower : bin.getAllOfType<Flower>())
     {
         cout << flower.thingy << " ";
         cout << flower.thingy2 << " ";
+        ++countOfFlowers;
     }
-    cout << endl;
+    cout << countOfFlowers << endl;
 
     cout << "\nbyLocal tests:\n";
 
@@ -58,13 +60,23 @@ int main()
         bin.insert(new Dog(randRange(gen), randRange(gen)));
     }
 
-    auto thingything = bin.getNear(myHeapFlower);
-    cout << "Nearby flowers: " << thingything.size() << endl;
+    for(Entity* entity : bin.getAllNear(myHeapFlower))
+        cout << typeid(*entity).name() << ' ';
+    cout << endl;
+    for(Flower& flower : bin.getAllOfTypeNear<Flower>(myHeapFlower))
+    {
+        cout << flower.thingy << " ";
+        cout << flower.thingy2 << " ";
+    }
+    cout << endl;
 
     cout << "/////////////////////// Everything tests ///////////////////////\n";
     int entityCount = 0;
-    for (auto& thing : bin.getAll())
+    for (Entity* thing : bin.getAll())
+    {
         ++entityCount;
+        thing->update();
+    }
     cout << "There are " << entityCount << " entities in the bin!\n";
     cout << "Call updateEntities():\n";
     bin.updateEntities();

@@ -10,6 +10,21 @@ Hex::Hex(const unsigned int x, const unsigned int y, const double hexRadius) :
   col(x),
   row(y) {}
 
+//Update enviornment stuff only, do not update entities inside
+void Hex::update() {}
+
+void Hex::insert(Entity* const entity, Enticap* enticap)
+{
+    //Insert into our map structure:
+      //<typeid.HashCode: <pointerToEntity:pointerToEnticap> >
+    byTypeMap[typeid(*entity).hash_code()][entity] = enticap;
+}
+
+void Hex::remove(Entity* const entity)
+{
+    byTypeMap[typeid(*entity).hash_code()].erase(entity);
+}
+
 unsigned int Hex::getX() const
 {
     return x;

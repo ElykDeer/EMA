@@ -2,7 +2,6 @@
 #define SIM_BINS 1
 
 #include "Entity.h"
-#include "Hex.h"
 
 //All Active Plugins need to be registered in this file
 #include "../Compiler/pluginTypes.h"
@@ -11,8 +10,6 @@
 #include <set>
 #include <functional>
 #include <vector>
-#include <cmath>  //Because hexagons
-
 
 //Ability to:
     //insert
@@ -32,23 +29,21 @@ public:
     //Delete an object
     void remove(Entity* const entity);
 
-    //Get a list of all objects near me
-    std::vector<Entity*> getNear(Entity* object);
-
     //Update All Entities In The Structure
     void updateEntities();
 
     ~Bin();
 private:
-
-    std::vector<unsigned int> hexOffsetCord(const unsigned int x, const unsigned int y) const;
+    class Hex;
 
     //Wrapper for an entity..adds
       //a "unique identifier"
     class Enticap
     {
     public:
-        Enticap(Entity* const newEntity);
+        Enticap(Entity* const newEntity, Hex* hexP);
+
+        Hex* getHexP() const;
 
         ~Enticap(); //be careful with this fellow... Changing how it works could
                     //be really really bad (memory leaks)
@@ -59,8 +54,10 @@ private:
 
     private:
         Entity* const entityP;
-        std::vector<Enticap*> nearMe; //For the other one
+        Hex* hexP;
     };
+
+    std::vector<unsigned int> hexOffsetCord(const unsigned int x, const unsigned int y) const;
 
     //For the bins:
     const unsigned int width;
@@ -224,9 +221,9 @@ public:
                    :innerIter(innerIter), outerIter(outerIter),
                    byTypeMapP(byTypeMapP) {}
 
-        Entity& operator*() //I don't like casting, but I know no alternative
+        Entity* operator*() //I don't like casting, but I know no alternative
         {
-          return *(innerIter)->first;
+          return innerIter->first;
         }
 
         globalIter& operator++()
@@ -264,9 +261,27 @@ public:
     //This returns an interatable object over a non-constant object
     globalIter getAll()
     {
-        return globalIter(byTypeMap.begin()->second.begin(), byTypeMap.begin(), &byTypeMap);
+        return globalIter(byTypeMap.begin()->second.begin(), byTypeMap.begin(),
+            &byTypeMap);
     }
 
+//hex Iterators:
+private:
+    #include "Hex.h"
+
+public:
+    template<class C>
+    byTypeIter<C> getAllOfTypeNear(Entity* entity, int distance = 1)
+    {
+        distance++;
+        return byTypeMap[typeid(C).hash_code()][entity]->getHexP()->getAllOfType<C>();
+    }
+
+    globalIter getAllNear(Entity* entity, int distance = 1)
+    {
+        distance++;
+        return byTypeMap[typeid(*entity).hash_code()][entity]->getHexP()->getAll();
+    }
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "dataStructure.h"
+#include <cmath>
 #include <iostream> //- debug only
 using namespace std;
 
@@ -104,13 +105,15 @@ void Bin::insert(Entity* const entity)
     //First Convert coordinates
     vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getY());
 
-    //byLocal
+    Enticap* enticap = new Enticap(entity, bins[cords[0]][cords[1]]);
+
+    //byLocal (which in turn stores by type)
     //structure: [col][row][Hex*]
-    bins[cords[0]][cords[1]]->insert(entity);
+    bins[cords[0]][cords[1]]->insert(entity, enticap);
 
     //byType
     //structure: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
-    byTypeMap[typeid(*entity).hash_code()][entity] = new Enticap(entity);
+    byTypeMap[typeid(*entity).hash_code()][entity] = enticap;
 }
 
 //Delete an object
@@ -120,7 +123,7 @@ void Bin::remove(Entity* const entity)
     vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getY());
 
     //remove from byLocal
-    bins[cords[0]][cords[1]]->erase(entity);
+    bins[cords[0]][cords[1]]->remove(entity);
 
     //remove from byType
     Enticap* enticapP = byTypeMap[typeid(*entity).hash_code()][entity];
@@ -128,35 +131,11 @@ void Bin::remove(Entity* const entity)
     delete enticapP; //Deletes the enticap and the entity
 }
 
-//For right now this returns fomr the 3x3 bin area around/including our bin
-vector<Entity*> Bin::getNear(Entity* entity)
-{
-    //First Convert coordinates
-    vector<unsigned int> cords = hexOffsetCord(entity->getX(), entity->getX());
-
-    //Our bin position - bins[col][row]
-    size_t col = cords[0];
-    size_t row = cords[1];
-
-    if (0)
-        cerr << col << row;
-
-    //Build the list of bins around us
-    vector<Entity*> nearMes; //The vector of what's around us
-/*    for(int colOffset = -1; colOffset < 2; ++colOffset)
-        for(int rowOffset = -1; rowOffset < 2; ++rowOffset)
-            for(auto& element : bins[col+colOffset][row+rowOffset])
-                nearMes.push_back(element);
-*/
-    //Return list
-    return nearMes;
-}
-
 //Update All Entities In The Structure
 void Bin::updateEntities()
 {
-    for(auto& entity : getAll())
-        entity.update();
+    for(Entity* entity : getAll())
+        entity->update();
 }
 
 Bin::~Bin()
@@ -197,7 +176,13 @@ vector<unsigned int> Bin::hexOffsetCord(const unsigned int x, const unsigned int
 }
 
 //Enticap
-Bin::Enticap::Enticap(Entity* const newEntity) : entityP(newEntity) {}
+Bin::Enticap::Enticap(Entity* const newEntity, Hex* hexP)
+            : entityP(newEntity), hexP(hexP) {}
+
+Bin::Hex* Bin::Enticap::getHexP() const
+{
+    return hexP;
+}
 
 Bin::Enticap::~Enticap()
 {
@@ -214,3 +199,46 @@ size_t Bin::Enticap::TUID() const //Type Identifier
 {
     return typeid(*entityP).hash_code();
 }*/
+
+//Give it the matrix coordinates, and it will generate pixel coordinates
+Bin::Hex::Hex(const unsigned int x, const unsigned int y, const double hexRadius) :
+  x(hexRadius * 1.5 * x),
+  y(hexRadius * sqrt(3) * (y - (0.5*(x&1))) ),
+  hexRadius(hexRadius),
+  col(x),
+  row(y) {}
+
+//Update enviornment stuff only, do not update entities inside
+void Bin::Hex::update() {}
+
+void Bin::Hex::insert(Entity* const entity, Enticap* enticap)
+{
+    //Insert into our map structure:
+      //<typeid.HashCode: <pointerToEntity:pointerToEnticap> >
+    byTypeMap[typeid(*entity).hash_code()][entity] = enticap;
+}
+
+void Bin::Hex::remove(Entity* const entity)
+{
+    byTypeMap[typeid(*entity).hash_code()].erase(entity);
+}
+
+unsigned int Bin::Hex::getX() const
+{
+    return x;
+}
+
+unsigned int Bin::Hex::getY() const
+{
+    return y;
+}
+
+unsigned int Bin::Hex::getCol() const
+{
+    return col;
+}
+
+unsigned int Bin::Hex::getRow() const
+{
+    return row;
+}
