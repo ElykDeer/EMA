@@ -19,6 +19,7 @@ int main()
     //Make 100 random dogs and flowers
     for(int numOfNodes = 0; numOfNodes < 100; ++numOfNodes)
     {
+        cerr << numOfNodes << " ";
         bin.insert(new Flower(randRange(gen), randRange(gen)));
         bin.insert(new Dog(randRange(gen), randRange(gen)));
     }

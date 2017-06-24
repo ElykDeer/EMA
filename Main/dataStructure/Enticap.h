@@ -1,3 +1,6 @@
+#ifndef SIM_ENTICAP
+#define SIM_ENTICAP 1
+
 //Wrapper for an entity..adds
     //a "unique identifier"
     //a pointer to its hex
@@ -19,3 +22,5 @@
       Entity* const entityP;
       Hex* hexP;
   };
+
+  #endif

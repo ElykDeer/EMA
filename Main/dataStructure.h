@@ -38,8 +38,6 @@ private:
 
     #include "dataStructure/Enticap.h"
 
-    std::vector<unsigned int> hexOffsetCord(const unsigned int x, const unsigned int y) const;
-
     //For the bins:
     const unsigned int width;
     const unsigned int height;
@@ -49,13 +47,8 @@ private:
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     std::map< const std::size_t, std::map<Entity* const, Enticap*> > byTypeMap;
 
-    // vector<Entity* const> allEntities; - have another list of everything?
-
-    //For converting from pixel-hex:
-    double guessBinWidth;
-    double guessBinHeight;
-
-    std::vector< std::vector< std::vector<Hex*> >> guessGrid;
+    #include "dataStructure/pixToHex.h"
+    pixToHex hexCords;
 
 public:
     #include "dataStructure/Iters.h"
