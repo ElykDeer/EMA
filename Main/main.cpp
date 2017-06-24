@@ -3,10 +3,14 @@
 #include "dataStructure.h"
 #include <random>
 #include <iostream>
+#include <time.h>
 using namespace std;
 
 int main()
 {
+    //Timer stuff
+    clock_t t1, t2; //Two timers
+
     //Random number stuff
     random_device seed;
     mt19937 gen(seed());
@@ -14,15 +18,17 @@ int main()
 
     Bin bin(500, 500, 50);
     cout << "/////////////////////// Bin tests ///////////////////////\n";
-    cout << "byType tests:\n";
 
     //Make 100 random dogs and flowers
-    for(int numOfNodes = 0; numOfNodes < 100; ++numOfNodes)
+    cout << "Insertion One (10 Entites Each); ";
+    t1=clock();
+    for(int numOfNodes = 0; numOfNodes < 10; ++numOfNodes)
     {
-        cerr << numOfNodes << " ";
         bin.insert(new Flower(randRange(gen), randRange(gen)));
         bin.insert(new Dog(randRange(gen), randRange(gen)));
     }
+    t2=clock();
+    cout << "Time: " << ((double)t2-(double)t1) / CLOCKS_PER_SEC << endl;
 
     //Make every dog bark
     cout << "Doggie Chior:\n";
@@ -30,57 +36,72 @@ int main()
         dog.bark();
 
     //Change somethings about every flower
+    cout << "\nNon-Const Check (Flowers, 1;23):\n";
     for(Flower& flower : bin.getAllOfType<Flower>())
     {
         flower.thingy = 1;
         flower.otherThingy();
-        //bin.remove(&flower);
     }
-
     //Check all flowers
-    cout << "\nFlower values:\n";
-    int countOfFlowers = 0;
     for(const Flower& flower : bin.getAllOfType<Flower>())
-    {
-        cout << flower.thingy << " ";
-        cout << flower.thingy2 << " ";
-        ++countOfFlowers;
-    }
-    cout << countOfFlowers << endl;
+        cout << flower.thingy << flower.thingy2 << " ";
 
-    cout << "\nbyLocal tests:\n";
-
+    cout << "\n\nInsert myHeapFlower; ";
     Flower* myHeapFlower = new Flower(100, 100);
+    t1=clock();
     bin.insert(myHeapFlower);
+    t2=clock();
+    cout << "Time: " << ((double)t2-(double)t1) / CLOCKS_PER_SEC << endl;
     //bin.remove(myHeapFlower);
 
     //Make more random dogs and flowers
-    for(int numOfNodes = 0; numOfNodes < 1000; ++numOfNodes)
+    cout << "Insertion Two (2000 Entites Each); ";
+    t1=clock();
+    for(int numOfNodes = 0; numOfNodes < 2000; ++numOfNodes)
     {
         bin.insert(new Flower(randRange(gen), randRange(gen)));
         bin.insert(new Dog(randRange(gen), randRange(gen)));
     }
+    t2=clock();
+    cout << "Time: " << ((double)t2-(double)t1) / CLOCKS_PER_SEC << endl;
 
-    for(Entity* entity : bin.getAllNear(myHeapFlower))
-        cout << typeid(*entity).name() << ' ';
-    cout << endl;
+    cout << "\ngetAllNear(myHeapFlower) test:\n";
+    for(Entity& entity : bin.getAllNear(myHeapFlower))
+        cout << typeid(*&entity).name() << ' ';
+
+    cout << "\ngetAllOfTypeNear<Flower>(myHeapFlower) test (1;23):\n";
     for(Flower& flower : bin.getAllOfTypeNear<Flower>(myHeapFlower))
-    {
-        cout << flower.thingy << " ";
-        cout << flower.thingy2 << " ";
-    }
-    cout << endl;
+        cout << flower.thingy << flower.thingy2 << " ";
 
-    cout << "/////////////////////// Everything tests ///////////////////////\n";
+    cout << "\n\ngetAll test: ";
     int entityCount = 0;
-    for (Entity* thing : bin.getAll())
+    t1=clock();
+    for (Entity& thing : bin.getAll())
     {
         ++entityCount;
-        thing->update();
+        thing.update();
     }
-    cout << "There are " << entityCount << " entities in the bin!\n";
-    cout << "Call updateEntities():\n";
-    bin.updateEntities();
+    t2=clock();
+    cout << entityCount << " entities in the bin!; ";
+    cout << "; Clocks: " << (t2-t1);
+    cout << "; Time: " << ((double)t2-(double)t1) / CLOCKS_PER_SEC*1000 << "ms\n";
 
-    cout << "All done!\n";
+    cout << "updateEntities() test: ";
+    t1=clock();
+    bin.updateEntities();
+    t2=clock();
+    cout << "; Time: " << ((double)t2-(double)t1) / CLOCKS_PER_SEC << endl;
+
+    cout << "updateHexes() test: ";
+    t1=clock();
+    bin.updateHexes();
+    t2=clock();
+    cout << "; Time: " << ((double)t2-(double)t1) / CLOCKS_PER_SEC << endl;
+
+    /* Hexes are only dealt with internally
+    cout << "getAllHexes test: ";
+    for (Hex& hex : bin.getAllHexes())
+        cout << hex.getCol() << " ";*/
+
+    cout << "\nAll done!\n";
 }
