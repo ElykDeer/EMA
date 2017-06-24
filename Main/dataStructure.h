@@ -29,8 +29,14 @@ public:
     //Delete an object
     void remove(Entity* const entity);
 
+    //How to move an object in the dataStructure
+    void move(Entity* entity, unsigned int newX, unsigned int newY);
+
     //Update All Entities In The Structure
     void updateEntities();
+
+    //Update All Hexes In The Data Structure
+    void updateHexes();
 
     ~Bin();
 private:
@@ -42,7 +48,7 @@ private:
     const unsigned int width;
     const unsigned int height;
     const double hexRadius;
-    std::vector<std::vector<Hex*>> bins;
+    std::vector<std::vector<Hex*>> hexes;
 
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     std::map< const std::size_t, std::map<Entity* const, Enticap*> > byTypeMap;
@@ -51,7 +57,7 @@ private:
     pixToHex hexCords;
 
 public:
-    #include "dataStructure/Iters.h"
+    #include "dataStructure/Iters.tpp"
 
 private:
     #include "dataStructure/Hex.h"
