@@ -125,7 +125,7 @@
   }
 
 ////////////////////////////////////////////////////////////////////////////////
-  //Iterstuff - non-const - byType
+  //Iterstuff - non-const - everything
   class globalIter
   {
       //So the iterator can compare to beginning and end
@@ -142,15 +142,16 @@
                  :innerIter(innerIter), outerIter(outerIter),
                  byTypeMapP(byTypeMapP) {}
 
-      Entity* operator*() //I don't like casting, but I know no alternative
+      Entity& operator*()
       {
-        return innerIter->first;
+        return *innerIter->first;
       }
 
       globalIter& operator++()
       {
           ++innerIter;
 
+          //If at the end of the "byType", go to the next one
           if(innerIter == outerIter->second.end() &&
              innerIter != byTypeMapP->rbegin()->second.end())
           {
@@ -179,23 +180,84 @@
           const byTypeMapP;
   };
 
-  //This returns an interatable object over a non-constant object
+  //This returns an interatable object over all non-constant object
   globalIter getAll()
   {
       return globalIter(byTypeMap.begin()->second.begin(), byTypeMap.begin(),
           &byTypeMap);
   }
 
-//Distance Iters
+////////////////////////////////////////////////////////////////////////////////
+ ///Iterstuff - non-const - byType - distance
   template<class C>
-  byTypeIter<C> getAllOfTypeNear(Entity* entity, int distance = 1)
+  byTypeIter<C> getAllOfTypeNear(Entity* entity, unsigned int distance = 1)
   {
       distance++;
       return byTypeMap[typeid(C).hash_code()][entity]->getHexP()->getAllOfType<C>();
   }
 
-  globalIter getAllNear(Entity* entity, int distance = 1)
+////////////////////////////////////////////////////////////////////////////////
+  //Iterstuff - non-const - everything - distance
+  globalIter getAllNear(Entity* entity, unsigned int distance = 1)
   {
       distance++;
       return byTypeMap[typeid(*entity).hash_code()][entity]->getHexP()->getAll();
   }
+
+////////////////////////////////////////////////////////////////////////////////
+  //Iterstuff - non-const - hexes
+class globalHexIter
+{
+    //So the iterator can compare to beginning and end
+    friend bool operator!=(
+        const globalHexIter& lhs,
+        const globalHexIter& rhs)
+    {
+        return lhs.innerIter != rhs.innerIter;
+    }
+public:
+    globalHexIter(std::vector<Hex*>::iterator innerIter,
+                  std::vector<std::vector<Hex*>>::iterator outerIter,
+                  std::vector<std::vector<Hex*>>* hexesP)
+     : innerIter(innerIter), outerIter(outerIter), hexesP(hexesP) {}
+
+    Hex& operator*()
+    {
+      return **innerIter;
+    }
+
+    globalHexIter& operator++()
+    {
+        ++innerIter;
+
+        //If at the end of the "byType", go to the next one
+        if(innerIter == outerIter->end() &&
+           innerIter != hexesP->rbegin()->end())
+        {
+            ++outerIter;
+            innerIter = outerIter->begin();
+        }
+
+        return *this;
+    }
+
+    globalHexIter begin() const
+    {
+        return globalHexIter(hexesP->begin()->begin(), hexesP->begin(), hexesP);
+    }
+
+    globalHexIter end() const
+    {
+        return globalHexIter(hexesP->rbegin()->end(), hexesP->end(), hexesP);
+    }
+
+private:
+    std::vector<Hex*>::iterator innerIter;
+    std::vector<std::vector<Hex*>>::iterator outerIter;
+    std::vector<std::vector<Hex*>>* hexesP;
+};
+
+globalHexIter getAllHexes()
+{
+    return globalHexIter(hexes.begin()->begin(), hexes.begin(), &hexes);
+}
