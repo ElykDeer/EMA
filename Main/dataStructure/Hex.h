@@ -4,13 +4,16 @@
 #include "../Entity.h"
 #include <map>
 
-class Hex
+class HexInternals
 {
 public:
     //Give it the matrix coordinates, and it will generate pixel coordinates
-    Hex(const unsigned int x, const unsigned int y, const double hexRadius);
+    HexInternals(const unsigned int col, const unsigned int row, const double hexRadius);
 
-    void update();
+    //Fake destructor because inheritance
+    virtual ~HexInternals();
+
+    virtual void update() = 0;
 
     void insert(Entity* const entity, Enticap* enticap);
 
@@ -39,6 +42,7 @@ public:
             &byTypeMap);
     }
 
+
 private:
     // X/Y Locations
     const unsigned int x;
@@ -51,6 +55,17 @@ private:
 
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     std::map< const std::size_t, std::map<Entity* const, Enticap*> > byTypeMap;
+};
+
+class Hex : public HexInternals
+{
+public:
+    //Give it the matrix coordinates, and it will generate pixel coordinates
+    Hex(const unsigned int row, const unsigned int col, const double hexRadius);
+
+    virtual void update() override;
+private:
+
 };
 
 #endif

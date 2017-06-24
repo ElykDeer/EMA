@@ -3,44 +3,49 @@
 using namespace std;
 
 //Give it the matrix coordinates, and it will generate pixel coordinates
-Bin::Hex::Hex(const unsigned int x, const unsigned int y, const double hexRadius) :
-  x(hexRadius * 1.5 * x),
-  y(hexRadius * sqrt(3) * (y - (0.5*(x&1))) ),
+Bin::HexInternals::HexInternals(const unsigned int col, const unsigned int row, const double hexRadius) :
+  x(hexRadius * 1.5 * col),
+  y(hexRadius * sqrt(3) * (row - (0.5*(col&1))) ),
   hexRadius(hexRadius),
-  col(x),
-  row(y) {}
+  col(col),
+  row(row) {}
 
-//Update enviornment stuff only, do not update entities inside
-void Bin::Hex::update() {}
+Bin::HexInternals::~HexInternals() {}
 
-void Bin::Hex::insert(Entity* const entity, Enticap* enticap)
+void Bin::HexInternals::insert(Entity* const entity, Enticap* enticap)
 {
     //Insert into our map structure:
       //<typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     byTypeMap[typeid(*entity).hash_code()][entity] = enticap;
 }
 
-void Bin::Hex::remove(Entity* const entity)
+void Bin::HexInternals::remove(Entity* const entity)
 {
     byTypeMap[typeid(*entity).hash_code()].erase(entity);
 }
 
-unsigned int Bin::Hex::getX() const
+unsigned int Bin::HexInternals::getX() const
 {
     return x;
 }
 
-unsigned int Bin::Hex::getY() const
+unsigned int Bin::HexInternals::getY() const
 {
     return y;
 }
 
-unsigned int Bin::Hex::getCol() const
+unsigned int Bin::HexInternals::getCol() const
 {
     return col;
 }
 
-unsigned int Bin::Hex::getRow() const
+unsigned int Bin::HexInternals::getRow() const
 {
     return row;
 }
+
+//Give it the matrix coordinates, and it will generate pixel coordinates
+Bin::Hex::Hex(const unsigned int row, const unsigned int col, const double hexRadius)
+: HexInternals(row, col, hexRadius) {}
+
+void Bin::Hex::update() {}
