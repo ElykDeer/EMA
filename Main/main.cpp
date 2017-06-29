@@ -84,7 +84,17 @@ int main()
     t2=clock();
     cout << entityCount << " entities in the bin!; ";
     cout << "; Clocks: " << (t2-t1);
-    cout << "; Time: " << ((double)t2-(double)t1) / CLOCKS_PER_SEC*1000 << "ms\n";
+    double theTime = ((double)t2-(double)t1) / CLOCKS_PER_SEC*1000;
+    cout << "; Time: " << theTime << "ms\n";
+
+    cout << "###########################################################\n";
+    cout << "# " << "Game Time vs Real Time:\n";
+    cout << "# " << "Factor Acceleraton: " << 1.0 / (theTime / 1000.0) << "x" << endl;
+    cout << "# " << "One Hour:   " << (theTime / 1000.0) * 60.0 << " minutes" << endl;
+    cout << "# " << "One Day:    " << (theTime / 1000.0) * 60.0 * 24.0 << " minutes" << endl;
+    cout << "# " << "One Year:   " << (theTime / 1000.0) * 24.0 * 365.0 << " hours (" << (theTime / 1000.0) * 365.0 << " days)" << endl;
+    cout << "# " << "One Centry: " << (theTime / 1000.0) * 365.0 * 100.0 << " days (" << (theTime / 1000.0) * 100.0 << " years)" << endl;
+    cout << "###########################################################\n";
 
     cout << "updateEntities() test: ";
     t1=clock();
