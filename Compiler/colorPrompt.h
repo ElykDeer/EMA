@@ -20,5 +20,5 @@
   {
     cout << "\033[0m";
   }
-  string commandPrompt = "\033[32m\ncompile: \033[0m";
+  string commandPrompt = "\033[32m\ncommand: \033[0m";
 #endif
