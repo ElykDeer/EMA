@@ -52,8 +52,8 @@
 
       byTypeConstIter<C> end() const
       {
-          return byTypeConstIter<C>(
-              byTypeMapP->at(typeid(C).hash_code()).end(), byTypeMapP);
+          return byTypeConstIter<C>(byTypeMapP->at(typeid(C).hash_code()).end(),
+            byTypeMapP);
       }
 
   private:
@@ -89,7 +89,7 @@
 
       C& operator*() //I don't like casting, but I know no alternative
       {
-        return *static_cast<C*>((iter)->first);
+        return *static_cast<C*>(iter->first);
       }
 
       byTypeIter<C>& operator++()
@@ -187,22 +187,7 @@
           &byTypeMap);
   }
 
-////////////////////////////////////////////////////////////////////////////////
- ///Iterstuff - non-const - byType - distance
-  template<class C>
-  byTypeIter<C> getAllOfTypeNear(Entity* entity, unsigned int distance = 1)
-  {
-      distance++;
-      return byTypeMap[typeid(C).hash_code()][entity]->getHexP()->getAllOfType<C>();
-  }
 
-////////////////////////////////////////////////////////////////////////////////
-  //Iterstuff - non-const - everything - distance
-  globalIter getAllNear(Entity* entity, unsigned int distance = 1)
-  {
-      distance++;
-      return byTypeMap[typeid(*entity).hash_code()][entity]->getHexP()->getAll();
-  }
 
 ////////////////////////////////////////////////////////////////////////////////
   //Iterstuff - non-const - hexes
@@ -261,3 +246,128 @@ globalHexIter getAllHexes()
 {
     return globalHexIter(hexes.begin()->begin(), hexes.begin(), &hexes);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+///Iterstuff - non-const - byType - distance
+template<class C>
+class byTypeIterNear
+{
+    //So the iterator can compare to beginning and end
+    friend bool operator!=(
+        const byTypeIterNear& lhs,
+        const byTypeIterNear& rhs)
+    {
+        return lhs.innerIter != rhs.innerIter;
+    }
+public:
+    byTypeIterNear(std::map<Entity* const, Enticap*>::iterator innerIter,
+               std::vector<std::map< const std::size_t, std::map<Entity* const, Enticap*> >*>::iterator outerIter,
+               std::vector<std::map< const std::size_t, std::map<Entity* const, Enticap*> >* >* const byTypeMapsP)
+               : innerIter(innerIter), outerIter(outerIter),
+               byTypeMapsP(byTypeMapsP) {}
+
+    C& operator*()
+    {
+      return *static_cast<C*>(innerIter->first);;
+    }
+
+    byTypeIterNear<C>& operator++()
+    {
+        ++innerIter;
+
+        //If at the end of the "byType" part, go to the next part
+        if (innerIter == (**outerIter)[typeid(C).hash_code()].end())
+        {
+            if (innerIter != (**byTypeMapsP->rbegin())[typeid(C).hash_code()].end())
+            {
+                ++outerIter;
+                innerIter = (*outerIter)[typeid(C).hash_code()].begin()->second.begin();
+            }
+        }
+
+        return *this;
+    }
+
+    byTypeIterNear<C> begin() const
+    {
+        return byTypeIterNear<C>((*(*byTypeMapsP->begin()))[typeid(C).hash_code()].begin(), byTypeMapsP->begin(), byTypeMapsP);
+    }
+
+    byTypeIterNear<C> end() const
+    {
+        return byTypeIterNear<C>((*(*byTypeMapsP->rbegin()))[typeid(C).hash_code()].end(), byTypeMapsP->end(), byTypeMapsP);
+    }
+
+private:
+    std::map<Entity* const, Enticap*>::iterator innerIter;
+    std::vector<std::map< const std::size_t, std::map<Entity* const, Enticap*> >*>::iterator
+        outerIter;
+    std::vector<std::map< const std::size_t, std::map<Entity* const, Enticap*> >* >* const
+        byTypeMapsP;
+
+};
+
+//Iterstuff - non-const - everything - distance
+class globalIterNear
+{
+    //So the iterator can compare to beginning and end
+    friend bool operator!=(
+        const globalIterNear& lhs,
+        const globalIterNear& rhs)
+    {
+        return lhs.innerIter != rhs.innerIter;
+    }
+public:
+    globalIterNear(const std::map<Entity* const, Enticap*>::iterator innerIter,
+               std::map<const std::size_t, std::map<Entity* const, Enticap*>>::iterator middleIter,
+               std::vector<std::map< const std::size_t, std::map<Entity* const, Enticap*> >*>::iterator outerIter,
+               std::vector<std::map< const std::size_t, std::map<Entity* const, Enticap*> >* >* const byTypeMapsP)
+               :innerIter(innerIter), middleIter(middleIter), outerIter(outerIter),
+               byTypeMapsP(byTypeMapsP) {}
+
+    Entity& operator*()
+    {
+      return *innerIter->first;
+    }
+
+    globalIterNear& operator++()
+    {
+        ++innerIter;
+
+        //If at the end of the "byType" part, go to the next part
+        if(innerIter == middleIter->second.end() &&
+           innerIter != (*byTypeMapsP->rbegin())->rbegin()->second.end())
+        {
+            //if at the end of this byType map, go to the next map
+            if(innerIter == (*outerIter)->rbegin()->second.end())
+            {
+                ++outerIter;
+                middleIter = (*outerIter)->begin();
+            }
+
+            ++middleIter;
+            innerIter = middleIter->second.begin();
+        }
+
+        return *this;
+    }
+
+    globalIterNear begin() const
+    {
+        return globalIterNear((*byTypeMapsP->begin())->begin()->second.begin(), (*byTypeMapsP->begin())->begin(), byTypeMapsP->begin(), byTypeMapsP);
+    }
+
+    globalIterNear end() const
+    {
+        return globalIterNear((*byTypeMapsP->rbegin())->rbegin()->second.end(), (*byTypeMapsP->rbegin())->end(), byTypeMapsP->end(), byTypeMapsP);
+    }
+
+private:
+    std::map<Entity* const, Enticap*>::iterator innerIter;
+    std::map<const std::size_t, std::map<Entity* const, Enticap*>>::iterator
+        middleIter;
+    std::vector<std::map< const std::size_t, std::map<Entity* const, Enticap*> >*>::iterator
+        outerIter;
+    std::vector<std::map< const std::size_t, std::map<Entity* const, Enticap*> >* >* const
+        byTypeMapsP;
+};

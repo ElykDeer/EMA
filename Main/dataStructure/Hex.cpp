@@ -1,5 +1,4 @@
 #include "Hex.h"
-#include <cmath>  //Because hexagons
 using namespace std;
 
 //Give it the matrix coordinates, and it will generate pixel coordinates
@@ -7,6 +6,7 @@ Bin::HexInternals::HexInternals(const unsigned int col, const unsigned int row, 
   x(hexRadius * 1.5 * col),
   y(hexRadius * sqrt(3) * (row - (0.5*(col&1))) ),
   hexRadius(hexRadius),
+  hexRadiusSmall((sqrt(3)*hexRadius)/2),
   col(col),
   row(row) {}
 
@@ -44,8 +44,12 @@ unsigned int Bin::HexInternals::getRow() const
     return row;
 }
 
+//std::vector< std::map< const std::size_t, std::map<Entity* const, Enticap*>>* > buildNear(const unsigned int distance)
+//vector<map< const size_t, map<Entity* const, Enticap*>>* > Bin::HexInternals::buildNear(const unsigned int col, const unsigned int row, const unsigned int distance, vector<vector<Hex*>>* hexes) const
+
+
 //Give it the matrix coordinates, and it will generate pixel coordinates
-Bin::Hex::Hex(const unsigned int row, const unsigned int col, const double hexRadius)
-: HexInternals(row, col, hexRadius) {}
+Bin::Hex::Hex(const unsigned int col, const unsigned int row, const double hexRadius)
+ : HexInternals(col, row, hexRadius) {}
 
 void Bin::Hex::update() {}

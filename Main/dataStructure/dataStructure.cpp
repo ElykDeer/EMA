@@ -1,6 +1,4 @@
 #include "../dataStructure.h"
-#include <cmath>
-#include <iostream> //- debug only
 using namespace std;
 
 //This is the data structure, where one can:

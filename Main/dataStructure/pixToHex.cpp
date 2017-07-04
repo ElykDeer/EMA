@@ -1,3 +1,5 @@
+#include <iostream> //Temporary (for testing)
+
 Bin::pixToHex::pixToHex(const unsigned int width,
                  const unsigned int height,
                  const double hexRadius)
@@ -70,7 +72,6 @@ void Bin::pixToHex::populate(const vector<vector<Hex*>>* const binP)
     }
 }
 
-unsigned int doNothing() {return 1;}
 vector<unsigned int> Bin::pixToHex::hexOffsetCord(const unsigned int x, const unsigned int y) const
 {
 

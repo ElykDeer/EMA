@@ -10,6 +10,7 @@
 #include <set>
 #include <functional>
 #include <vector>
+#include <cmath> //because hexagons
 
 //Ability to:
     //insert
@@ -61,6 +62,24 @@ public:
 
 private:
     #include "dataStructure/Hex.h"
+
+public:
+////////////////////////////////////////////////////////////////////////////////
+    ///Iterstuff - non-const - byType - distance
+    template<class C>
+    byTypeIterNear<C> getAllOfTypeNear(Entity* entity, const unsigned int distance)
+    {
+        Hex* hexP = byTypeMap[typeid(C).hash_code()][entity]->getHexP();
+        return hexP->getAllOfTypeNear<C>(hexP->getCol(), hexP->getRow(), distance, &hexes);
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+    //Iterstuff - non-const - everything - distance
+    globalIterNear getAllNear(Entity* entity, const unsigned int distance)
+    {
+        Hex* hexP = byTypeMap[typeid(*entity).hash_code()][entity]->getHexP();
+        return hexP->getAllNear(hexP->getCol(), hexP->getRow(), distance, &hexes);
+    }
 };
 
 #endif
