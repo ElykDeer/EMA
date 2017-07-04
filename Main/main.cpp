@@ -73,12 +73,6 @@ int main()
     for(Flower& flower : bin.getAllOfTypeNear<Flower>(myHeapFlower, 0))
         cerr << flower.thingy << flower.thingy2 << " ";
 
-    /*
-    cerr << endl;
-    auto thingythingthing = bin.getAllOfTypeNear<Flower>(myHeapFlower, 0);
-    cerr << (*thingythingthing).thingy << endl;
-    */
-
     cout << "\n\ngetAll test: ";
     int entityCount = 0;
     t1=clock();
@@ -89,8 +83,8 @@ int main()
     }
     t2=clock();
     cout << entityCount << " entities in the bin!; ";
-    cout << "; Clocks: " << (t2-t1);
-    cout << "; Time: " << ((double)t2-(double)t1) / CLOCKS_PER_SEC*1000 << "ms\n";
+    double theTime = ((double)t2-(double)t1) / CLOCKS_PER_SEC*1000;
+    cout << "; Time: " << theTime << "ms\n";
 
     cout << "###########################################################\n";
     cout << "# " << "Game Time vs Real Time:\n";
