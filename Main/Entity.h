@@ -8,7 +8,7 @@ public:
     //Simple Constructor
     Entity(const unsigned int x, const unsigned int y);
 
-    virtual void update() = 0;
+    virtual void update(unsigned int resolution) = 0;
 
     //Deconstructor for derived classes
     virtual ~Entity();

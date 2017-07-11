@@ -16,7 +16,7 @@ public:
     //Fake destructor because inheritance
     virtual ~HexInternals();
 
-    virtual void update() = 0;
+    virtual void update(unsigned int resolution) = 0;
 
     void insert(Entity* const entity, Enticap* enticap);
 
@@ -162,7 +162,7 @@ public:
     //Give it the matrix coordinates, and it will generate pixel coordinates
     Hex(const unsigned int col, const unsigned int row, const double hexRadius);
 
-    virtual void update() override;
+    virtual void update(unsigned int resolution) override;
 //private:
 
 };

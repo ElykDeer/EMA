@@ -17,6 +17,7 @@
     //remove
     //get near
     //iterate over each specific type
+    //get width/height
 class Bin// : public byType, public byLocal
 {
 public:
@@ -34,10 +35,14 @@ public:
     void move(Entity* entity, unsigned int newX, unsigned int newY);
 
     //Update All Entities In The Structure
-    void updateEntities();
+    void updateEntities(unsigned int resolution);
 
     //Update All Hexes In The Data Structure
-    void updateHexes();
+    void updateHexes(unsigned int resolution);
+
+    //Two simple getters
+    unsigned int getWidth() const;
+    unsigned int getHeight() const;
 
     ~Bin();
 private:

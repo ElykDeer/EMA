@@ -92,17 +92,17 @@ void Bin::move(Entity* entity, unsigned int newX, unsigned int newY)
 }
 
 //Update All Entities In The Structure
-void Bin::updateEntities()
+void Bin::updateEntities(unsigned int resolution)
 {
     for(Entity& entity : getAll())
-        entity.update();
+        entity.update(resolution);
 }
 
 //Update All Hexes In The Structure
-void Bin::updateHexes()
+void Bin::updateHexes(unsigned int resolution)
 {
     for(Hex& hex : getAllHexes())
-        hex.update();
+        hex.update(resolution);
 }
 
 Bin::~Bin()
@@ -116,6 +116,16 @@ Bin::~Bin()
         for(Hex* hex : col) //Every single element
             delete hex;
     //All heap elements are deleted, now the deconstructor will remove pointers
+}
+
+//Two simple getters
+unsigned int Bin::getWidth() const
+{
+    return width;
+}
+unsigned int Bin::getHeight() const
+{
+    return height;
 }
 
 #include "Enticap.cpp"
