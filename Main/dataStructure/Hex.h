@@ -30,6 +30,8 @@ public:
 
     unsigned int getRow() const;
 
+    unsigned long int count() const;
+
 ////////////////////////////////////////////////////////////////////////////////
 //Iterstuff - non-const - of one type near
     template<class C>
@@ -146,6 +148,8 @@ private:
     //Where in the grid that it is located
     const unsigned int col;
     const unsigned int row;
+
+    unsigned int entityCount = 0;
 
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     std::map< const std::size_t, std::map<Entity* const, Enticap*> > byTypeMap;

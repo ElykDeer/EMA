@@ -17,11 +17,14 @@ void Bin::HexInternals::insert(Entity* const entity, Enticap* enticap)
     //Insert into our map structure:
       //<typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     byTypeMap[typeid(*entity).hash_code()][entity] = enticap;
+
+    ++entityCount;
 }
 
 void Bin::HexInternals::remove(Entity* const entity)
 {
     byTypeMap[typeid(*entity).hash_code()].erase(entity);
+    --entityCount;
 }
 
 unsigned int Bin::HexInternals::getX() const
@@ -44,9 +47,13 @@ unsigned int Bin::HexInternals::getRow() const
     return row;
 }
 
+unsigned long int Bin::HexInternals::count() const
+{
+    return entityCount;
+}
+
 //std::vector< std::map< const std::size_t, std::map<Entity* const, Enticap*>>* > buildNear(const unsigned int distance)
 //vector<map< const size_t, map<Entity* const, Enticap*>>* > Bin::HexInternals::buildNear(const unsigned int col, const unsigned int row, const unsigned int distance, vector<vector<Hex*>>* hexes) const
-
 
 //Give it the matrix coordinates, and it will generate pixel coordinates
 Bin::Hex::Hex(const unsigned int col, const unsigned int row, const double hexRadius)

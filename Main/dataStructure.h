@@ -40,9 +40,10 @@ public:
     //Update All Hexes In The Data Structure
     void updateHexes(unsigned int resolution);
 
-    //Two simple getters
+    //A few simple getters
     unsigned int getWidth() const;
     unsigned int getHeight() const;
+    unsigned long int count() const;
 
     ~Bin();
 private:
@@ -58,6 +59,7 @@ private:
 
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     std::map< const std::size_t, std::map<Entity* const, Enticap*> > byTypeMap;
+    unsigned long int entityCount = 0;
 
     #include "dataStructure/pixToHex.h"
     pixToHex hexCords;

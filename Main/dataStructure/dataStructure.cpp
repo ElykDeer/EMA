@@ -51,6 +51,9 @@ void Bin::insert(Entity* const entity)
     //byType
     //structure: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     byTypeMap[typeid(*entity).hash_code()][entity] = enticap;
+
+    //adjust the count
+    ++entityCount;
 }
 
 //Delete an object
@@ -66,6 +69,9 @@ void Bin::remove(Entity* const entity)
     Enticap* enticapP = byTypeMap[typeid(*entity).hash_code()][entity];
     byTypeMap[typeid(*entity).hash_code()].erase(entity);
     delete enticapP; //Deletes the enticap and the entity
+
+    //adjust the Count
+    --entityCount;
 }
 
 //How to move an object in the dataStructure
@@ -118,7 +124,7 @@ Bin::~Bin()
     //All heap elements are deleted, now the deconstructor will remove pointers
 }
 
-//Two simple getters
+//A few simple getters
 unsigned int Bin::getWidth() const
 {
     return width;
@@ -126,6 +132,10 @@ unsigned int Bin::getWidth() const
 unsigned int Bin::getHeight() const
 {
     return height;
+}
+unsigned long int Bin::count() const
+{
+    return entityCount;
 }
 
 #include "Enticap.cpp"

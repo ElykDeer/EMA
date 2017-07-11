@@ -71,7 +71,8 @@ void graphics(const Bin* const bin, const ThreadManager* const manager)
             ostringstream output;
             output << "Resolution: " << manager->getResolution();
             output << "; Speed: " << manager->getSpeed();
-            output << "; Tick Count: " << manager->getTick() << " " << spin[i];
+            output << "; Tick Count: " << manager->getTick();
+            output << "; entityCount: " << bin->count() << " " << spin[i];
 
             //Print it
             cout << output.str();
@@ -83,8 +84,5 @@ void graphics(const Bin* const bin, const ThreadManager* const manager)
             //Refreash/clear screen
             for (size_t t = 0; t < output.str().size(); ++t)
                 cout << "\b"; //clear last character
-
-            //Just to remove the compiler warning for unused vars
-            output << bin->getWidth();
         }
 }
