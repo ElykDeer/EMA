@@ -242,10 +242,10 @@ void compile(const unordered_set<string>& plugins)
         dependencies += getDependencies("Plugins/" + dep);
 
     string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
-    string links = "";  //Linker dependencies
+    string links = "-pthread";  //Linker dependencies
 
     string command =
-    "g++ " + gccOptions + dependencies + "-o main" + links;
+    "g++ " + gccOptions + dependencies + "-o main " + links;
 
     startPaint(1);
     cout << "Command: " << command;
