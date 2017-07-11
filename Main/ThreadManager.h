@@ -11,9 +11,6 @@
 class ThreadManager
 {
 public:
-    /*ThreadManager(const vector<(*)(int)> timedUpdateThreads, const vector<(*)(int)> untimedUpdateThreads):
-        timedUpdateThreads(timedUpdateThreads), untimedUpdateThreads(untimedUpdateThreads), resolution(1) {}*/
-
     ThreadManager(Bin& bin);
 
     void startGraphics( void (*graphics)(const Bin* const, const ThreadManager* const) ) const;
@@ -29,23 +26,21 @@ public:
     unsigned int getSpeed() const;
 
 private:
+    //Helper functions to allow these to be seperate threads
     void continueUpdatingMap();
-
     void map();
-
     void entities();
 
     Bin* bin;
-    unsigned int resolution;
-    unsigned long long int tick = 0;
-    unsigned int speed = 1;
+    unsigned int resolution = 1;  //how fine we is calculating
+    unsigned long long int tick = 0; //the time, in seconds, of the game
+    unsigned int speed = 1;  //The fast forwarding capability
     std::chrono::system_clock::time_point t1, t2;
 
-    //Lock stuff:
+    //Lock stuff - for syncronization:
     std::mutex originalLock;
     std::condition_variable sync;
     bool ready = false;
-
     volatile bool mapBool = false;
     volatile bool entBool = false;
 };

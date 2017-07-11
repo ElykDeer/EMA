@@ -7,7 +7,7 @@ using namespace std::chrono;
 
 typedef std::chrono::high_resolution_clock Clock;
 
-ThreadManager::ThreadManager(Bin& bin) : bin(&bin), resolution(1) {}
+ThreadManager::ThreadManager(Bin& bin) : bin(&bin) {}
 
 void ThreadManager::startGraphics( void (*graphics)(const Bin* const, const ThreadManager* const) ) const
 {
@@ -81,10 +81,7 @@ void ThreadManager::continueUpdatingMap()
             while ((t2 - t1) < nanoseconds(1000000000/speed))
                 t2 = Clock::now();
 
-        ++tick; //The tick has completed
-
-        //Test, need to see what this is so I don't have to cast
-        //cerr << "TIMER: " << duration_cast<duration<double>>t2 - t1).count() << endl<< endl<< endl<< endl<< endl;
+        tick += resolution; //The tick has completed, simulating "res" ticks
     }
 }
 
