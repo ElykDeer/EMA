@@ -14,7 +14,7 @@ void graphics(const Bin* const bin, const ThreadManager* const manager);
 int main()
 {
     //Create Bin
-    Bin bin(500, 500, 50);
+    Bin bin(500, 500, 5);
 
     init(bin); //Initialize the content of the bin
 
@@ -30,8 +30,7 @@ int main()
     //Will "endlessly" update the map (spawns and updates the described threads)
     manager.startUpdatingMap();
 
-    char command;
-    cin >> command;
+    manager.wait();
 }
 
 
@@ -47,13 +46,15 @@ void init(Bin& bin, ostream& os)
     uniform_real_distribution<double> randRangeWidth (0.0, bin.getWidth() );
     uniform_real_distribution<double> randRangeHeight(0.0, bin.getHeight());
 
-    os << "INIT: Generating 10 flowers\n";
-    for(int numOfNodes = 0; numOfNodes < 10; ++numOfNodes)
+    int numFlowers = 100000;
+    os << "INIT: Generating " << numFlowers << " flowers\n";
+    for(int numOfNodes = 0; numOfNodes < numFlowers; ++numOfNodes)
     {
         bin.insert(new Flower(randRangeWidth(gen), randRangeHeight(gen)));
     }
-    os << "INIT: Generating 10 dogs\n";
-    for(int numOfNodes = 0; numOfNodes < 10; ++numOfNodes)
+    int numDoggies = 100000;
+    os << "INIT: Generating " << numDoggies << " dogs\n";
+    for(int numOfNodes = 0; numOfNodes < numDoggies; ++numOfNodes)
     {
         bin.insert(new Dog(randRangeWidth(gen), randRangeHeight(gen)));
     }
@@ -79,7 +80,7 @@ void graphics(const Bin* const bin, const ThreadManager* const manager)
             cout.flush();
 
             //Delay for the spinner
-            for(double delay = 0; delay <= 40000000; ++delay) {}
+            manager->sleep(75000000);  //Spin lock hovered around 30%
 
             //Refreash/clear screen
             for (size_t t = 0; t < output.str().size(); ++t)

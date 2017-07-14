@@ -9,11 +9,10 @@ typedef std::chrono::high_resolution_clock Clock;
 
 ThreadManager::ThreadManager(Bin& bin) : bin(&bin) {}
 
-void ThreadManager::startGraphics( void (*graphics)(const Bin* const, const ThreadManager* const) ) const
+void ThreadManager::startGraphics( void (*graphics)(const Bin* const, const ThreadManager* const) )
 {
     //Just let the graphics do their thing
-    thread graphicsThread(graphics, bin, this);
-    graphicsThread.detach();
+    graphicsThread = new thread(graphics, bin, this);
 }
 
 unsigned int ThreadManager::getResolution() const
@@ -42,8 +41,15 @@ void ThreadManager::startUpdatingMap()
     //continueUpdatingMap(); // - private function
     //Alternativly, if I want more in main:
     //Start thread, let it go, get back to main
-    thread updateMapThread(&ThreadManager::continueUpdatingMap, this);
-    updateMapThread.detach();
+    updateMapThread = new thread(&ThreadManager::continueUpdatingMap, this);
+}
+
+void ThreadManager::wait()
+{
+    if (updateMapThread)
+        updateMapThread->join();
+    if (graphicsThread)
+        graphicsThread->join();
 }
 
 void ThreadManager::continueUpdatingMap()
@@ -57,6 +63,13 @@ void ThreadManager::continueUpdatingMap()
 
     while (1)
     {
+        //Sleep == 0; means paused. Sleep for 1/20th a second and try again
+        if (paused)
+        {
+            sleep(50000000);
+            continue;
+        }
+
         //Start Threads
         ready = true;
         sync.notify_all();
@@ -78,11 +91,23 @@ void ThreadManager::continueUpdatingMap()
             resolution *= 2;
         else
             //timeout the rest of the second
-            while ((t2 - t1) < nanoseconds(1000000000/speed))
-                t2 = Clock::now();
+            this_thread::sleep_for(nanoseconds(1000000000/speed) - (t2 - t1));
 
-        tick += resolution; //The tick has completed, simulating "res" ticks
+        //If the resolution can be reduced, do it
+          //Resolution greater than one,
+          //runtime less than 1/3 a period - wiggle room
+        if (resolution > 1 && (t2 - t1).count() < system_clock::to_time_t(t1 + nanoseconds((1000000000/speed)/3)))
+            resolution /= 2;
+
+            //Uses about 2x more CPU time:
+              //while ((t2 - t1) < nanoseconds(1000000000/speed))
+              //    t2 = Clock::now();
+
+        tick += resolution; //The tick has completed, simulating "res" # O ticks
     }
+
+    mapThread.join();
+    entThread.join();
 }
 
 
@@ -118,4 +143,19 @@ void ThreadManager::entities()
         //Notify controling thread
         entBool = true;
     }
+}
+
+void ThreadManager::sleep(unsigned long long int nanosecs) const
+{
+    this_thread::sleep_for(nanoseconds(nanosecs));
+}
+
+void ThreadManager::pause()
+{
+    paused = true;
+}
+
+void ThreadManager::resume()
+{
+    paused = false;
 }
