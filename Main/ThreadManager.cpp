@@ -85,6 +85,8 @@ void ThreadManager::continueUpdatingMap()
         ready = false;
         originalLock.lock();
 
+        timeeee = duration_cast<duration<double>>(t2 - t1);
+
         //if (duration_cast<duration<double>>(t2 - t1) >= seconds(1))
         if ((t2 - t1).count() >= system_clock::to_time_t(t1 + nanoseconds(1000000000/speed)))
             //If this has taken one second or more, double the resolution

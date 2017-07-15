@@ -144,7 +144,7 @@
 
       Entity& operator*()
       {
-        return *innerIter->first;
+          return *innerIter->first;
       }
 
       globalIter& operator++()

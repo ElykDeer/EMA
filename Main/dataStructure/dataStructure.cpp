@@ -101,7 +101,9 @@ void Bin::move(Entity* entity, unsigned int newX, unsigned int newY)
 void Bin::updateEntities(unsigned int resolution)
 {
     for(Entity& entity : getAll())
+    {
         entity.update(resolution);
+    }
 }
 
 //Update All Hexes In The Structure

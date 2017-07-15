@@ -11,6 +11,8 @@
 class ThreadManager
 {
 public:
+    std::chrono::duration<double> timeeee;
+
     ThreadManager(Bin& bin);
 
     void startGraphics( void (*graphics)(const Bin* const, const ThreadManager* const) );

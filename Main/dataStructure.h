@@ -12,6 +12,8 @@
 #include <vector>
 #include <cmath> //because hexagons
 
+#include <iostream>
+
 //Ability to:
     //insert
     //remove
