@@ -12,6 +12,8 @@ class ThreadManager
 {
 public:
     std::chrono::duration<double> timeeee;
+    std::chrono::duration<double> lasTimeeee;
+
 
     ThreadManager(Bin& bin);
 

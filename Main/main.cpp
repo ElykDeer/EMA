@@ -76,6 +76,7 @@ void graphics(const Bin* const bin, const ThreadManager* const manager)
             output << "; Speed: " << manager->getSpeed();
             output << "; Tick Count: " << manager->getTick();
             output << "; entityCount: " << bin->count();
+            output << "; lasTime: " << manager->lasTimeeee.count();
             output << "; time: " << manager->timeeee.count() << " " << spin[i];
 
             //Print it

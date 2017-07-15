@@ -85,6 +85,7 @@ void ThreadManager::continueUpdatingMap()
         ready = false;
         originalLock.lock();
 
+        lasTimeeee = timeeee;
         timeeee = duration_cast<duration<double>>(t2 - t1);
 
         //if (duration_cast<duration<double>>(t2 - t1) >= seconds(1))
