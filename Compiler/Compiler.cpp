@@ -245,7 +245,7 @@ void compile(const unordered_set<string>& plugins)
     string links = "-pthread";  //Linker dependencies
 
     string command =
-    "g++ " + gccOptions + dependencies + "-o main " + links;
+    "g++ " + gccOptions + dependencies + "-o mainP " + links;
 
     startPaint(1);
     cout << "Command: " << command;
