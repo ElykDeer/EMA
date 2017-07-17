@@ -2,10 +2,9 @@
 //Only ever include the data structure - insures only registered plugins work
 #include "dataStructure.h"
 #include "ThreadManager.h"
+#include "Graphics.h"
 #include <random>
-#include <string>
 #include <iostream>
-#include <sstream>
 using namespace std;
 
 void init(Bin& bin, ostream& os = cout);
@@ -66,28 +65,6 @@ void init(Bin& bin, ostream& os)
 
 void graphics(const Bin* const bin, const ThreadManager* const manager)
 {
-    string spin = "|\\-/";
-    while (1)
-        for (int i = 0; i < 4; ++i)
-        {
-            //Build print statement
-            ostringstream output;
-            output << "Resolution: " << manager->getResolution();
-            output << "; Speed: " << manager->getSpeed();
-            output << "; Tick Count: " << manager->getTick();
-            output << "; entityCount: " << bin->count();
-            output << "; lasTime: " << manager->lasTimeeee.count();
-            output << "; time: " << manager->timeeee.count() << " " << spin[i];
-
-            //Print it
-            cout << output.str();
-            cout.flush();
-
-            //Delay for the spinner
-            manager->sleep(75000000);  //Spin lock hovered around 30%
-
-            //Refreash/clear screen
-            for (size_t t = 0; t < output.str().size(); ++t)
-                cout << "\b"; //clear last character
-        }
+    Graphics graphic(bin, manager);
+    graphic.spin();
 }

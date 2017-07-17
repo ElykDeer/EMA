@@ -122,7 +122,8 @@ bool verifyPlugin(const fs::directory_entry& entry)
   //Just a stack of if statements that need to be true
   if(fs::is_directory(entry.symlink_status())) //Makes sure it's actually a folder
     if((string(entry.path()).substr(8) != "Enviornment"))  //Ignores the enviornment
-      return true;
+      if((string(entry.path()).substr(8) != "Graphics"))  //Ignores the enviornment
+        return true;
   return false;
 }
 
