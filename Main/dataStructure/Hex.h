@@ -37,7 +37,7 @@ public:
     template<class C>
     byTypeIterNear<C> getAllOfTypeNear(const unsigned int col, const unsigned int row, const unsigned int distance, std::vector<std::vector<Hex*>>* hexes)
     {
-        unsigned int hexDistance = distance;//floor((distance-(hexRadiusSmall))/(2*hexRadiusSmall));
+        unsigned int hexDistance = floor(distance/hexRadius);
         if (nearBy.count(hexDistance) == 1)
             return byTypeIterNear<C>((*(*nearBy[hexDistance].begin()))[typeid(C).hash_code()].begin(), nearBy[hexDistance].begin(), &nearBy[hexDistance]);
         else
@@ -49,7 +49,7 @@ public:
     //This returns an interatable object over a non-constant object
     globalIterNear getAllNear(const unsigned int col, const unsigned int row, const unsigned int distance, std::vector<std::vector<Hex*>>* hexes)
     {
-        unsigned int hexDistance = distance;//floor((distance-(hexRadiusSmall/2))/hexRadiusSmall);
+        unsigned int hexDistance = floor(distance/hexRadius);
         if (nearBy.count(hexDistance) == 1)
             return globalIterNear((*nearBy[hexDistance].begin())->begin()->second.begin(), (*nearBy[hexDistance].begin())->begin(), nearBy[hexDistance].begin(), &nearBy[hexDistance]);
         else
