@@ -119,10 +119,10 @@ void ThreadManager::map()
     while(1)
     {
         //Wait to be notified to continue
-        unique_lock<std::mutex> lock(originalLock);
-        while (!ready)
-            sync.wait(lock);
-        sync.notify_all(); //Just incase
+        //unique_lock<std::mutex> lock(originalLock);
+        while (!ready) {}
+            //sync.wait(lock);
+        //sync.notify_all(); //Just incase
 
         bin->updateHexes(resolution);
 
@@ -136,10 +136,10 @@ void ThreadManager::entities()
     while(1)
     {
         //Wait to be notified to continue
-        unique_lock<std::mutex> lock(originalLock);
-        while (!ready)
-            sync.wait(lock);
-        sync.notify_all(); //Just incase
+        //unique_lock<std::mutex> lock(originalLock);
+        while (!ready) {}
+        //    sync.wait(lock);
+        //sync.notify_all(); //Just incase
 
         bin->updateEntities(resolution);
 
