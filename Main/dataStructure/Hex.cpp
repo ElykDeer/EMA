@@ -55,8 +55,4 @@ unsigned long int Bin::HexInternals::count() const
 //std::vector< std::map< const std::size_t, std::map<Entity* const, Enticap*>>* > buildNear(const unsigned int distance)
 //vector<map< const size_t, map<Entity* const, Enticap*>>* > Bin::HexInternals::buildNear(const unsigned int col, const unsigned int row, const unsigned int distance, vector<vector<Hex*>>* hexes) const
 
-//Give it the matrix coordinates, and it will generate pixel coordinates
-Bin::Hex::Hex(const unsigned int col, const unsigned int row, const double hexRadius)
- : HexInternals(col, row, hexRadius) {}
-
-void Bin::Hex::update(unsigned int resolution) {if (resolution) {}}
+#include "../../Plugins/Enviornment/Hex.cpp"

@@ -117,11 +117,12 @@ void save(const unordered_set<string>& enabledPlugins)
 
 //Make sure that what the calle is looking at is a real plugin
   //does not check if the plugin works, in any fashion
-bool verifyPlugin(fs::file_status entry)
+bool verifyPlugin(const fs::directory_entry& entry)
 {
   //Just a stack of if statements that need to be true
-  if(fs::is_directory(entry)) //Makes sure it's actually a folder
-    return true;
+  if(fs::is_directory(entry.symlink_status())) //Makes sure it's actually a folder
+    if((string(entry.path()).substr(8) != "Enviornment"))  //Ignores the enviornment
+      return true;
   return false;
 }
 
@@ -131,10 +132,10 @@ vector<string> readPlugins()
 {
   //Build a vector<string> of all availible plugins
   vector<string> plugins;
-  for (auto& entry : fs::directory_iterator("Plugins/"))
+  for (const fs::directory_entry& entry : fs::directory_iterator("Plugins/"))
   {
     //Verifies that this is a conforming plugin
-    if(verifyPlugin(entry.symlink_status()))
+    if(verifyPlugin(entry))
     {
       //Gets the string from the directory_entries, removing "Plugins/"
       string sliceString = entry.path();
