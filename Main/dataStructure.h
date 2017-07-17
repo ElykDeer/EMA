@@ -10,19 +10,22 @@
 #include <set>
 #include <functional>
 #include <vector>
+#include <cmath> //because hexagons
 
+#include <iostream>
 
 //Ability to:
     //insert
     //remove
     //get near
     //iterate over each specific type
+    //get width/height
 class Bin// : public byType, public byLocal
 {
 public:
     //This data structure needs to know the level size in the game
-    //Width, height, binSize
-    Bin(const unsigned int, const unsigned int, const unsigned int);
+    //Width, height, hexRadius
+    Bin(const unsigned int, const unsigned int, const double);
 
     //How else do we put things in this monstrosity?
     void insert(Entity* const entity);
@@ -30,170 +33,62 @@ public:
     //Delete an object
     void remove(Entity* const entity);
 
-    //Get a list of all objects near me
-    std::vector<Entity*> getNear(Entity* object);
+    //How to move an object in the dataStructure
+    void move(Entity* entity, unsigned int newX, unsigned int newY);
+
+    //Update All Entities In The Structure
+    void updateEntities(unsigned int resolution);
+
+    //Update All Hexes In The Data Structure
+    void updateHexes(unsigned int resolution);
+
+    //A few simple getters
+    unsigned int getWidth() const;
+    unsigned int getHeight() const;
+    unsigned long int count() const;
 
     ~Bin();
 private:
+    class Hex;
 
-    //Wrapper for an entity..adds
-      //a "unique identifier" and
-      //a list of all things near me - not yet utilized
-    class Enticap
-    {
-    public:
-        Enticap(Entity* const newEntity);
-
-        ~Enticap(); //be careful with this fellow... Changing how it works could
-                    //be really really bad (memory leaks)
-
-        const Entity* UID() const;
-
-        const std::size_t TUID() const;
-
-    private:
-        Entity* const entityP;
-        std::vector<Enticap*> nearMe; //For the other one
-    };
+    #include "dataStructure/Enticap.h"
 
     //For the bins:
     const unsigned int width;
     const unsigned int height;
-    const unsigned int binSize;
-    std::vector<std::vector<std::set<Entity*>>> bins;
+    const double hexRadius;
+    std::vector<std::vector<Hex*>> hexes;
 
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
     std::map< const std::size_t, std::map<Entity* const, Enticap*> > byTypeMap;
+    unsigned long int entityCount = 0;
 
-    // vector<Entity* const> allEntities; - have another list of everything?
+    #include "dataStructure/pixToHex.h"
+    pixToHex hexCords;
 
-//Iterstuff - const
 public:
-    /*
-    This was removed as to force the user to use our provided iterators, which
-      hide the internals of this data structure
+    #include "dataStructure/Iters.tpp"
+
+private:
+    #include "dataStructure/Hex.h"
+
+public:
+////////////////////////////////////////////////////////////////////////////////
+    ///Iterstuff - non-const - byType - distance
     template<class C>
-    const auto& getAllOfTyp() const
+    byTypeIterNear<C> getAllOfTypeNear(Entity* entity, const unsigned int distance)
     {
-        return byTypeMap.at(typeid(C).hash_code());
+        Hex* hexP = byTypeMap[typeid(C).hash_code()][entity]->getHexP();
+        return hexP->getAllOfTypeNear<C>(hexP->getCol(), hexP->getRow(), distance, &hexes);
     }
 
-    This would have been used as such:
-    for(auto& flo : bin.getAllOfTyp<Flower>())
-        static_cast<Flower*>(flo.first)->thingy = 1;
-    for(auto& flo : bin.getAllOfTyp<Flower>())
-        cout << static_cast<Flower*>(flo.first)->thingy << " ";
-    */
-
-    //If this is deleted it still works... Consider deleting this in the future
-    template<class C>
-    class byTypeConstIter
+////////////////////////////////////////////////////////////////////////////////
+    //Iterstuff - non-const - everything - distance
+    globalIterNear getAllNear(Entity* entity, const unsigned int distance)
     {
-        //So the iterator can compare to beginning and end
-        friend bool operator!=(
-            const byTypeConstIter<C>& lhs,
-            const byTypeConstIter<C>& rhs)
-        {
-            return lhs.iter != rhs.iter;
-        }
-    public:
-        byTypeConstIter(
-            const std::map<Entity* const, Enticap*>::const_iterator& iter,
-            const std::map< const std::size_t,
-            std::map<Entity* const, Enticap*> >* const byTypeMapP)
-            :iter(iter), byTypeMapP(byTypeMapP) {}
-
-        const C& operator*() const //I don't like casting, but I know no alt.
-        {
-            return *static_cast<const C*>(iter->first);
-        }
-
-        byTypeConstIter<C>& operator++()
-        {
-            ++iter;
-            return *this;
-        }
-
-        byTypeConstIter<C> begin() const
-        {
-            return byTypeConstIter<C>(
-                byTypeMapP->at(typeid(C).hash_code()).begin(), byTypeMapP);
-        }
-
-        byTypeConstIter<C> end() const
-        {
-            return byTypeConstIter<C>(
-                byTypeMapP->at(typeid(C).hash_code()).end(), byTypeMapP);
-        }
-
-    private:
-        std::map<Entity* const, Enticap*>::const_iterator iter;
-        const std::map< const std::size_t, std::map<Entity* const, Enticap*> >*
-            const byTypeMapP;
-    };
-
-    //This returns a const interatable object over a const object
-    template<class C>
-    byTypeConstIter<C> getAllOfType() const
-    {
-        return byTypeConstIter<C>(byTypeMap.at( typeid(C).hash_code() ).begin(),
-            &byTypeMap);
+        Hex* hexP = byTypeMap[typeid(*entity).hash_code()][entity]->getHexP();
+        return hexP->getAllNear(hexP->getCol(), hexP->getRow(), distance, &hexes);
     }
-
-//Iterstuff - non-const
-    template<class C>
-    class byTypeIter
-    {
-        //So the iterator can compare to beginning and end
-        friend bool operator!=(
-            const byTypeIter<C>& lhs,
-            const byTypeIter<C>& rhs)
-        {
-            return lhs.iter != rhs.iter;
-        }
-    public:
-        byTypeIter(const std::map<Entity* const, Enticap*>::iterator iter,
-                   std::map<const std::size_t,
-                    std::map<Entity* const, Enticap*> >* const byTypeMapP)
-                   :iter(iter), byTypeMapP(byTypeMapP) {}
-
-        C& operator*() //I don't like casting, but I know no alternative
-        {
-          return *static_cast<C*>((iter)->first);
-        }
-
-        byTypeIter<C>& operator++()
-        {
-            ++iter;
-            return *this;
-        }
-
-        byTypeIter<C> begin() const
-        {
-            return byTypeIter<C>(byTypeMapP->at(typeid(C).hash_code()).begin(),
-                byTypeMapP);
-        }
-
-        byTypeIter<C> end() const
-        {
-            return byTypeIter<C>(byTypeMapP->at(typeid(C).hash_code()).end(),
-                byTypeMapP);
-        }
-
-    private:
-        std::map<Entity* const, Enticap*>::iterator iter;
-        std::map< const std::size_t, std::map<Entity* const, Enticap*> >*
-            const byTypeMapP;
-    };
-
-    //This returns an interatable object over a non-constant object
-    template<class C>
-    byTypeIter<C> getAllOfType()
-    {
-        return byTypeIter<C>(byTypeMap[typeid(C).hash_code()].begin(),
-            &byTypeMap);
-    }
-
 };
 
 #endif

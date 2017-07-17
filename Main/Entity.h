@@ -3,29 +3,24 @@
 
 class Entity
 {
+    friend class Bin;
 public:
     //Simple Constructor
-    Entity(const int x, const int y);
+    Entity(const unsigned int x, const unsigned int y);
 
-    virtual void update() = 0;
+    virtual void update(unsigned int resolution) = 0;
 
     //Deconstructor for derived classes
     virtual ~Entity();
 
-    int getX()
-    {
-        return x;
-    }
+    unsigned int getX() const;
 
-    int getY()
-    {
-        return y;
-    }
+    unsigned int getY() const;
 
 protected:
     // X/Y Locations
-    int x;
-    int y;
+    unsigned int x;
+    unsigned int y;
 };
 
 #endif

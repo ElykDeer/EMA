@@ -7,34 +7,52 @@
 #include <string.h>
 #include <vector>
 #include <unordered_set>
+
+//Auto-completion:
+#include <readline/readline.h>
+#include <readline/history.h>
+
 using namespace std;
 
 //c++17
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 
-//Can paint in various colors on linux
-/* Short Color Reference:
- * -30 - Normal
- * -25 - Blink
- * 1 - Red
- * 2 - Green
- * 3 - Yellow
- * 4 - Blue
- */
-#ifdef _WIN32
-  void startPaint(const int color) {}
-  void endPaint() {}
-#else
-  void startPaint(const int color)
-  {
-    cout << "\033[" << color+30 << "m";
-  }
-  void endPaint()
-  {
-    cout << "\033[0m";
-  }
-#endif
+//Command Prompt Colors
+#include "colorPrompt.h"
+
+void enable(const vector<string>& plugins, unordered_set<string>& enabledPlugins, unordered_set<string>& disabledPlugins, const vector<string>& command)
+{
+  //Check if plugin exists
+  bool pluginExists = false;
+  for (string pluginName : plugins)
+    if (pluginName == command[1])
+    {
+      pluginExists = true;
+      enabledPlugins.insert(command[1]);
+      disabledPlugins.erase(command[1]);
+      break;
+    }
+  if (!pluginExists)
+    cerr << "The plugin '" << command[1] << "' is not availible.\n";
+}
+
+
+void disable(const vector<string>& plugins, unordered_set<string>& enabledPlugins, unordered_set<string>& disabledPlugins, const vector<string>& command)
+{
+  //Check if plugin exists
+  bool pluginExists = false;
+  for (string pluginName : plugins)
+    if (pluginName == command[1])
+    {
+      pluginExists = true;
+      disabledPlugins.insert(command[1]);
+      enabledPlugins.erase(command[1]);
+      break;
+    }
+  if (!pluginExists)
+    cerr << "The plugin '" << command[1] << "' is not availible.\n";
+}
 
 
 unordered_set<string> load()
@@ -99,11 +117,12 @@ void save(const unordered_set<string>& enabledPlugins)
 
 //Make sure that what the calle is looking at is a real plugin
   //does not check if the plugin works, in any fashion
-bool verifyPlugin(fs::file_status entry)
+bool verifyPlugin(const fs::directory_entry& entry)
 {
   //Just a stack of if statements that need to be true
-  if(fs::is_directory(entry)) //Makes sure it's actually a folder
-    return true;
+  if(fs::is_directory(entry.symlink_status())) //Makes sure it's actually a folder
+    if((string(entry.path()).substr(8) != "Enviornment"))  //Ignores the enviornment
+      return true;
   return false;
 }
 
@@ -113,10 +132,10 @@ vector<string> readPlugins()
 {
   //Build a vector<string> of all availible plugins
   vector<string> plugins;
-  for (auto& entry : fs::directory_iterator("Plugins/"))
+  for (const fs::directory_entry& entry : fs::directory_iterator("Plugins/"))
   {
     //Verifies that this is a conforming plugin
-    if(verifyPlugin(entry.symlink_status()))
+    if(verifyPlugin(entry))
     {
       //Gets the string from the directory_entries, removing "Plugins/"
       string sliceString = entry.path();
@@ -139,8 +158,8 @@ void help()
   "list \t- lists all plugins\n"
   "listD\t- lists disabled plugins\n"
   "listE\t- lists enabled plugins\n"
-  "-compile\t- compiles the program\n"
-  "-save \t- saves the list of enabled plugins\n"
+  "compile\t- compiles the program\n"
+  "save \t- saves the list of enabled plugins\n"
   "exit \t- exits the program, discarding unsaved changes\n"
   "help \t- lists this menu\n"
   "\n"
@@ -224,10 +243,10 @@ void compile(const unordered_set<string>& plugins)
         dependencies += getDependencies("Plugins/" + dep);
 
     string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
-    string links = "";  //Linker dependencies
+    string links = "-pthread";  //Linker dependencies
 
     string command =
-    "g++ " + gccOptions + dependencies + "-o main" + links;
+    "g++ " + gccOptions + dependencies + "-o mainP " + links;
 
     startPaint(1);
     cout << "Command: " << command;
@@ -247,6 +266,24 @@ void compile(const unordered_set<string>& plugins)
             cout << buffer.data();
 }
 
+
+vector<string> vectorize(string commandString)
+{
+    istringstream commandStream(commandString);
+
+    string word = "";
+    vector<string> commandVector;
+    while(commandStream >> word)
+      commandVector.push_back(word);
+
+    return commandVector;
+}
+
+
+//auto-completion
+static char** my_completion(const char*, int, int);
+char* my_generator(const char*,int);
+std::vector<std::string> cmd = { "enable", "disable", "clear", "list", "listD" ,"listE", "compile", "save", "exit", "help" };
 
 
 int main()
@@ -271,73 +308,50 @@ int main()
   endPaint();
 
   //A simple command prompt to interact with the compiler
-  string command = "";
+  string rawCommand = "";
+  vector<string> command;
+  //Auto-completion:
+  rl_attempted_completion_function = my_completion;
 
-  //Write out prompt, in green
-  startPaint(2);
-  cout << "command: ";
-  endPaint();
-
+  //Need readline so that it can parse tabs, should only equal null on error
   //Command prompt, options detailed in the help fuction
-  while(cin >> command && command != "exit")
+  //prints in green
+  while((rawCommand = readline(commandPrompt.c_str())).c_str() != NULL )
   {
-    if (command == "enable")
-    {
-        //Get name of plugin
-        cin >> command;
+    //enable auto-complete
+    rl_bind_key('\t', rl_complete);
 
-        //Check if plugin exists
-        bool pluginExists = false;
-        for (string pluginName : plugins)
-          if (pluginName == command)
-          {
-            pluginExists = true;
-            enabledPlugins.insert(command);
-            disabledPlugins.erase(command);
-            break;
-          }
-        if (!pluginExists)
-          cerr << "The plugin '" << command << "' is not availible.\n";
+    command = vectorize(rawCommand);
+
+    if (command[0] == "enable")
+    {
+        enable(plugins, enabledPlugins, disabledPlugins, command);
     }
 
-    else if (command == "disable")
+    else if (command[0] == "disable")
     {
-        //Get name of plugin
-        cin >> command;
-
-        //Check if plugin exists
-        bool pluginExists = false;
-        for (string pluginName : plugins)
-          if (pluginName == command)
-          {
-            pluginExists = true;
-            disabledPlugins.insert(command);
-            enabledPlugins.erase(command);
-            break;
-          }
-        if (!pluginExists)
-          cerr << "The plugin '" << command << "' is not availible.\n";
+        disable(plugins, enabledPlugins, disabledPlugins, command);
     }
 
-    else if (command == "list")
+    else if (command[0] == "list")
     {
       for(string& pluginName : plugins)
         cout << pluginName << endl;
     }
 
-    else if (command == "listD")
+    else if (command[0] == "listD")
     {
       for(string pluginName : disabledPlugins)
         cout << pluginName << endl;
     }
 
-    else if (command == "listE")
+    else if (command[0] == "listE")
     {
       for(string pluginName : enabledPlugins)
         cout << pluginName << endl;
     }
 
-    else if (command == "clear")
+    else if (command[0] == "clear")
     {
       enabledPlugins.clear();
 
@@ -345,22 +359,22 @@ int main()
         disabledPlugins.insert(pluginName);
     }
 
-    else if (command == "compile")
+    else if (command[0] == "compile")
     {
         compile(enabledPlugins);
     }
 
-    else if (command == "save")
+    else if (command[0] == "save")
     {
         save(enabledPlugins);
     }
 
-    else if(command == "exit")
+    else if(command[0] == "exit")
     {
         break;
     }
 
-    else if(command == "help")
+    else if(command[0] == "help")
     {
         help();
     }
@@ -370,13 +384,53 @@ int main()
         cerr << "Unknown command.\n";
     }
 
-    //Write out prompt, in green
-    startPaint(2);
-    cout << "command: ";
-    endPaint();
-
-    //Clear any extra characters in the cin stream
-    cin.ignore(1000,'\n');
-    cin.clear();
+    if (rawCommand != "")
+        add_history(rawCommand.c_str());
   }
+}
+
+
+//Does completions
+static char** my_completion( const char * text , int start, int end)
+{
+    char **matches;
+
+    matches = (char **)NULL;
+
+    if (start == 0)
+        matches = rl_completion_matches ((char*)text, &my_generator);
+    else
+        rl_bind_key('\t',rl_abort);
+
+    return (matches);
+
+    end += 1; //////////////////////////////////////////////////////////////////
+}
+
+
+//Gets matches
+char* my_generator(const char* text, int state)
+{
+  static std::size_t list_index, len;
+  std::string name;
+
+  if (!state) {
+      list_index = 0;
+      len = strlen (text);
+  }
+
+  while (list_index < cmd.size()) {
+      name = cmd[list_index];
+      list_index++;
+
+      if (strncmp (const_cast<char*>(name.c_str()), text, len) == 0)
+      {
+          char* copy = static_cast<char*>(malloc(name.length() + 1));
+          strcpy(copy, const_cast<char*>(name.c_str()));
+          return copy;
+      }
+  }
+
+    /* If no names matched, then return NULL. */
+    return (char *)NULL;
 }

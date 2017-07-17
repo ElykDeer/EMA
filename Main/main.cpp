@@ -1,65 +1,93 @@
 // "Walk Of Life" Data Structure Test
 //Only ever include the data structure - insures only registered plugins work
 #include "dataStructure.h"
+#include "ThreadManager.h"
 #include <random>
+#include <string>
 #include <iostream>
+#include <sstream>
 using namespace std;
+
+void init(Bin& bin, ostream& os = cout);
+void graphics(const Bin* const bin, const ThreadManager* const manager);
 
 int main()
 {
+    //Create Bin
+    Bin bin(500, 500, 5);
+
+    init(bin); //Initialize the content of the bin
+
+    //This is the multithreading a thread for each for
+     //updating the hexes
+     //updating the entities
+     //Timing the update cycle and adjusting resolution
+    ThreadManager manager(bin);
+
+    //Start drawing the screen, in a seperate thread
+    manager.startGraphics(&graphics);
+
+    //Will "endlessly" update the map (spawns and updates the described threads)
+    manager.startUpdatingMap();
+
+    manager.wait();
+}
+
+
+void init(Bin& bin, ostream& os)
+{
+    os << "INIT: Initializing Map...\n";
+
     //Random number stuff
     random_device seed;
     mt19937 gen(seed());
-    uniform_real_distribution<double> randRange(0.0, 500.0);
 
-    cout << "/////////////////////// Bin tests ///////////////////////\n";
-    cout << "byType tests:\n";
-    Bin bin(500, 500, 50);
+    //Make two generators for generating entities in random locations
+    uniform_real_distribution<double> randRangeWidth (0.0, bin.getWidth() );
+    uniform_real_distribution<double> randRangeHeight(0.0, bin.getHeight());
 
-    //Make 100 random dogs and flowers
-    for(int numOfNodes = 0; numOfNodes < 100; ++numOfNodes)
+    int numFlowers = 50000;
+    os << "INIT: Generating " << numFlowers << " flowers\n";
+    vector<Flower>* flowerBucket = new vector<Flower>(numFlowers, Flower(randRangeWidth(gen), randRangeHeight(gen))); //Make space
+    for(int numOfNodes = 0; numOfNodes < numFlowers; ++numOfNodes)
     {
-        bin.insert(new Flower(randRange(gen), randRange(gen)));
-        bin.insert(new Dog(randRange(gen), randRange(gen)));
+        bin.insert(&(*flowerBucket)[numOfNodes]);
+    }
+    int numDoggies = 50000;
+    os << "INIT: Generating " << numDoggies << " dogs\n";
+    vector<Dog>* dogBucket = new vector<Dog>(numDoggies, Dog(randRangeWidth(gen), randRangeHeight(gen)));  //Make space
+    for(int numOfNodes = 0; numOfNodes < numDoggies; ++numOfNodes)
+    {
+        bin.insert(&(*dogBucket)[numOfNodes]);
     }
 
-    //Make every dog bark
-    cout << "Doggie Chior:\n";
-    for(const Dog& dog : bin.getAllOfType<Dog>())
-        dog.bark();
+    os << "INIT: Done!\n\n";
+}
 
-    //Change somethings about every flower
-    for(Flower& flower : bin.getAllOfType<Flower>())
-    {
-        flower.thingy = 1;
-        flower.otherThingy();
-        //bin.remove(&flower);
-    }
+void graphics(const Bin* const bin, const ThreadManager* const manager)
+{
+    string spin = "|\\-/";
+    while (1)
+        for (int i = 0; i < 4; ++i)
+        {
+            //Build print statement
+            ostringstream output;
+            output << "Resolution: " << manager->getResolution();
+            output << "; Speed: " << manager->getSpeed();
+            output << "; Tick Count: " << manager->getTick();
+            output << "; entityCount: " << bin->count();
+            output << "; lasTime: " << manager->lasTimeeee.count();
+            output << "; time: " << manager->timeeee.count() << " " << spin[i];
 
-    //Check all flowers
-    cout << "\nFlower values:\n";
-    for(const Flower& flower : bin.getAllOfType<Flower>())
-    {
-        cout << flower.thingy << " ";
-        cout << flower.thingy2 << " ";
-    }
-    cout << endl;
+            //Print it
+            cout << output.str();
+            cout.flush();
 
-    cout << "\nbyLocal tests:\n";
+            //Delay for the spinner
+            manager->sleep(75000000);  //Spin lock hovered around 30%
 
-    Flower* myHeapFlower = new Flower(100, 100);
-    bin.insert(myHeapFlower);
-    //bin.remove(myHeapFlower);
-
-    //Make 100 random dogs and flowers
-    for(int numOfNodes = 0; numOfNodes < 100; ++numOfNodes)
-    {
-        bin.insert(new Flower(randRange(gen), randRange(gen)));
-        bin.insert(new Dog(randRange(gen), randRange(gen)));
-    }
-
-    auto thingything = bin.getNear(myHeapFlower);
-    cout << "Nearby flowers: " << thingything.size() << endl;
-
-    cout << "All done!\n";
+            //Refreash/clear screen
+            for (size_t t = 0; t < output.str().size(); ++t)
+                cout << "\b"; //clear last character
+        }
 }
