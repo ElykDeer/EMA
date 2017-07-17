@@ -5,8 +5,6 @@
 
 #include <chrono>  /*Timing*/
 #include <thread>
-#include <mutex>
-#include <condition_variable>
 
 class ThreadManager
 {
@@ -47,8 +45,6 @@ private:
     std::chrono::system_clock::time_point t1, t2;
 
     //Lock stuff - for syncronization:
-    std::mutex originalLock;
-    std::condition_variable sync;
     bool ready = false;
     volatile bool mapBool = false;
     volatile bool entBool = false;

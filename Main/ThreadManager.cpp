@@ -1,10 +1,7 @@
 #include "ThreadManager.h"
 
-#include <iostream>
-
 using namespace std;
 using namespace std::chrono;
-
 typedef std::chrono::high_resolution_clock Clock;
 
 ThreadManager::ThreadManager(Bin& bin) : bin(&bin) {}
@@ -54,9 +51,6 @@ void ThreadManager::wait()
 
 void ThreadManager::continueUpdatingMap()
 {
-    //lock my lock - own it - doesn't actually matter?
-    originalLock.lock();
-
     //Spawn two threads for maps and entities
     thread mapThread(&ThreadManager::map, this);
     thread entThread(&ThreadManager::entities, this);
@@ -72,8 +66,6 @@ void ThreadManager::continueUpdatingMap()
 
         //Start Threads
         ready = true;
-        sync.notify_all();
-        originalLock.unlock();
 
         //Start timing
         t1 = Clock::now();
@@ -83,7 +75,6 @@ void ThreadManager::continueUpdatingMap()
         //Reset things
         mapBool = entBool = false;
         ready = false;
-        originalLock.lock();
 
         lasTimeeee = timeeee;
         timeeee = duration_cast<duration<double>>(t2 - t1);
@@ -119,10 +110,7 @@ void ThreadManager::map()
     while(1)
     {
         //Wait to be notified to continue
-        //unique_lock<std::mutex> lock(originalLock);
         while (!ready) {}
-            //sync.wait(lock);
-        //sync.notify_all(); //Just incase
 
         bin->updateHexes(resolution);
 
@@ -136,10 +124,7 @@ void ThreadManager::entities()
     while(1)
     {
         //Wait to be notified to continue
-        //unique_lock<std::mutex> lock(originalLock);
         while (!ready) {}
-        //    sync.wait(lock);
-        //sync.notify_all(); //Just incase
 
         bin->updateEntities(resolution);
 
