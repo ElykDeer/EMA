@@ -1,6 +1,6 @@
 using namespace std;
 
-void Graphics::spin()
+void Graphics::spin() const
 {
   string spin = "|\\-/";
   while (1)

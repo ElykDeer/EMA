@@ -45,17 +45,17 @@ void init(Bin& bin, ostream& os)
     uniform_real_distribution<double> randRangeWidth (0.0, bin.getWidth() );
     uniform_real_distribution<double> randRangeHeight(0.0, bin.getHeight());
 
-    int numFlowers = 50000;
+    const unsigned int numFlowers = 500;
     os << "INIT: Generating " << numFlowers << " flowers\n";
     vector<Flower>* flowerBucket = new vector<Flower>(numFlowers, Flower(randRangeWidth(gen), randRangeHeight(gen))); //Make space
-    for(int numOfNodes = 0; numOfNodes < numFlowers; ++numOfNodes)
+    for(unsigned int numOfNodes = 0; numOfNodes < numFlowers; ++numOfNodes)
     {
         bin.insert(&(*flowerBucket)[numOfNodes]);
     }
-    int numDoggies = 50000;
+    const unsigned int numDoggies = 500;
     os << "INIT: Generating " << numDoggies << " dogs\n";
     vector<Dog>* dogBucket = new vector<Dog>(numDoggies, Dog(randRangeWidth(gen), randRangeHeight(gen)));  //Make space
-    for(int numOfNodes = 0; numOfNodes < numDoggies; ++numOfNodes)
+    for(unsigned int numOfNodes = 0; numOfNodes < numDoggies; ++numOfNodes)
     {
         bin.insert(&(*dogBucket)[numOfNodes]);
     }

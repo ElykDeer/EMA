@@ -7,7 +7,7 @@ class Graphics : public GraphicsInternals
 public:
   using GraphicsInternals::GraphicsInternals;
 
-  void spin();
+  void spin() const;
 
 private:
 
