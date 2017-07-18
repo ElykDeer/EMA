@@ -16,10 +16,9 @@ public:
     ThreadManager(Bin& bin);
 
     void startGraphics( void (*graphics)(const Bin* const, const ThreadManager* const) );
-
     void startUpdatingMap();
 
-    void wait();
+    void waitForThreadsEnd(); //Wait for the graphics and map threads to close
 
     void sleep(unsigned long long int nanosecs) const;
 

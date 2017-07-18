@@ -12,14 +12,35 @@ void ThreadManager::startGraphics( void (*graphics)(const Bin* const, const Thre
     graphicsThread = new thread(graphics, bin, this);
 }
 
-unsigned int ThreadManager::getResolution() const
+void ThreadManager::startUpdatingMap()
 {
-    return resolution;
+    //continueUpdatingMap(); // - private function
+    //Alternativly, if I want more in main:
+    //Start thread, let it go, get back to main
+    updateMapThread = new thread(&ThreadManager::continueUpdatingMap, this);
 }
 
-unsigned int ThreadManager::getTick() const
+void ThreadManager::waitForThreadsEnd()
 {
-    return tick;
+    if (updateMapThread)
+        updateMapThread->join();
+    if (graphicsThread)
+        graphicsThread->join();
+}
+
+void ThreadManager::sleep(unsigned long long int nanosecs) const
+{
+    this_thread::sleep_for(nanoseconds(nanosecs));
+}
+
+void ThreadManager::pause()
+{
+    paused = true;
+}
+
+void ThreadManager::resume()
+{
+    paused = false;
 }
 
 void ThreadManager::setSpeed(const unsigned int newSpeed)
@@ -33,20 +54,14 @@ unsigned int ThreadManager::getSpeed() const
     return speed;
 }
 
-void ThreadManager::startUpdatingMap()
+unsigned int ThreadManager::getResolution() const
 {
-    //continueUpdatingMap(); // - private function
-    //Alternativly, if I want more in main:
-    //Start thread, let it go, get back to main
-    updateMapThread = new thread(&ThreadManager::continueUpdatingMap, this);
+    return resolution;
 }
 
-void ThreadManager::wait()
+unsigned int ThreadManager::getTick() const
 {
-    if (updateMapThread)
-        updateMapThread->join();
-    if (graphicsThread)
-        graphicsThread->join();
+    return tick;
 }
 
 void ThreadManager::continueUpdatingMap()
@@ -131,19 +146,4 @@ void ThreadManager::entities()
         //Notify controling thread
         entBool = true;
     }
-}
-
-void ThreadManager::sleep(unsigned long long int nanosecs) const
-{
-    this_thread::sleep_for(nanoseconds(nanosecs));
-}
-
-void ThreadManager::pause()
-{
-    paused = true;
-}
-
-void ThreadManager::resume()
-{
-    paused = false;
 }
