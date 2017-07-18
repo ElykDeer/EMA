@@ -12,7 +12,6 @@ public:
     std::chrono::duration<double> timeeee;
     std::chrono::duration<double> lasTimeeee;
 
-
     ThreadManager(Bin& bin);
 
     void startGraphics( void (*graphics)(const Bin* const, const ThreadManager* const) );
