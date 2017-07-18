@@ -11,7 +11,7 @@
 class GraphicsInternals
 {
 public:
-  GraphicsInternals(const Bin* const bin, const ThreadManager* const manager);
+  GraphicsInternals(const Bin* const bin, ThreadManager* const manager);
   virtual ~GraphicsInternals();
 
   virtual void openWindow(const std::string& name);
@@ -23,7 +23,7 @@ public:
 
 protected:
   const Bin* const bin;
-  const ThreadManager* const manager;
+  ThreadManager* const manager;
 
   sf::Window window;
 

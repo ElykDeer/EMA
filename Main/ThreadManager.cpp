@@ -6,7 +6,7 @@ typedef std::chrono::high_resolution_clock Clock;
 
 ThreadManager::ThreadManager(Bin& bin) : bin(&bin) {}
 
-void ThreadManager::startGraphics( void (*graphics)(const Bin* const, const ThreadManager* const) )
+void ThreadManager::startGraphics( void (*graphics)(const Bin* const, ThreadManager* const) )
 {
     //Just let the graphics do their thing
     graphicsThread = new thread(graphics, bin, this);
@@ -70,7 +70,7 @@ void ThreadManager::continueUpdatingMap()
     thread mapThread(&ThreadManager::map, this);
     thread entThread(&ThreadManager::entities, this);
 
-    while (1)
+    while (running)
     {
         //Sleep == 0; means paused. Sleep for 1/20th a second and try again
         if (paused)
@@ -80,16 +80,25 @@ void ThreadManager::continueUpdatingMap()
         }
 
         //Start Threads
-        ready = true;
+        nextLoop = true;
 
         //Start timing
         t1 = Clock::now();
-        while (!mapBool || !entBool) {}
+        while (!mapBool || !entBool)
+        {
+            if (!running) //If while we were waiting, the game closes...
+            {
+                mapThread.join();
+                entThread.join();
+
+                return;
+            }
+        }
         t2 = Clock::now();
 
         //Reset things
         mapBool = entBool = false;
-        ready = false;
+        nextLoop = false;
 
         lasTimeeee = timeeee;
         timeeee = duration_cast<duration<double>>(t2 - t1);
@@ -122,10 +131,12 @@ void ThreadManager::continueUpdatingMap()
 
 void ThreadManager::map()
 {
-    while(1)
+    while(running)
     {
         //Wait to be notified to continue
-        while (!ready) {}
+        while (!nextLoop || mapBool)
+            if (!running)
+                return;
 
         bin->updateHexes(resolution);
 
@@ -136,14 +147,21 @@ void ThreadManager::map()
 
 void ThreadManager::entities()
 {
-    while(1)
+    while(running)
     {
         //Wait to be notified to continue
-        while (!ready) {}
+        while (!nextLoop || entBool)
+            if (!running)
+                return;
 
         bin->updateEntities(resolution);
 
         //Notify controling thread
         entBool = true;
     }
+}
+
+void ThreadManager::kill()
+{
+  running = false;
 }

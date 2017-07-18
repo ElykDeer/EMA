@@ -8,7 +8,7 @@
 using namespace std;
 
 void init(Bin& bin, ostream& os = cout);
-void graphics(const Bin* const bin, const ThreadManager* const manager);
+void graphics(const Bin* const bin, ThreadManager* const manager);
 
 int main()
 {
@@ -61,7 +61,7 @@ void init(Bin& bin, ostream& os)
     os << "INIT: Done!\n\n";
 }
 
-void graphics(const Bin* const bin, const ThreadManager* const manager)
+void graphics(const Bin* const bin, ThreadManager* const manager)
 {
     Graphics graphic(bin, manager);
     graphic.spin();

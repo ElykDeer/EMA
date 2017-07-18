@@ -12,7 +12,10 @@ void Graphics::spin()
         {
             // "close requested" event: we close the window
             if (event.type == sf::Event::Closed)
-                window.close();
+            {
+              manager->kill();
+              window.close();
+            }
         }
 
         for (int i = 0; i < 4; ++i)
