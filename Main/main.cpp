@@ -47,17 +47,15 @@ void init(Bin& bin, ostream& os)
 
     const unsigned int numFlowers = 500;
     os << "INIT: Generating " << numFlowers << " flowers\n";
-    vector<Flower>* flowerBucket = new vector<Flower>(numFlowers, Flower(randRangeWidth(gen), randRangeHeight(gen))); //Make space
     for(unsigned int numOfNodes = 0; numOfNodes < numFlowers; ++numOfNodes)
     {
-        bin.insert(&(*flowerBucket)[numOfNodes]);
+        bin.insert(new Flower(randRangeWidth(gen), randRangeHeight(gen)));
     }
     const unsigned int numDoggies = 500;
     os << "INIT: Generating " << numDoggies << " dogs\n";
-    vector<Dog>* dogBucket = new vector<Dog>(numDoggies, Dog(randRangeWidth(gen), randRangeHeight(gen)));  //Make space
     for(unsigned int numOfNodes = 0; numOfNodes < numDoggies; ++numOfNodes)
     {
-        bin.insert(&(*dogBucket)[numOfNodes]);
+        bin.insert(new Dog(randRangeWidth(gen), randRangeHeight(gen)));
     }
 
     os << "INIT: Done!\n\n";
