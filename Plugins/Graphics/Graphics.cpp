@@ -1,29 +1,41 @@
 using namespace std;
 
-void Graphics::spin() const
+void Graphics::spin()
 {
-  string spin = "|\\-/";
-  while (1)
-      for (int i = 0; i < 4; ++i)
-      {
-          //Build print statement
-          ostringstream output;
-          output << "Resolution: " << manager->getResolution();
-          output << "; Speed: " << manager->getSpeed();
-          output << "; Tick Count: " << manager->getTick();
-          output << "; entityCount: " << bin->count();
-          output << "; lasTime: " << manager->lasTimeeee.count();
-          output << "; time: " << manager->timeeee.count() << " " << spin[i];
+    string spin = "|\\-/";
+    GraphicsInternals::openWindow(string("Sim"));
+    while (window.isOpen())
+    {
+        //Create window, check window events
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
 
-          //Print it
-          cout << output.str();
-          cout.flush();
+        for (int i = 0; i < 4; ++i)
+        {
+            //Build print statement
+            ostringstream output;
+            output << "Resolution: " << manager->getResolution();
+            output << "; Speed: " << manager->getSpeed();
+            output << "; Tick Count: " << manager->getTick();
+            output << "; entityCount: " << bin->count();
+            output << "; lasTime: " << manager->lasTimeeee.count();
+            output << "; time: " << manager->timeeee.count() << " " << spin[i];
 
-          //Delay for the spinner
-          manager->sleep(75000000);  //Spin lock hovered around 30%
+            //Print it
+            cout << output.str();
+            cout.flush();
 
-          //Refreash/clear screen
-          for (size_t t = 0; t < output.str().size(); ++t)
-              cout << "\b"; //clear last character
-      }
+            //Delay for the spinner
+            manager->sleep(75000000);  //Spin lock hovered around 30%
+
+            //Refreash/clear screen
+            for (size_t t = 0; t < output.str().size(); ++t)
+                cout << "\b"; //clear last character
+        }
+    }
 }

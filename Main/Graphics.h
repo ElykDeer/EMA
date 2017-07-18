@@ -3,6 +3,9 @@
 
 #include "dataStructure.h"
 #include "ThreadManager.h"
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <string>
 
 class GraphicsInternals
 {
@@ -10,11 +13,19 @@ public:
   GraphicsInternals(const Bin* const bin, const ThreadManager* const manager);
   virtual ~GraphicsInternals();
 
-  virtual void spin() = 0;
+  virtual void openWindow(const std::string& name);
+
+  virtual void spin() = 0; //Perhaps remove this later...
+
+  virtual void drawMap() const;
+  virtual void drawEntities() const;
 
 protected:
   const Bin* const bin;
   const ThreadManager* const manager;
+
+  sf::Window window;
+
 };
 
 #include "../Plugins/Graphics/Graphics.h"
