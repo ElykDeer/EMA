@@ -29,7 +29,7 @@ int main()
     //Will "endlessly" update the map (spawns and updates the described threads)
     manager.startUpdatingMap();
 
-    manager.wait();
+    manager.waitForThreadsEnd();
 }
 
 
