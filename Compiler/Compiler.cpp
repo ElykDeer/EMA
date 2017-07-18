@@ -244,7 +244,7 @@ void compile(const unordered_set<string>& plugins)
         dependencies += getDependencies("Plugins/" + dep);
 
     string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
-    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-audio";  //Linker dependencies
+    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system";  //Linker dependencies
 
     string command =
     "g++ " + gccOptions + dependencies + "-o mainP " + links;
