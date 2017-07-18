@@ -1,5 +1,6 @@
 #ifndef SIM_GRAPHICAL_API
 #define SIM_GRAPHICAL_API 1
+#define SFML_STATIC
 
 #include "dataStructure.h"
 #include "ThreadManager.h"
