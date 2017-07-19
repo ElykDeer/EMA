@@ -20,13 +20,14 @@ public:
 
   virtual void drawMap() const;
   virtual void drawEntities() const;
+  virtual void drawMap();
+  virtual void drawEntities();
 
 protected:
   Bin* const bin;
   ThreadManager* const manager;
 
-  sf::Window window;
-
+  sf::RenderWindow window;
 };
 
 #include "../Plugins/Graphics/Graphics.h"
