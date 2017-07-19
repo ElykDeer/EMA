@@ -36,8 +36,39 @@ void GraphicsInternals::drawEntities()
   }
 }
 
+void GraphicsInternals::manageEvents()
 {
+  //check window events
+  sf::Event event;
+  while (window.pollEvent(event))
+  {
+    // "close requested" event: we close the window
+    if (event.type == sf::Event::Closed)
+    {
+      manager->kill();
+      window.close();
+    }
 
+    // catch the resize events
+    if (event.type == sf::Event::Resized)
+    {
+      // update the view to the new size of the window
+      sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+      window.setView(sf::View(visibleArea));
+    }
+
+    //zoom
+    if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+    {
+      // create a view half the size of the default view
+      sf::View view = window.getView();
+      if (event.mouseWheelScroll.delta > 0)
+        view.zoom(1.1);
+      else if (event.mouseWheelScroll.delta < 0)
+        view.zoom(0.9);
+      window.setView(view);
+    }
+  }
 }
 
 #include "../Plugins/Graphics/Graphics.cpp"

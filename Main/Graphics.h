@@ -18,10 +18,10 @@ public:
 
   virtual void spin() = 0; //Perhaps remove this later...
 
-  virtual void drawMap() const;
-  virtual void drawEntities() const;
   virtual void drawMap();
   virtual void drawEntities();
+
+  virtual void manageEvents();
 
 protected:
   Bin* const bin;
