@@ -2,22 +2,35 @@ using namespace std;
 
 void Graphics::spin()
 {
-    string spin = "|\\-/";
+    manager->startDetachedThread(&Graphics::textualGraphics, this);
+    visualGraphics();
+}
+
+void Graphics::visualGraphics()
+{
     GraphicsInternals::openWindow(string("Sim"));
+
     while (window.isOpen())
     {
-        //Create window, check window events
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // "close requested" event: we close the window
-            if (event.type == sf::Event::Closed)
-            {
-              manager->kill();
-              window.close();
-            }
-        }
+      GraphicsInternals::manageEvents();
 
+      //Actually Draw!
+      window.clear();
+
+      GraphicsInternals::drawMap();
+      GraphicsInternals::drawEntities();
+
+      window.display();
+    }
+}
+
+void Graphics::textualGraphics() const
+{
+    manager->sleep(1000000000); //Wait for window to open
+
+    string spin = "|\\-/";
+    while (window.isOpen())
+    {
         for (int i = 0; i < 4; ++i)
         {
             //Build print statement

@@ -9,4 +9,8 @@ public:
 
   void spin();
 
+  void visualGraphics();
+
+  void textualGraphics() const;
+
 };
