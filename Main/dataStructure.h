@@ -48,9 +48,9 @@ public:
     unsigned long int count() const;
 
     ~Bin();
-private:
-    class Hex;
 
+    class Hex;//Now needs to be public - so the graphics can mess with it
+  private:
     #include "dataStructure/Enticap.h"
 
     //For the bins:
@@ -69,10 +69,8 @@ private:
 public:
     #include "dataStructure/Iters.tpp"
 
-private:
     #include "dataStructure/Hex.h"
 
-public:
 ////////////////////////////////////////////////////////////////////////////////
     ///Iterstuff - non-const - byType - distance
     template<class C>
