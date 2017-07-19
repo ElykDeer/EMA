@@ -11,7 +11,7 @@
 class GraphicsInternals
 {
 public:
-  GraphicsInternals(const Bin* const bin, ThreadManager* const manager);
+  GraphicsInternals(Bin* const bin, ThreadManager* const manager);
   virtual ~GraphicsInternals();
 
   virtual void openWindow(const std::string& name);
