@@ -22,12 +22,12 @@ void Graphics::spin()
         {
             //Build print statement
             ostringstream output;
-            output << "Resolution: " << manager->getResolution();
+            output << "Res: " << manager->getResolution();
             output << "; Speed: " << manager->getSpeed();
-            output << "; Tick Count: " << manager->getTick();
-            output << "; entityCount: " << bin->count();
-            output << "; lasTime: " << manager->lasTimeeee.count();
-            output << "; time: " << manager->timeeee.count() << " " << spin[i];
+            output << "; Tick: " << manager->getTick();
+            output << "; entCount: " << bin->count();
+            output << "; " << manager->lasTimeeee.count();
+            output << "; " << manager->timeeee.count() << " " << spin[i] << "    ";
 
             //Print it
             cout << output.str();
