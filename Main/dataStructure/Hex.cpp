@@ -4,7 +4,7 @@ using namespace std;
 //Give it the matrix coordinates, and it will generate pixel coordinates
 Bin::HexInternals::HexInternals(const unsigned int col, const unsigned int row, const double hexRadius) :
   x(hexRadius * 1.5 * col),
-  y(hexRadius * sqrt(3) * (row - (0.5*(col&1))) ),
+  y(hexRadius * sqrt(3.0) * (row - (0.5*(col&1))) ),
   hexRadius(hexRadius),
   hexRadiusSmall((sqrt(3)*hexRadius)/2),
   col(col),
@@ -27,12 +27,12 @@ void Bin::HexInternals::remove(Entity* const entity)
     --entityCount;
 }
 
-unsigned int Bin::HexInternals::getX() const
+double Bin::HexInternals::getX() const
 {
     return x;
 }
 
-unsigned int Bin::HexInternals::getY() const
+double Bin::HexInternals::getY() const
 {
     return y;
 }
@@ -50,6 +50,11 @@ unsigned int Bin::HexInternals::getRow() const
 unsigned long int Bin::HexInternals::count() const
 {
     return entityCount;
+}
+
+double Bin::HexInternals::getRadius() const
+{
+    return hexRadius;
 }
 
 //std::vector< std::map< const std::size_t, std::map<Entity* const, Enticap*>>* > buildNear(const unsigned int distance)

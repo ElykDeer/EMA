@@ -2,14 +2,13 @@
 //Only ever include the data structure - insures only registered plugins work
 #include "dataStructure.h"
 #include "ThreadManager.h"
+#include "Graphics.h"
 #include <random>
-#include <string>
 #include <iostream>
-#include <sstream>
 using namespace std;
 
 void init(Bin& bin, ostream& os = cout);
-void graphics(const Bin* const bin, const ThreadManager* const manager);
+void graphics(Bin* const bin, ThreadManager* const manager);
 
 int main()
 {
@@ -30,7 +29,9 @@ int main()
     //Will "endlessly" update the map (spawns and updates the described threads)
     manager.startUpdatingMap();
 
-    manager.wait();
+    manager.waitForThreadsEnd();
+
+    cout << endl; //For neatness
 }
 
 
@@ -46,48 +47,24 @@ void init(Bin& bin, ostream& os)
     uniform_real_distribution<double> randRangeWidth (0.0, bin.getWidth() );
     uniform_real_distribution<double> randRangeHeight(0.0, bin.getHeight());
 
-    int numFlowers = 50000;
+    const unsigned int numFlowers = 500;
     os << "INIT: Generating " << numFlowers << " flowers\n";
-    vector<Flower>* flowerBucket = new vector<Flower>(numFlowers, Flower(randRangeWidth(gen), randRangeHeight(gen))); //Make space
-    for(int numOfNodes = 0; numOfNodes < numFlowers; ++numOfNodes)
+    for(unsigned int numOfNodes = 0; numOfNodes < numFlowers; ++numOfNodes)
     {
-        bin.insert(&(*flowerBucket)[numOfNodes]);
+        bin.insert(new Flower(randRangeWidth(gen), randRangeHeight(gen)));
     }
-    int numDoggies = 50000;
+    const unsigned int numDoggies = 500;
     os << "INIT: Generating " << numDoggies << " dogs\n";
-    vector<Dog>* dogBucket = new vector<Dog>(numDoggies, Dog(randRangeWidth(gen), randRangeHeight(gen)));  //Make space
-    for(int numOfNodes = 0; numOfNodes < numDoggies; ++numOfNodes)
+    for(unsigned int numOfNodes = 0; numOfNodes < numDoggies; ++numOfNodes)
     {
-        bin.insert(&(*dogBucket)[numOfNodes]);
+        bin.insert(new Dog(randRangeWidth(gen), randRangeHeight(gen)));
     }
 
     os << "INIT: Done!\n\n";
 }
 
-void graphics(const Bin* const bin, const ThreadManager* const manager)
+void graphics(Bin* const bin, ThreadManager* const manager)
 {
-    string spin = "|\\-/";
-    while (1)
-        for (int i = 0; i < 4; ++i)
-        {
-            //Build print statement
-            ostringstream output;
-            output << "Resolution: " << manager->getResolution();
-            output << "; Speed: " << manager->getSpeed();
-            output << "; Tick Count: " << manager->getTick();
-            output << "; entityCount: " << bin->count();
-            output << "; lasTime: " << manager->lasTimeeee.count();
-            output << "; time: " << manager->timeeee.count() << " " << spin[i];
-
-            //Print it
-            cout << output.str();
-            cout.flush();
-
-            //Delay for the spinner
-            manager->sleep(75000000);  //Spin lock hovered around 30%
-
-            //Refreash/clear screen
-            for (size_t t = 0; t < output.str().size(); ++t)
-                cout << "\b"; //clear last character
-        }
+    Graphics graphic(bin, manager);
+    graphic.spin();
 }
