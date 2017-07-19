@@ -12,7 +12,8 @@ void Graphics::visualGraphics()
 
     while (window.isOpen())
     {
-      GraphicsInternals::manageEvents();
+      GraphicsInternals::manageEvents(); //Window resizing, closing, scrolling, etc
+      GraphicsInternals::input(); //Keyboard, mouse, etc
 
       //Actually Draw!
       window.clear();

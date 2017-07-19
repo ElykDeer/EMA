@@ -21,13 +21,18 @@ public:
   virtual void drawMap();
   virtual void drawEntities();
 
-  virtual void manageEvents();
+  //These two should probably be built by the compiler based on some rules I'll think up later
+  virtual void manageEvents();  //Window resizing, closing, scrolling
+  virtual void input();  //Keyboard, mouse, etc
 
 protected:
   Bin* const bin;
   ThreadManager* const manager;
 
   sf::RenderWindow window;
+
+private:
+  int moveSensitivity = 2;
 };
 
 #include "../Plugins/Graphics/Graphics.h"
