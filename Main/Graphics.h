@@ -22,7 +22,7 @@ public:
   virtual void drawEntities() const;
 
 protected:
-  const Bin* const bin;
+  Bin* const bin;
   ThreadManager* const manager;
 
   sf::Window window;

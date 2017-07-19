@@ -14,8 +14,15 @@ public:
 
     ThreadManager(Bin& bin);
 
-    void startGraphics( void (*graphics)(const Bin* const, ThreadManager* const) );
+    void startGraphics( void (*graphics)(Bin* const, ThreadManager* const) );
     void startUpdatingMap();
+
+    template <typename... Args, typename F>
+    void startDetachedThread(const F& func, Args &&... args)
+    {
+        std::thread newThread(func, args...);
+        newThread.detach();
+    }
 
     void waitForThreadsEnd(); //Wait for the graphics and map threads to close
 

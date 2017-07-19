@@ -6,7 +6,7 @@ typedef std::chrono::high_resolution_clock Clock;
 
 ThreadManager::ThreadManager(Bin& bin) : bin(&bin) {}
 
-void ThreadManager::startGraphics( void (*graphics)(const Bin* const, ThreadManager* const) )
+void ThreadManager::startGraphics( void (*graphics)(Bin* const, ThreadManager* const) )
 {
     //Just let the graphics do their thing
     graphicsThread = new thread(graphics, bin, this);
