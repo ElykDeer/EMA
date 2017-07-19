@@ -22,15 +22,17 @@ public:
 
     void remove(Entity* const entity);
 
-    unsigned int getX() const;
+    double getX() const;
 
-    unsigned int getY() const;
+    double getY() const;
 
     unsigned int getCol() const;
 
     unsigned int getRow() const;
 
     unsigned long int count() const;
+
+    double getRadius() const;
 
 ////////////////////////////////////////////////////////////////////////////////
 //Iterstuff - non-const - of one type near
@@ -140,8 +142,8 @@ private:
     }
 
     // X/Y Locations
-    const unsigned int x;
-    const unsigned int y;
+    const double x;
+    const double y;
     const double hexRadius;
     const double hexRadiusSmall;
 

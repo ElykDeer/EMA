@@ -1,28 +1,46 @@
 #include "ThreadManager.h"
 
-#include <iostream>
-
 using namespace std;
 using namespace std::chrono;
-
 typedef std::chrono::high_resolution_clock Clock;
 
 ThreadManager::ThreadManager(Bin& bin) : bin(&bin) {}
 
-void ThreadManager::startGraphics( void (*graphics)(const Bin* const, const ThreadManager* const) )
+void ThreadManager::startGraphics( void (*graphics)(Bin* const, ThreadManager* const) )
 {
     //Just let the graphics do their thing
     graphicsThread = new thread(graphics, bin, this);
 }
 
-unsigned int ThreadManager::getResolution() const
+void ThreadManager::startUpdatingMap()
 {
-    return resolution;
+    //continueUpdatingMap(); // - private function
+    //Alternativly, if I want more in main:
+    //Start thread, let it go, get back to main
+    updateMapThread = new thread(&ThreadManager::continueUpdatingMap, this);
 }
 
-unsigned int ThreadManager::getTick() const
+void ThreadManager::waitForThreadsEnd()
 {
-    return tick;
+    if (updateMapThread)
+        updateMapThread->join();
+    if (graphicsThread)
+        graphicsThread->join();
+}
+
+void ThreadManager::sleep(unsigned long long int nanosecs) const
+{
+    this_thread::sleep_for(nanoseconds(nanosecs));
+}
+
+void ThreadManager::pause()
+{
+    paused = true;
+}
+
+void ThreadManager::resume()
+{
+    paused = false;
 }
 
 void ThreadManager::setSpeed(const unsigned int newSpeed)
@@ -36,32 +54,23 @@ unsigned int ThreadManager::getSpeed() const
     return speed;
 }
 
-void ThreadManager::startUpdatingMap()
+unsigned int ThreadManager::getResolution() const
 {
-    //continueUpdatingMap(); // - private function
-    //Alternativly, if I want more in main:
-    //Start thread, let it go, get back to main
-    updateMapThread = new thread(&ThreadManager::continueUpdatingMap, this);
+    return resolution;
 }
 
-void ThreadManager::wait()
+unsigned int ThreadManager::getTick() const
 {
-    if (updateMapThread)
-        updateMapThread->join();
-    if (graphicsThread)
-        graphicsThread->join();
+    return tick;
 }
 
 void ThreadManager::continueUpdatingMap()
 {
-    //lock my lock - own it - doesn't actually matter?
-    originalLock.lock();
-
     //Spawn two threads for maps and entities
     thread mapThread(&ThreadManager::map, this);
     thread entThread(&ThreadManager::entities, this);
 
-    while (1)
+    while (running)
     {
         //Sleep == 0; means paused. Sleep for 1/20th a second and try again
         if (paused)
@@ -71,19 +80,25 @@ void ThreadManager::continueUpdatingMap()
         }
 
         //Start Threads
-        ready = true;
-        sync.notify_all();
-        originalLock.unlock();
+        nextLoop = true;
 
         //Start timing
         t1 = Clock::now();
-        while (!mapBool || !entBool) {}
+        while (!mapBool || !entBool)
+        {
+            if (!running) //If while we were waiting, the game closes...
+            {
+                mapThread.join();
+                entThread.join();
+
+                return;
+            }
+        }
         t2 = Clock::now();
 
         //Reset things
         mapBool = entBool = false;
-        ready = false;
-        originalLock.lock();
+        nextLoop = false;
 
         lasTimeeee = timeeee;
         timeeee = duration_cast<duration<double>>(t2 - t1);
@@ -116,13 +131,12 @@ void ThreadManager::continueUpdatingMap()
 
 void ThreadManager::map()
 {
-    while(1)
+    while(running)
     {
         //Wait to be notified to continue
-        unique_lock<std::mutex> lock(originalLock);
-        while (!ready)
-            sync.wait(lock);
-        sync.notify_all(); //Just incase
+        while (!nextLoop || mapBool)
+            if (!running)
+                return;
 
         bin->updateHexes(resolution);
 
@@ -133,13 +147,12 @@ void ThreadManager::map()
 
 void ThreadManager::entities()
 {
-    while(1)
+    while(running)
     {
         //Wait to be notified to continue
-        unique_lock<std::mutex> lock(originalLock);
-        while (!ready)
-            sync.wait(lock);
-        sync.notify_all(); //Just incase
+        while (!nextLoop || entBool)
+            if (!running)
+                return;
 
         bin->updateEntities(resolution);
 
@@ -148,17 +161,7 @@ void ThreadManager::entities()
     }
 }
 
-void ThreadManager::sleep(unsigned long long int nanosecs) const
+void ThreadManager::kill()
 {
-    this_thread::sleep_for(nanoseconds(nanosecs));
-}
-
-void ThreadManager::pause()
-{
-    paused = true;
-}
-
-void ThreadManager::resume()
-{
-    paused = false;
+  running = false;
 }

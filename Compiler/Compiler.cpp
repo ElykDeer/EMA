@@ -122,7 +122,8 @@ bool verifyPlugin(const fs::directory_entry& entry)
   //Just a stack of if statements that need to be true
   if(fs::is_directory(entry.symlink_status())) //Makes sure it's actually a folder
     if((string(entry.path()).substr(8) != "Enviornment"))  //Ignores the enviornment
-      return true;
+      if((string(entry.path()).substr(8) != "Graphics"))  //Ignores the enviornment
+        return true;
   return false;
 }
 
@@ -243,7 +244,7 @@ void compile(const unordered_set<string>& plugins)
         dependencies += getDependencies("Plugins/" + dep);
 
     string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
-    string links = "-pthread";  //Linker dependencies
+    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system";  //Linker dependencies
 
     string command =
     "g++ " + gccOptions + dependencies + "-o mainP " + links;
