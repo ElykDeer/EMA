@@ -287,7 +287,7 @@ char* my_generator(const char*,int);
 std::vector<std::string> cmd = { "enable", "disable", "clear", "list", "listD" ,"listE", "compile", "save", "exit", "help" };
 
 
-int main()
+int main(int argc, char* argv[])
 {
   //Initialize the list of plugins
   vector<string> plugins = readPlugins();
@@ -301,6 +301,13 @@ int main()
   for (string pluginName : plugins)
     if(enabledPlugins.count(pluginName) == 0)
       disabledPlugins.insert(pluginName);
+
+  if (argc == 2)
+    if (*argv[1] == 'c')
+    {
+      compile(enabledPlugins);
+      return 1;
+    }
 
   //User prompt
   startPaint(3);
@@ -382,7 +389,9 @@ int main()
 
     else
     {
+        startPaint(1);
         cerr << "Unknown command.\n";
+        endPaint();
     }
 
     if (rawCommand != "")
