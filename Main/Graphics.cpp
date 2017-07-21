@@ -16,8 +16,9 @@ void GraphicsInternals::drawMap()
   sf::CircleShape hexa((*bin->getAllHexes()).getRadius(), 6); //Each hex will be a circle with 6 sides
   hexa.rotate(30);
   hexa.setOutlineThickness(0.8);
-  hexa.setOutlineColor(sf::Color::Black);
+  hexa.setOutlineColor(sf::Color::Blue);
   hexa.setFillColor(sf::Color::White);
+  hexa.setOrigin((*bin->getAllHexes()).getRadius(), (*bin->getAllHexes()).getRadius());
   for (const Bin::Hex& hex : bin->getAllHexes())
   {
     hexa.setPosition(hex.getX(), hex.getY());
