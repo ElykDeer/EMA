@@ -69,7 +69,7 @@ public:
 public:
     #include "dataStructure/Iters.tpp"
 
-    #include "dataStructure/Hex.h"
+    #include "dataStructure/HexInternals.h"
 
 ////////////////////////////////////////////////////////////////////////////////
     ///Iterstuff - non-const - byType - distance

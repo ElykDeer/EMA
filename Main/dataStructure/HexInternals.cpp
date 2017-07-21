@@ -1,4 +1,4 @@
-#include "Hex.h"
+#include "HexInternals.h"
 using namespace std;
 
 //Give it the matrix coordinates, and it will generate pixel coordinates
@@ -27,36 +27,42 @@ void Bin::HexInternals::remove(Entity* const entity)
     --entityCount;
 }
 
+//Map Positoin Getters
 double Bin::HexInternals::getX() const
 {
     return x;
 }
-
 double Bin::HexInternals::getY() const
 {
     return y;
 }
 
+
+//Storage Position Getters
 unsigned int Bin::HexInternals::getCol() const
 {
     return col;
 }
-
 unsigned int Bin::HexInternals::getRow() const
 {
     return row;
 }
 
-unsigned long int Bin::HexInternals::count() const
-{
-    return entityCount;
-}
-
+//Radius Getter
 double Bin::HexInternals::getRadius() const
 {
     return hexRadius;
 }
 
+
+//Returns the count of how many entities are in this hex
+unsigned long int Bin::HexInternals::count() const
+{
+    return entityCount;
+}
+
+
+//This function creates a list of all entities within a certian pix distance
 vector< map< const size_t, map<Entity* const, Bin::Enticap*>>* >
   Bin::HexInternals::buildNear(const unsigned int col,
                                const unsigned int row,
