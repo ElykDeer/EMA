@@ -208,35 +208,102 @@ string getDependencies(const string& pluginName)
     return dependencies;
 }
 
+bool buildPluginTypes(const unordered_set<string>& plugins)
+{
+  //Open the types file
+  ofstream typesFile("Compiler/pluginTypes.h");
+  if (!typesFile)
+  {
+      startPaint(1);
+      cerr << "Could not create file.\n";
+      endPaint();
+      return false;
+  }
+
+  //Beginning and end of the file
+  string begin =
+  "#ifndef SIM_PLUGIN_TYPES\n"
+  "#define SIM_PLUGIN_TYPES 1\n\n";
+
+  string end =
+  "\n#endif\n";
+
+  //Write header to file
+  typesFile << begin;
+  //Write Includes
+  for (const string& pluginName : plugins)
+      typesFile << "#include " << "\"../Plugins/" << pluginName << '/' << pluginName << "Types.h" << '"' << endl;
+
+  typesFile << end;  //Write end portion
+  typesFile.close();  //Close File
+
+  return true;
+}
+
+bool buildEntityDrawCode(const unordered_set<string>& plugins)
+{
+  //Open the types file
+  ofstream graphicsFile("Compiler/EntityDrawCode.cpp");
+  if (!graphicsFile)
+  {
+      startPaint(1);
+      cerr << "Could not create file.\n";
+      endPaint();
+      return false;
+  }
+
+  //Beginning of each link in the if-chain:
+  string ifLinkP1 =
+  "if (typeid(*&entity).hash_code() == typeid("; //<PluginName>
+
+  //Middle:
+  string ifLinkP2 =
+  ").hash_code())\n"
+  "{\n"
+  "  #include \"../Plugins/datTest/Graphics/"; //<PluginName>
+
+  //End of each link:
+  string ifLinkP3 =
+  ".cpp\"\n"
+  "}\n"
+  "else ";
+
+  //Write Includes
+  for (const string& pluginName : plugins)
+  {
+    try  //Trying going into it's graphics folder.. If it's not there, whatever
+    {
+      //Build a vector<string> of all availible plugins
+      for (const fs::directory_entry& entry : fs::directory_iterator("Plugins/" + pluginName + "/Graphics/"))
+      {
+        //Gets the string from the directory_entries, removing "Plugins/"
+        string sliceString = entry.path();
+        string className = sliceString.substr(18+pluginName.size(), sliceString.size() - (18+pluginName.size()+4)); // 18 = len("Plugins/" + "/Graphics/")
+        graphicsFile << ifLinkP1 << className << ifLinkP2 << className << ifLinkP3;
+      }
+    }
+    catch(...)
+    {
+      continue;
+    }
+  }
+
+  //Write default case:
+    //erase extra character
+  graphicsFile << "\n{\n  #include \"EntityDefaultDrawCode.cpp\"\n}\n";
+
+  graphicsFile.close();  //Close File
+
+  return true;
+}
 
 void compile(const unordered_set<string>& plugins)
 {
-    //Open the types file
-    ofstream typesFile("Compiler/pluginTypes.h");
-    if (!typesFile)
-    {
-        startPaint(1);
-        cerr << "Could not create file.\n";
-        endPaint();
-        return;
-    }
+    if (!buildPluginTypes(plugins))
+      return;
 
-    //Beginning and end of the file
-    string begin =
-    "#ifndef SIM_PLUGIN_TYPES\n"
-    "#define SIM_PLUGIN_TYPES 1\n\n";
-
-    string end =
-    "\n#endif\n";
-
-    //Write header to file
-    typesFile << begin;
-    //Write Includes
-    for (const string& pluginName : plugins)
-        typesFile << "#include " << "\"../Plugins/" << pluginName << '/' << pluginName << "Types.h" << '"' << endl;
-
-    typesFile << end;  //Write end portion
-    typesFile.close();  //Close File
+    if (!buildEntityDrawCode(plugins))
+      return;
 
     //Create the make command
     string dependencies = getDependencies("Main");;  //List of the main dependencies
@@ -287,7 +354,7 @@ char* my_generator(const char*,int);
 std::vector<std::string> cmd = { "enable", "disable", "clear", "list", "listD" ,"listE", "compile", "save", "exit", "help" };
 
 
-int main()
+int main(int argc, char* argv[])
 {
   //Initialize the list of plugins
   vector<string> plugins = readPlugins();
@@ -301,6 +368,13 @@ int main()
   for (string pluginName : plugins)
     if(enabledPlugins.count(pluginName) == 0)
       disabledPlugins.insert(pluginName);
+
+  if (argc == 2)
+    if (*argv[1] == 'c')
+    {
+      compile(enabledPlugins);
+      return 1;
+    }
 
   //User prompt
   startPaint(3);
@@ -382,7 +456,9 @@ int main()
 
     else
     {
+        startPaint(1);
         cerr << "Unknown command.\n";
+        endPaint();
     }
 
     if (rawCommand != "")

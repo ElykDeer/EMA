@@ -16,8 +16,9 @@ void GraphicsInternals::drawMap()
   sf::CircleShape hexa((*bin->getAllHexes()).getRadius(), 6); //Each hex will be a circle with 6 sides
   hexa.rotate(30);
   hexa.setOutlineThickness(0.8);
-  hexa.setOutlineColor(sf::Color::Black);
+  hexa.setOutlineColor(sf::Color::Blue);
   hexa.setFillColor(sf::Color::White);
+  hexa.setOrigin((*bin->getAllHexes()).getRadius(), (*bin->getAllHexes()).getRadius());
   for (const Bin::Hex& hex : bin->getAllHexes())
   {
     hexa.setPosition(hex.getX(), hex.getY());
@@ -28,26 +29,9 @@ void GraphicsInternals::drawMap()
 void GraphicsInternals::drawEntities()
 {
   //Every ent will be a red ring with a red dot at it's center
-
-  sf::CircleShape circularEnt(2, 30); //Each ent will be a circle of radius x
-  circularEnt.setOrigin(2, 2);
-  circularEnt.setOutlineThickness(0.8);
-  circularEnt.setOutlineColor(sf::Color::Red);
-  circularEnt.setFillColor(sf::Color::Transparent);
-
-  sf::CircleShape entCenter(0.2, 30); //Each ent will be a circle of radius
-  entCenter.setOrigin(0.2, 0.2);
-  entCenter.setFillColor(sf::Color::Red);
-
   for (const Entity& entity : bin->getAll())
   {
-    //Draw circle for entitiy
-    circularEnt.setPosition(entity.getX(), entity.getY());
-    window.draw(circularEnt);
-
-    //Draw point for center
-    entCenter.setPosition(entity.getX(), entity.getY());
-    window.draw(entCenter);
+    #include "../Compiler/EntityDrawCode.cpp"
   }
 }
 

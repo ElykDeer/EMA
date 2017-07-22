@@ -144,4 +144,4 @@ unsigned long int Bin::count() const
 
 #include "pixToHex.cpp"
 
-#include "Hex.cpp"
+#include "HexInternals.cpp"
