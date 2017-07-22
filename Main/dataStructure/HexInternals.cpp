@@ -146,4 +146,4 @@ vector< map< const size_t, map<Entity* const, Bin::Enticap*>>* >
     return nearVec;
 }
 
-#include "../../Plugins/Enviornment/Hex.cpp"
+#include "../../Plugins/Environment/Hex.cpp"

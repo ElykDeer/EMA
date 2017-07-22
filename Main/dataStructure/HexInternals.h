@@ -64,6 +64,6 @@ private:
      std::map< const std::size_t, std::map<Entity* const, Enticap*>>* >> nearBy;
 };
 
-#include "../../Plugins/Enviornment/Hex.h"
+#include "../../Plugins/Environment/Hex.h"
 
 #endif
