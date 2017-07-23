@@ -100,15 +100,15 @@ void Bin::move(Entity* entity, unsigned int newX, unsigned int newY)
 //Update All Entities In The Structure
 void Bin::updateEntities(unsigned int resolution)
 {
+  if (entityCount)
     for(Entity& entity : getAll())
-    {
         entity.update(resolution);
-    }
 }
 
 //Update All Hexes In The Structure
 void Bin::updateHexes(unsigned int resolution)
 {
+  if (entityCount)
     for(Hex& hex : getAllHexes())
         hex.update(resolution);
 }
