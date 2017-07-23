@@ -260,10 +260,12 @@ bool buildEntityDrawCode(const unordered_set<string>& plugins)
   string ifLinkP2 =
   ").hash_code())\n"
   "{\n"
-  "  #include \"../Plugins/datTest/Graphics/"; //<PluginName>
+  "  #include \"../Plugins/";
+
+  string ifLinkP3 = "/Graphics/"; //<PluginName>
 
   //End of each link:
-  string ifLinkP3 =
+  string ifLinkP4 =
   ".cpp\"\n"
   "}\n"
   "else ";
@@ -279,7 +281,7 @@ bool buildEntityDrawCode(const unordered_set<string>& plugins)
         //Gets the string from the directory_entries, removing "Plugins/"
         string sliceString = entry.path();
         string className = sliceString.substr(18+pluginName.size(), sliceString.size() - (18+pluginName.size()+4)); // 18 = len("Plugins/" + "/Graphics/")
-        graphicsFile << ifLinkP1 << className << ifLinkP2 << className << ifLinkP3;
+        graphicsFile << ifLinkP1 << className << ifLinkP2 << pluginName << ifLinkP3 << className << ifLinkP4;
       }
     }
     catch(...)
