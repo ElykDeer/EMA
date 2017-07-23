@@ -290,7 +290,7 @@ bool buildEntityDrawCode(const unordered_set<string>& plugins)
 
   //Write default case:
     //erase extra character
-  graphicsFile << "\n{\n  #include \"EntityDefaultDrawCode.cpp\"\n}\n";
+  graphicsFile << "\n{\n  #include \"../Plugins/Graphics/EntityDefaultDrawCode.cpp\"\n}\n";
 
   graphicsFile.close();  //Close File
 
