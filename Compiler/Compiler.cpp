@@ -299,12 +299,55 @@ bool buildEntityDrawCode(const unordered_set<string>& plugins)
   return true;
 }
 
+
+bool buildInit(const unordered_set<string>& plugins)
+{
+  //Open the types file
+  ofstream initFile("Compiler/init.cpp");
+  if (!initFile)
+  {
+      startPaint(1);
+      cerr << "Could not create file.\n";
+      endPaint();
+      return false;
+  }
+
+  //File header:
+  initFile << "void init(Bin& bin, ostream& os = cout)\n{\n";
+
+  //Beginning of each include:
+  string linkP1 =
+  "  {\n"
+  "    #include \"../Plugins/"; //<PluginName>
+
+  //End of each link:
+  string linkP2 =
+  ".cpp\"\n"
+  "  }\n";
+
+  //Write Includes
+  for (const string& pluginName : plugins)
+  {
+    initFile << linkP1 << pluginName << "/" << pluginName << linkP2;
+  }
+
+  //File ender
+  initFile << "}\n";
+
+  initFile.close();  //Close File
+
+  return true;
+}
+
+
 void compile(const unordered_set<string>& plugins)
 {
+    //Build dependencies:
     if (!buildPluginTypes(plugins))
       return;
-
     if (!buildEntityDrawCode(plugins))
+      return;
+    if (!buildInit(plugins))
       return;
 
     //Create the make command
