@@ -31,7 +31,9 @@ void GraphicsInternals::drawEntities()
   //Every ent will be a red ring with a red dot at it's center
   if (bin->count())
     for (const Entity& entity : bin->getAll())
+    {
       #include "../Compiler/EntityDrawCode.cpp"
+    }
 }
 
 void GraphicsInternals::manageEvents()
