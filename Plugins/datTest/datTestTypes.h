@@ -2,25 +2,50 @@
 #define TESTTYPES 1
 #include "../../Main/Entity.h"
 
+#define TICKSINADAY 60*60*24 //Ticks in one day
+
 //Just two basic derived types to serve testing purposes
 class Flower : public Entity
 {
 public:
-    using Entity::Entity;
-    void update(unsigned int resolution) override {if (resolution) {}} //Required, but not in use
+    Flower(unsigned int x, unsigned int y);
+    void update(unsigned int resolution) override;
 
-    //The following three things are for const testing
-    void otherThingy();
-    int thingy = 0;
-    int thingy2 = 10;
+    double getSize() const;
+
+private:
+  //Age, in ticks, of the flower
+  unsigned long long int age = 0;
+
+  //Growth of the flower over time
+  double size = 0.0; //0 at birth
+  double maxSize = 3.0; //Flowers cannot be bigger than this, ever ever
+
+  //When it flowers and seeds
+  unsigned int minSeedAge = 23;
+  unsigned int maxSeedAge = 35;
+
+  //Germinates between 10 and 20 days
+  unsigned int germinationMinAge = 10*TICKSINADAY;
+  unsigned int germinationMaxAge = 22*TICKSINADAY;
+
+  //No flower can live longer than 60 days
+  unsigned int maxAge = 60*TICKSINADAY;
+  double chanceOfRandomDeath = 0.0005; //0.05% chance of dying at any point
+
+  double chance;
+
 };
 
-class Dog : public Entity
+class Bunny : public Entity
 {
 public:
     using Entity::Entity;
-    void update(unsigned int resolution) override {if (resolution) {}} //Required, but not in use
-    void bark() const;
+    void update(unsigned int resolution) override;
+
+private:
+  unsigned long long int age;
 };
 
+#undef TICKSINADAY
 #endif

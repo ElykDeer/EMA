@@ -41,7 +41,9 @@ void Graphics::textualGraphics() const
             output << "; Tick: " << manager->getTick();
             output << "; entCount: " << bin->count();
             output << "; " << manager->lasTimeeee.count();
-            output << "; " << manager->timeeee.count() << " " << spin[i] << "    ";
+            output << "; " << manager->timeeee.count();
+            output << " " << spin[i];
+            output << "    ";
 
             //Print it
             cout << output.str();
