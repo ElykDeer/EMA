@@ -98,6 +98,14 @@ void GraphicsInternals::input()
     view.move(0, moveSensitivity);
     window.setView(view);
   }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+  {
+    manager->setSpeed(manager->getSpeed()*2);
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+  {
+    manager->setSpeed(manager->getSpeed()/2);
+  }
 }
 
 #include "../Plugins/Graphics/Graphics.cpp"
