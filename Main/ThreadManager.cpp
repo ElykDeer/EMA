@@ -119,7 +119,7 @@ void ThreadManager::continueUpdatingMap()
         //If the resolution can be reduced, do it
           //Resolution greater than one,
           //runtime less than 1/2 a period
-        if (resolution > 1 && (t2 - t1).count() < system_clock::to_time_t(t1 + nanoseconds(static_cast<int>(floor(1000000000.0/(speed/resolution)))/2)))
+        if (resolution > 1 && (t2 - t1) < nanoseconds(static_cast<int>(floor((1000000000.0/(speed/resolution))/2.0))) )
           resolution /= 2;
 
             //Uses about 2x more CPU time:
@@ -130,7 +130,6 @@ void ThreadManager::continueUpdatingMap()
     mapThread.join();
     entThread.join();
 }
-
 
 void ThreadManager::map()
 {
