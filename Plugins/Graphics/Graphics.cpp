@@ -39,6 +39,7 @@ void Graphics::textualGraphics() const
             output << "Res: " << manager->getResolution();
             output << "; Speed: " << manager->getSpeed();
             output << "; Tick: " << manager->getTick();
+            output << "; Day: " << float(manager->getTick())/(60.0*60.0*24.0);
             output << "; entCount: " << bin->count();
             output << "; " << manager->lasTimeeee.count();
             output << "; " << manager->timeeee.count();
