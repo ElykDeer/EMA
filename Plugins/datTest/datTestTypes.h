@@ -8,7 +8,7 @@
 class Flower : public Entity
 {
 public:
-    Flower(unsigned int x, unsigned int y);
+    Flower(unsigned int x, unsigned int y, Bin* const bin);
     void update(unsigned int resolution) override;
 
     double getSize() const;

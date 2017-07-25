@@ -3,7 +3,8 @@
 #include <cmath>
 using namespace std;
 
-Flower::Flower(unsigned int x, unsigned int y) : Entity::Entity(x, y)
+Flower::Flower(unsigned int x, unsigned int y, Bin* const bin)
+  : Entity::Entity(x, y, bin)
 {
   //Random number stuff
   random_device seed;
