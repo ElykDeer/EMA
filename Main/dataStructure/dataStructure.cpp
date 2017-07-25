@@ -72,6 +72,9 @@ void Bin::remove(Entity* const entity)
 
     //adjust the Count
     --entityCount;
+
+    if (byTypeMap[typeid(*entity).hash_code()].size() == 0)
+        byTypeMap.erase(typeid(*entity).hash_code());
 }
 
 //Add to removal list
