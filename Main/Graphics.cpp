@@ -68,6 +68,18 @@ void GraphicsInternals::manageEvents()
         view.zoom(0.9);
       window.setView(view);
     }
+
+    if (event.type == sf::Event::KeyPressed)
+    {
+        if (event.key.code == sf::Keyboard::Add)
+        {
+          manager->setSpeed(manager->getSpeed()*2);
+        }
+        if (event.key.code == sf::Keyboard::Subtract)
+        {
+          manager->setSpeed(manager->getSpeed()/2);
+        }
+    }
   }
 }
 
@@ -97,14 +109,6 @@ void GraphicsInternals::input()
     sf::View view = window.getView();
     view.move(0, moveSensitivity);
     window.setView(view);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
-  {
-    manager->setSpeed(manager->getSpeed()*2);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
-  {
-    manager->setSpeed(manager->getSpeed()/2);
   }
 }
 
