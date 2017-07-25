@@ -74,6 +74,22 @@ void Bin::remove(Entity* const entity)
     --entityCount;
 }
 
+//Add to removal list
+void Bin::markForRemoval(Entity* const entity)
+{
+  removalList.push_back(entity);
+}
+
+//remove all entities marked for removal and clear removal list
+void Bin::removeAll()
+{
+  for (Entity* const entity : removalList)
+  {
+    remove(entity);
+  }
+  removalList.clear();
+}
+
 //How to move an object in the dataStructure
 void Bin::move(Entity* entity, unsigned int newX, unsigned int newY)
 {
