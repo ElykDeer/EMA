@@ -20,7 +20,8 @@ void Flower::update(unsigned int resolution)
   auto gexChance = [=](int age)->double { return double(age-germinationMinAge) / double(germinationMaxAge-germinationMinAge);};
   auto distribution = [=](int age)->double { return pow( 2.0*(-0.1*gexChance(age) / (gexChance(age) - 1.0)), 3.0 ); };
 
-  if (size < maxSize) //If I can grow continue
+  //If I can grow
+  if (size < maxSize)
   {
     //If you're jumping over the grow period due to resolution
     if ((age-resolution <= germinationMinAge) && (age >= germinationMaxAge))
@@ -36,6 +37,10 @@ void Flower::update(unsigned int resolution)
         size += (maxSize/(60.0*60.0*12.0))*resolution; //Grows to full size in 12 hours
     }
   }
+
+  //death timer:
+  if (age > maxAge)
+    bin->markForRemoval(this);
 }
 
 double Flower::getSize() const

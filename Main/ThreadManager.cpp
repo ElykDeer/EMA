@@ -157,6 +157,7 @@ void ThreadManager::entities()
                 return;
 
         bin->updateEntities(resolution);
+        bin->removeAll();
 
         //Notify controling thread
         entBool = true;

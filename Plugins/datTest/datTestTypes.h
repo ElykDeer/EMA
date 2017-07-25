@@ -1,6 +1,7 @@
 #ifndef TESTTYPES
 #define TESTTYPES 1
 #include "../../Main/Entity.h"
+#include "../../Main/dataStructure.h"
 
 #define TICKSINADAY 60*60*24 //Ticks in one day
 
