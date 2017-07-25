@@ -59,22 +59,22 @@ void Bin::insert(Entity* const entity)
 //Delete an object
 void Bin::remove(Entity* const entity)
 {
-    //First Convert Coordinates
-    vector<unsigned int> cords = hexCords.hexOffsetCord(entity->getX(), entity->getY());
-
     //remove from byLocal
+    vector<unsigned int> cords = hexCords.hexOffsetCord(entity->getX(), entity->getY());
     hexes[cords[0]][cords[1]]->remove(entity);
 
     //remove from byType
-    Enticap* enticapP = byTypeMap[typeid(*entity).hash_code()][entity];
-    byTypeMap[typeid(*entity).hash_code()].erase(entity);
+    size_t classCode = typeid(*entity).hash_code();
+
+    Enticap* enticapP = byTypeMap[classCode][entity];
+    byTypeMap[classCode].erase(entity);
     delete enticapP; //Deletes the enticap and the entity
 
     //adjust the Count
     --entityCount;
 
-    if (byTypeMap[typeid(*entity).hash_code()].size() == 0)
-        byTypeMap.erase(typeid(*entity).hash_code());
+    if (byTypeMap[classCode].size() == 0)
+        byTypeMap.erase(classCode);
 }
 
 //Add to removal list
