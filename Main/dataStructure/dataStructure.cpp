@@ -59,19 +59,38 @@ void Bin::insert(Entity* const entity)
 //Delete an object
 void Bin::remove(Entity* const entity)
 {
-    //First Convert Coordinates
-    vector<unsigned int> cords = hexCords.hexOffsetCord(entity->getX(), entity->getY());
-
     //remove from byLocal
+    vector<unsigned int> cords = hexCords.hexOffsetCord(entity->getX(), entity->getY());
     hexes[cords[0]][cords[1]]->remove(entity);
 
     //remove from byType
-    Enticap* enticapP = byTypeMap[typeid(*entity).hash_code()][entity];
-    byTypeMap[typeid(*entity).hash_code()].erase(entity);
+    size_t classCode = typeid(*entity).hash_code();
+
+    Enticap* enticapP = byTypeMap[classCode][entity];
+    byTypeMap[classCode].erase(entity);
     delete enticapP; //Deletes the enticap and the entity
 
     //adjust the Count
     --entityCount;
+
+    if (byTypeMap[classCode].size() == 0)
+        byTypeMap.erase(classCode);
+}
+
+//Add to removal list
+void Bin::markForRemoval(Entity* const entity)
+{
+  removalList.push_back(entity);
+}
+
+//remove all entities marked for removal and clear removal list
+void Bin::removeAll()
+{
+  for (Entity* const entity : removalList)
+  {
+    remove(entity);
+  }
+  removalList.clear();
 }
 
 //How to move an object in the dataStructure
@@ -100,15 +119,15 @@ void Bin::move(Entity* entity, unsigned int newX, unsigned int newY)
 //Update All Entities In The Structure
 void Bin::updateEntities(unsigned int resolution)
 {
+  if (entityCount)
     for(Entity& entity : getAll())
-    {
         entity.update(resolution);
-    }
 }
 
 //Update All Hexes In The Structure
 void Bin::updateHexes(unsigned int resolution)
 {
+  if (entityCount)
     for(Hex& hex : getAllHexes())
         hex.update(resolution);
 }
@@ -144,4 +163,4 @@ unsigned long int Bin::count() const
 
 #include "pixToHex.cpp"
 
-#include "Hex.cpp"
+#include "HexInternals.cpp"

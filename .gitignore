@@ -2,3 +2,7 @@ Compiler/enabledPlugins\.conf
 Compiler/pluginTypes\.h
 compile
 mainP
+
+Compiler/EntityDrawCode\.cpp
+
+Compiler/init\.cpp

@@ -79,11 +79,13 @@ void ThreadManager::continueUpdatingMap()
             continue;
         }
 
+        //Start timing
+        t1 = Clock::now();
+
         //Start Threads
         nextLoop = true;
 
-        //Start timing
-        t1 = Clock::now();
+        //Wait for update
         while (!mapBool || !entBool)
         {
             if (!running) //If while we were waiting, the game closes...
@@ -94,40 +96,40 @@ void ThreadManager::continueUpdatingMap()
                 return;
             }
         }
-        t2 = Clock::now();
 
         //Reset things
         mapBool = entBool = false;
         nextLoop = false;
 
+        tick += resolution; //The tick has completed, simulating "res" # O ticks
+
+        t2 = Clock::now();
+
         lasTimeeee = timeeee;
         timeeee = duration_cast<duration<double>>(t2 - t1);
 
         //if (duration_cast<duration<double>>(t2 - t1) >= seconds(1))
-        if ((t2 - t1).count() >= system_clock::to_time_t(t1 + nanoseconds(1000000000/speed)))
+        if ( (t2 - t1) >= (nanoseconds(static_cast<int>(floor(1000000000.0/(speed/resolution))))) )
             //If this has taken one second or more, double the resolution
             resolution *= 2;
         else
             //timeout the rest of the second
-            this_thread::sleep_for(nanoseconds(1000000000/speed) - (t2 - t1));
+            this_thread::sleep_for(nanoseconds(static_cast<int>(floor(1000000000.0/(speed/resolution)))) - (t2 - t1));
 
         //If the resolution can be reduced, do it
           //Resolution greater than one,
-          //runtime less than 1/3 a period - wiggle room
-        if (resolution > 1 && (t2 - t1).count() < system_clock::to_time_t(t1 + nanoseconds((1000000000/speed)/3)))
-            resolution /= 2;
+          //runtime less than 1/2 a period
+        if (resolution > 1 && (t2 - t1) < nanoseconds(static_cast<int>(floor((1000000000.0/(speed/resolution))/2.0))) )
+          resolution /= 2;
 
             //Uses about 2x more CPU time:
               //while ((t2 - t1) < nanoseconds(1000000000/speed))
               //    t2 = Clock::now();
-
-        tick += resolution; //The tick has completed, simulating "res" # O ticks
     }
 
     mapThread.join();
     entThread.join();
 }
-
 
 void ThreadManager::map()
 {
@@ -155,6 +157,7 @@ void ThreadManager::entities()
                 return;
 
         bin->updateEntities(resolution);
+        bin->removeAll();
 
         //Notify controling thread
         entBool = true;

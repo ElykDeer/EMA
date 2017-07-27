@@ -5,6 +5,7 @@
 
 #include <chrono>  /*Timing*/
 #include <thread>
+#include <cmath>
 
 class ThreadManager
 {
@@ -45,21 +46,21 @@ private:
     void entities();
 
     Bin* bin;
-    unsigned int resolution = 1;  //how fine we is calculating
-    unsigned long long int tick = 0; //the time, in seconds, of the game
-    unsigned int speed = 1;  //The fast forwarding capability
-    bool paused = false;
+    volatile double resolution = 1;  //how fine we is calculating
+    volatile unsigned long long int tick = 0; //the time, in seconds, of the game
+    volatile double speed = 1;  //The fast forwarding capability
+    volatile bool paused = false;
     std::chrono::system_clock::time_point t1, t2;
 
     //Lock stuff - for syncronization:
-    bool nextLoop = false;
+    volatile bool nextLoop = false;
     volatile bool mapBool = false;
     volatile bool entBool = false;
 
     std::thread* updateMapThread = nullptr;
     std::thread* graphicsThread = nullptr;
 
-    bool running = true; //Whether the game is running
+    volatile bool running = true; //Whether the game is running
 };
 
 #endif

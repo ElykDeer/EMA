@@ -33,6 +33,11 @@ public:
     //Delete an object
     void remove(Entity* const entity);
 
+    //Add to removal list
+    void markForRemoval(Entity* const entity);
+    //remove all entities marked for removal and clear removal list
+    void removeAll();
+
     //How to move an object in the dataStructure
     void move(Entity* entity, unsigned int newX, unsigned int newY);
 
@@ -66,10 +71,12 @@ public:
     #include "dataStructure/pixToHex.h"
     pixToHex hexCords;
 
+    std::vector<Entity*> removalList;
+
 public:
     #include "dataStructure/Iters.tpp"
 
-    #include "dataStructure/Hex.h"
+    #include "dataStructure/HexInternals.h"
 
 ////////////////////////////////////////////////////////////////////////////////
     ///Iterstuff - non-const - byType - distance
