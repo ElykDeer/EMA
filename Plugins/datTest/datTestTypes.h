@@ -30,6 +30,9 @@ private:
   unsigned int germinationMinAge = 10*TICKSINADAY;
   unsigned int germinationMaxAge = 22*TICKSINADAY;
 
+  //The area over which a flower gathers its nutrients
+  double gatherRadius = 20.0;
+
   //No flower can live longer than 60 days
   unsigned int maxAge = 60*TICKSINADAY;
   double chanceOfRandomDeath = 0.0005; //0.05% chance of dying at any point
