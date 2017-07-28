@@ -127,9 +127,8 @@ void Bin::updateEntities(unsigned int resolution)
 //Update All Hexes In The Structure
 void Bin::updateHexes(unsigned int resolution)
 {
-  if (entityCount)
-    for(Hex& hex : getAllHexes())
-        hex.update(resolution);
+  for(Hex& hex : getAllHexes())
+    hex.update(resolution);
 }
 
 Bin::~Bin()
