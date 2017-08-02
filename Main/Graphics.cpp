@@ -71,11 +71,11 @@ void GraphicsInternals::manageEvents()
 
     if (event.type == sf::Event::KeyPressed)
     {
-        if (event.key.code == sf::Keyboard::Add)
+        if ((event.key.code == sf::Keyboard::Add) || ( (event.key.code == sf::Keyboard::Equal) && (event.key.shift) ))
         {
           manager->setSpeed(manager->getSpeed()*2);
         }
-        if (event.key.code == sf::Keyboard::Subtract)
+        if ((event.key.code == sf::Keyboard::Subtract) || (event.key.code == sf::Keyboard::Dash))
         {
           manager->setSpeed(manager->getSpeed()/2);
         }
