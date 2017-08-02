@@ -51,7 +51,7 @@ void Flower::update(unsigned int resolution)
     mt19937 gen(seed());
     uniform_real_distribution<double> randChange (0.0, gatherRadius );
     bin->insert(new Flower(getX()+randChange(gen), getY()+randChange(gen), bin));
-    bin->insert(new Flower(getX()+randChange(gen), gety()+randChange(gen), bin));
+    bin->insert(new Flower(getX()+randChange(gen), getY()+randChange(gen), bin));
 
     //Actually mark for death
     bin->markForRemoval(this);
