@@ -9,8 +9,17 @@ if (event.type == sf::Event::Closed)
 if (event.type == sf::Event::Resized)
 {
   // update the view to the new size of the window
-  sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-  window.setView(sf::View(visibleArea));
+  sf::View view = window.getView();
+  const auto zoom = view.getSize();
+  auto center = view.getCenter();
+
+//  auto diffX = event.size.width  - zoom.x;
+//  auto diffY = event.size.height - zoom.y;
+
+  view = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
+  //view.setViewport(sf::FloatRect( 0, 0, zoom.x, zoom.y));
+  view.setCenter(center);
+  window.setView(view);
 }
 
 //zoom

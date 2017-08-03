@@ -12,5 +12,4 @@ public:
   void visualGraphics();
 
   void textualGraphics() const;
-
 };
