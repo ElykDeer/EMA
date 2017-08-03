@@ -16,7 +16,7 @@ public:
 
   virtual void openWindow(const std::string& name);
 
-  virtual void spin() = 0; //Perhaps remove this later...
+  virtual void evnetLoop() = 0;
 
   virtual void drawMap();
   virtual void drawEntities();

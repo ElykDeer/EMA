@@ -1,6 +1,6 @@
 using namespace std;
 
-void Graphics::spin()
+void Graphics::evnetLoop()
 {
     manager->startDetachedThread(&Graphics::textualGraphics, this);
     visualGraphics();
