@@ -35,12 +35,22 @@ void ThreadManager::sleep(unsigned long long int nanosecs) const
 
 void ThreadManager::pause()
 {
+    //Save the speed ebfore pauseing, so it can resume to that speed later
+    lastSpeed = speed;
+    speed = 0;
     paused = true;
 }
 
 void ThreadManager::resume()
 {
+    //resume at the speed we were paused at
+    speed = lastSpeed;
     paused = false;
+}
+
+bool ThreadManager::getPauseState() const
+{
+    return paused;
 }
 
 void ThreadManager::setSpeed(const unsigned int newSpeed)

@@ -18,6 +18,7 @@ public:
     void startGraphics( void (*graphics)(Bin* const, ThreadManager* const) );
     void startUpdatingMap();
 
+    //Template to start any thread, detached
     template <typename... Args, typename F>
     void startDetachedThread(const F& func, Args &&... args)
     {
@@ -31,6 +32,7 @@ public:
 
     void pause();
     void resume();
+    bool getPauseState() const;
 
     void setSpeed(const unsigned int newSpeed);
     unsigned int getSpeed() const;
@@ -48,9 +50,11 @@ private:
     Bin* bin;
     volatile double resolution = 1;  //how fine we is calculating
     volatile unsigned long long int tick = 0; //the time, in seconds, of the game
-    volatile double speed = 1;  //The fast forwarding capability
-    volatile bool paused = false;
+    volatile double speed = 0;  //The fast forwarding capability
     std::chrono::system_clock::time_point t1, t2;
+    //pasuing
+    volatile double lastSpeed = 1;
+    volatile bool paused = true;
 
     //Lock stuff - for syncronization:
     volatile bool nextLoop = false;
