@@ -115,9 +115,6 @@ void ThreadManager::continueUpdatingMap()
 
         t2 = Clock::now();
 
-        lasTimeeee = timeeee;
-        timeeee = duration_cast<duration<double>>(t2 - t1);
-
         //if (duration_cast<duration<double>>(t2 - t1) >= seconds(1))
         if ( (t2 - t1) >= (nanoseconds(static_cast<int>(floor(1000000000.0/(speed/resolution))))) )
             //If this has taken one second or more, double the resolution

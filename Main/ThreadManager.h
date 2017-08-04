@@ -10,9 +10,6 @@
 class ThreadManager
 {
 public:
-    std::chrono::duration<double> timeeee;
-    std::chrono::duration<double> lasTimeeee;
-
     ThreadManager(Bin& bin);
 
     void startGraphics( void (*graphics)(Bin* const, ThreadManager* const) );
