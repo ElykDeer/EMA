@@ -64,6 +64,7 @@ void Graphics::visualGraphics()
 
       GraphicsInternals::drawMap();
       GraphicsInternals::drawEntities();
+      GraphicsInternals::pauseOverlay();
 
       window.display();
     }

@@ -24,6 +24,8 @@ public:
   virtual void manageEvents();  //Window resizing, closing, scrolling
   virtual void input();  //Keyboard, mouse, etc
 
+  void pauseOverlay();
+
 protected:
   Bin* const bin;
   ThreadManager* const manager;

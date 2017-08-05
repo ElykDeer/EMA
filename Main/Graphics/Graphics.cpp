@@ -75,4 +75,41 @@ void GraphicsInternals::input()
   #include "Input.cpp"
 }
 
+void GraphicsInternals::pauseOverlay()
+{
+    if (manager->getPauseState())
+    {
+      auto oldView = window.getView();
+
+      window.setView(window.getDefaultView());
+
+      // get the screen bounds
+      sf::Vector2i bottomRightPos(window.getSize().x, window.getSize().y);
+      // convert it to world coordinates
+      sf::Vector2f bottomRight = window.mapPixelToCoords(bottomRightPos);
+      sf::Vector2f topLeft = window.mapPixelToCoords(sf::Vector2i(0, 0));
+
+      int windowSize;
+      if (bottomRight.x - topLeft.x > bottomRight.y - topLeft.y)
+          windowSize = bottomRight.x - topLeft.x;
+      else
+          windowSize = bottomRight.y - topLeft.y;
+
+      //define the shape and adjust its properties
+      sf::CircleShape pauseGraying(windowSize, 4);
+      pauseGraying.rotate(45);
+      pauseGraying.setOrigin(windowSize, windowSize);
+      pauseGraying.setFillColor(sf::Color(0, 0, 0, 200));
+
+      //draw it in the middle of the screen
+      pauseGraying.setPosition(bottomRight.x/2, bottomRight.y/2);
+
+      //Draw it
+      window.draw(pauseGraying);
+
+      //get the old view back
+      window.setView(oldView);
+    }
+}
+
 #include "../../Plugins/Graphics/Graphics.cpp"
