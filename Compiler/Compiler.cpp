@@ -1,6 +1,8 @@
 //This is the program that is supposed to pull together the resources of the
   //various pluggins and compile them before runtime
 
+#include "Compiler.def" //The define for what platform is compilign for what
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -358,8 +360,20 @@ void compile(const unordered_set<string>& plugins)
     string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
     string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system";  //Linker dependencies
 
+    #ifdef LINUX_X_LINUX
+    string compiler = "g++";
+    #endif
+
+    #ifdef MAC_X_MAC
+    string compiler = "/usr/local/bin/g++-7";
+    #endif
+
+    #ifdef LINUX_X_WINDOWS
+    string compiler = "x86_64-w64-mingw32-gcc ";
+    #endif
+
     string command =
-    "g++ " + gccOptions + dependencies + "-o mainP " + links;
+    compiler+ " " + gccOptions + dependencies + "-o mainP " + links;
 
     startPaint(1);
     cout << "Command: " << command;
