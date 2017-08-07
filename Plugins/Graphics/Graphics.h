@@ -7,7 +7,7 @@ class Graphics : public GraphicsInternals
 public:
   using GraphicsInternals::GraphicsInternals;
 
-  void evnetLoop();
+  void eventLoop();
 
   void visualGraphics();
 

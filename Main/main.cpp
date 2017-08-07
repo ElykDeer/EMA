@@ -39,5 +39,5 @@ int main()
 void graphics(Bin* const bin, ThreadManager* const manager)
 {
     Graphics graphic(bin, manager);
-    graphic.evnetLoop();
+    graphic.eventLoop();
 }

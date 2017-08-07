@@ -49,3 +49,33 @@ if (event.type == sf::Event::KeyPressed)
         manager->pause();
     }
 }
+
+//Drag/drop
+if (event.type == sf::Event::MouseButtonPressed) // Mouse button is pressed, get the position and set moving as active
+    if (event.mouseButton.button == 0)
+    {
+        moving = true;
+        oldPos = window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+    }
+if (event.type == sf::Event::MouseButtonReleased)
+    if (event.mouseButton.button == 0) // Mouse button is released, no longer move
+        moving = false;
+if (event.type == sf::Event::MouseMoved)
+{
+    if (!moving)
+        continue;
+    // Determine the new position in world coordinates
+    const sf::Vector2f newPos = window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
+    // Determine how the cursor has moved
+    // Swap these to invert the movement direction
+    const sf::Vector2f deltaPos = oldPos - newPos;
+
+    // Move our view accordingly and update the window
+    view.move(deltaPos);
+    view.setSize(window.getView().getSize());
+    window.setView(view);
+
+    // Save the new position as the old one
+    // We're recalculating this, since we've changed the view
+    oldPos = window.mapPixelToCoords(sf::Vector2i(event.mouseMove.x, event.mouseMove.y));
+}

@@ -15,7 +15,7 @@ public:
 
   virtual void openWindow(const std::string& name);
 
-  virtual void evnetLoop() = 0;
+  virtual void eventLoop() = 0;
 
   virtual void drawMap();
   virtual void drawEntities();
@@ -33,7 +33,13 @@ protected:
   sf::RenderWindow window;
 
 private:
+  //Arrow keys move
   int moveSensitivity = 2;
+
+  //Drag/drop
+  sf::Vector2f oldPos;
+  bool moving = false;
+  sf::View view = window.getView();
 };
 
 #include "../Plugins/Graphics/Graphics.h"
