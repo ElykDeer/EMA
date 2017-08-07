@@ -357,23 +357,33 @@ void compile(const unordered_set<string>& plugins)
     for (const string& dep : plugins)
         dependencies += getDependencies("Plugins/" + dep);
 
+
+    #if defined(LINUX_X_LINUX)
+    string compiler = "g++ ";
     string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
-    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system";  //Linker dependencies
+    string programName = "-o mainP ";
+    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system ";  //Linker dependencies
 
-    #ifdef LINUX_X_LINUX
-    string compiler = "g++";
-    #endif
+    #elif defined(MAC_X_MAC)
+    string compiler = "/usr/local/bin/g++-7 ";
+    string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
+    string programName = "-o mainP ";
+    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system ";  //Linker dependencies
 
-    #ifdef MAC_X_MAC
-    string compiler = "/usr/local/bin/g++-7";
-    #endif
+    #elif defined(LINUX_X_WINDOWS)
+    string compiler = "x86_64-w64-mingw32-g++ ";
+    string gccOptions = "-static -DSFML_STATIC -Wall -Wextra -pedantic -std=c++1y ";
+    string programName = "-o mainP.exe ";
+    string links = "-pthread -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32 ";  //Linker dependencies
 
-    #ifdef LINUX_X_WINDOWS
-    string compiler = "x86_64-w64-mingw32-gcc ";
+    #else
+    cerr << "No compilation target specified.\n";
+    exit();
+
     #endif
 
     string command =
-    compiler+ " " + gccOptions + dependencies + "-o mainP " + links;
+    compiler + gccOptions + dependencies + programName + links;
 
     startPaint(1);
     cout << "Command: " << command;

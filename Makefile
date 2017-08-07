@@ -1,4 +1,5 @@
-all:
+help:
+	#Please see the readme for how to compile this project
 
 #Set up defines for compiling on linux for windows
 configureLXW:
@@ -17,10 +18,10 @@ configureMXM:
 #Compile: Compiler/Compiler.cpp
 #	g++-7.1 -Wall -Wextra -pedantic -std=c++1z Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
 
-LinuxFirstTime:
+firstTimeLXL:
 	sudo apt install libreadline-dev libsfml-dev git
 
-LinuxForWindowsFirstTime: LinuxFirstTime
+firstTimeLXW: firstTimeLXL
 	echo "Installing MinGW Cross-Compiler"
 	sudo apt install g++-mingw-w64-x86-64
 	echo "Downloading and setting up SFML with MinGW"
@@ -41,9 +42,8 @@ LinuxForWindowsFirstTime: LinuxFirstTime
 	echo "Cleaning up"
 	rm -r Build/
 
-
 #To be run on a Mac, the first time trying to compile an EMA program
-macFirstTime:
+firstTimeMXM:
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 	brew install sfml
 	brew install readline
@@ -54,15 +54,16 @@ macFirstTime:
 #
 
 #To be run on Linux, to comple for Linux
-linux: Compiler/Compiler.cpp
+LXL: Compiler/Compiler.cpp configureLXL
 	g++ -Wall -Wextra -pedantic -std=c++1z Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
 
 #To be run on Linux, to compile for Windows
-windows: Compiler/Compiler.cpp
-	x86_64-w64-mingw32-g++ -static -DSFML_STATIC -Wall -Wextra -pedantic -std=c++1z Main/main.cpp Main/dataStructure/dataStructure.cpp Main/Entity.cpp Main/ThreadManager.cpp Main/Graphics/Graphics.cpp Plugins/datTest/datTestTypes.cpp -o mainP.exe -pthread -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32
+LXW: Compiler/Compiler.cpp configureLXW
+	g++ -Wall -Wextra -pedantic -std=c++1z Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
+	#x86_64-w64-mingw32-g++ -static -DSFML_STATIC -Wall -Wextra -pedantic -std=c++1z Main/main.cpp Main/dataStructure/dataStructure.cpp Main/Entity.cpp Main/ThreadManager.cpp Main/Graphics/Graphics.cpp Plugins/datTest/datTestTypes.cpp -o mainP.exe -pthread -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32
 
 #To be run on a Mac, to compile for a Mac
-mac: Compiler/Compiler.cpp
+MXM: Compiler/Compiler.cpp configureMXM
 	/usr/local/bin/g++-7 -Wall -Wextra -pedantic -std=c++17 -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
 
 #
@@ -74,4 +75,4 @@ clean:
 
 cleanAll:
 	rm compile
-	rm mainP
+	rm mainP*
