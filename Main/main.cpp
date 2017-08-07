@@ -1,5 +1,5 @@
 // "Walk Of Life" Data Structure Test
-//Only ever include the data structure - insures only registered plugins work
+
 #include "dataStructure.h"
 #include "ThreadManager.h"
 #include "Graphics.h"

@@ -19,15 +19,28 @@ configureMXM:
 
 LinuxFirstTime:
 	sudo apt install libreadline-dev libsfml-dev git
-LinuxForWindowsFirstTime:
-	echo "Installing MinGW Corss-Compiler and cmake"
-	sudo apt install g++-mingw-w64-x86-64 cmake-qt-gui
-	echo "Cloning SFML into ../SFML"
-	cd ../
-	git clone https://github.com/SFML/SFML
-	echo "Installing SFML Dependancies"
-	sudo apt install freetype jpeg x11 xrandr xcb x11-xcb xcb-randr xcb-image opengl flac ogg vorbis vorbisenc vorbisfile openal pthread
-	cmake-gui
+
+LinuxForWindowsFirstTime: LinuxFirstTime
+	echo "Installing MinGW Cross-Compiler"
+	sudo apt install g++-mingw-w64-x86-64
+	echo "Downloading and setting up SFML with MinGW"
+	sudo apt install unzip
+	mkdir -p Build/
+	wget -O Build/source.zip "https://www.sfml-dev.org/files/SFML-2.4.2-windows-gcc-6.1.0-mingw-64-bit.zip"
+	unzip Build/source.zip -d Build/
+	#Move files to the right places
+	sudo cp -r Build/SFML-2.4.2/lib/ /usr/x86_64-w64-mingw32/
+	sudo cp -r Build/SFML-2.4.2/include/ /usr/x86_64-w64-mingw32/include
+	#Give files the right permissions
+	sudo find /usr/x86_64-w64-mingw32/lib/ -type d -exec chmod 755 {} \;
+	sudo find /usr/x86_64-w64-mingw32/lib/ -type f -exec chmod 655 {} \;
+	sudo find /usr/x86_64-w64-mingw32/include/ -type d -exec chmod 755 {} \;
+	sudo find /usr/x86_64-w64-mingw32/include/ -type f -exec chmod 655 {} \;
+	echo "Getting Thread Library"
+	wget -O Compiler/mingw.thread.h "https://raw.githubusercontent.com/meganz/mingw-std-threads/master/mingw.thread.h"
+	echo "Cleaning up"
+	rm -r Build/
+
 
 #To be run on a Mac, the first time trying to compile an EMA program
 macFirstTime:
@@ -46,7 +59,7 @@ linux: Compiler/Compiler.cpp
 
 #To be run on Linux, to compile for Windows
 windows: Compiler/Compiler.cpp
-	x86_64-w64-mingw32-g++ -I/usr/include/ -Wall -Wextra -pedantic -std=c++17 Main/main.cpp Main/dataStructure/dataStructure.cpp Main/Entity.cpp Main/ThreadManager.cpp Main/Graphics/Graphics.cpp Plugins/datTest/datTestTypes.cpp -o mainP.exe -pthread -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32
+	x86_64-w64-mingw32-g++ -static -DSFML_STATIC -Wall -Wextra -pedantic -std=c++1z Main/main.cpp Main/dataStructure/dataStructure.cpp Main/Entity.cpp Main/ThreadManager.cpp Main/Graphics/Graphics.cpp Plugins/datTest/datTestTypes.cpp -o mainP.exe -pthread -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32
 
 #To be run on a Mac, to compile for a Mac
 mac: Compiler/Compiler.cpp

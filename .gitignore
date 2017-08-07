@@ -6,3 +6,7 @@ mainP
 Compiler/EntityDrawCode\.cpp
 
 Compiler/init\.cpp
+
+Compiler/Compiler\.def
+
+Compiler/mingw\.thread\.h
