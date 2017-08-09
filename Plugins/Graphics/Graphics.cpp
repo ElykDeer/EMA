@@ -3,25 +3,77 @@ using namespace std;
 void Graphics::eventLoop()
 {
     manager->startDetachedThread(&Graphics::textualGraphics, this);
-    visualGraphics();
-}
 
-void Graphics::visualGraphics()
-{
     GraphicsInternals::openWindow(string("Sim"));
 
+    //Menu numbers"
+      // 0 - Pause
+      // 1 - Game
+    int menu = 0;
     while (window.isOpen())
     {
-      GraphicsInternals::manageEvents(); //check window events
-      GraphicsInternals::input(); //Keyboard, mouse, etc
-
-      //Actually Draw!
-      window.clear();
-      GraphicsInternals::drawMap();         //Hex grid
-      GraphicsInternals::drawEntities();    //Entites
-      GraphicsInternals::pauseOverlay();    //Graying screen
-      window.display();
+        if (menu == 0) //paused
+        {
+            menu = pauseMenu();
+        }
+        else if (menu == 1) //running the game
+        {
+            menu = game();
+        }
     }
+}
+
+int  Graphics::pauseMenu()
+{
+    //check window events
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        GraphicsInternals::basicEvents(event); //Get window events
+
+        //Pause control
+        if (event.type == sf::Event::KeyPressed)
+        {
+          if (event.key.code == sf::Keyboard::Space)
+          {
+            if(manager->getPauseState()) //paused
+              manager->resume();
+            else
+              manager->pause();
+          }
+
+          return 1;
+        }
+
+
+        //add click for menu options
+
+    }
+
+    //still draw the hexes, but don't have the interactivity of the map
+    window.clear();
+    GraphicsInternals::drawMap();         //Hex grid
+    GraphicsInternals::drawEntities();    //Entites
+    GraphicsInternals::pauseOverlay();    //Graying screen
+    window.display();
+
+    return 0;
+}
+
+int Graphics::game()
+{
+    //check window events
+    GraphicsInternals::manageEvents();
+    //Keyboard, mouse, etc
+    GraphicsInternals::input();
+
+    //Actually Draw!
+    window.clear();
+    GraphicsInternals::drawMap();         //Hex grid
+    GraphicsInternals::drawEntities();    //Entites
+    window.display();
+
+    return 1;
 }
 
 void Graphics::textualGraphics() const
