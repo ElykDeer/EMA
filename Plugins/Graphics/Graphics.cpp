@@ -53,6 +53,57 @@ void  Graphics::pauseMenu()
     GraphicsInternals::drawMap();         //Hex grid
     GraphicsInternals::drawEntities();    //Entites
     GraphicsInternals::pauseOverlay();    //Graying screen
+
+    /* <Menu-Graphics>  */
+    auto center = window.getView().getCenter();
+    double hexRadius;
+    if (window.getView().getSize().x < window.getView().getSize().y)
+        hexRadius = window.getView().getSize().x/8;
+    else
+        hexRadius = window.getView().getSize().y/8;
+
+
+    //Background hex
+    sf::CircleShape hexa(hexRadius*2.6, 6); //Each hex will be a circle with 6 sides
+    hexa.setOrigin(hexRadius*2.6, hexRadius*2.6);
+    hexa.setPosition(center.x, center.y);
+    hexa.setFillColor(sf::Color::Green);
+    window.draw(hexa);
+
+    //Reset to normal attributes
+    hexa.setRadius(hexRadius);
+    hexa.setOrigin(hexRadius, hexRadius);
+    hexa.rotate(30);
+    hexa.setOutlineColor(sf::Color::Blue);
+    hexa.setOutlineThickness(3);
+    hexa.setFillColor(sf::Color::White);
+
+    //Middle Hex
+    hexa.setPosition(center.x, center.y);
+    window.draw(hexa);
+
+    //Bottom Hex
+    hexa.setPosition(center.x, center.y+(2*hexRadius));
+    window.draw(hexa);
+    //Top Hex
+    hexa.setPosition(center.x, center.y-(2*hexRadius));
+    window.draw(hexa);
+
+    //Bottom Right Hex
+    hexa.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius));
+    window.draw(hexa);
+    //Top Right Hex
+    hexa.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius));
+    window.draw(hexa);
+
+    //Bottom Left Hex
+    hexa.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius));
+    window.draw(hexa);
+    //Top Left Hex
+    hexa.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius));
+    window.draw(hexa);
+    /* </Menu-Graphics> */
+
     window.display();
 }
 
