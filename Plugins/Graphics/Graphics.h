@@ -11,10 +11,13 @@ public:
   void eventLoop();
 
   //Menus
-  int pauseMenu();
-  int game();
+  void pauseMenu();
+  void game();
 
   void textualGraphics() const;
+
+private:
+  int menu = 0;
 };
 
 

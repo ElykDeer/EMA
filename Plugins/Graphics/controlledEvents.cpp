@@ -21,16 +21,9 @@ if (event.type == sf::Event::KeyPressed)
     {
       manager->setSpeed(manager->getSpeed()*2);
     }
-    if ((event.key.code == sf::Keyboard::Subtract) || (event.key.code == sf::Keyboard::Dash))
+    else if ((event.key.code == sf::Keyboard::Subtract) || (event.key.code == sf::Keyboard::Dash))
     {
       manager->setSpeed(manager->getSpeed()/2);
-    }
-    if (event.key.code == sf::Keyboard::Space)
-    {
-      if(manager->getPauseState()) //paused
-        manager->resume();
-      else
-        manager->pause();
     }
 }
 

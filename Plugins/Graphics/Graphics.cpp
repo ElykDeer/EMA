@@ -9,21 +9,20 @@ void Graphics::eventLoop()
     //Menu numbers"
       // 0 - Pause
       // 1 - Game
-    int menu = 0;
     while (window.isOpen())
     {
         if (menu == 0) //paused
         {
-            menu = pauseMenu();
+            pauseMenu();
         }
         else if (menu == 1) //running the game
         {
-            menu = game();
+            game();
         }
     }
 }
 
-int  Graphics::pauseMenu()
+void  Graphics::pauseMenu()
 {
     //check window events
     sf::Event event;
@@ -40,14 +39,13 @@ int  Graphics::pauseMenu()
               manager->resume();
             else
               manager->pause();
-          }
 
-          return 1;
+            menu = 1; //switch to the game menu
+            return;
+          }
         }
 
-
         //add click for menu options
-
     }
 
     //still draw the hexes, but don't have the interactivity of the map
@@ -56,14 +54,34 @@ int  Graphics::pauseMenu()
     GraphicsInternals::drawEntities();    //Entites
     GraphicsInternals::pauseOverlay();    //Graying screen
     window.display();
-
-    return 0;
 }
 
-int Graphics::game()
+void Graphics::game()
 {
     //check window events
-    GraphicsInternals::manageEvents();
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+      //Get window events
+      GraphicsInternals::basicEvents(event);
+      //get controls
+      GraphicsInternals::controlledEvents(event);
+
+      //Pause control
+      if (event.type == sf::Event::KeyPressed)
+      {
+        if (event.key.code == sf::Keyboard::Space)
+        {
+          if(manager->getPauseState()) //paused
+            manager->resume();
+          else
+            manager->pause();
+
+          menu = 0; //switch to the pause menu
+          return;
+        }
+      }
+    }
     //Keyboard, mouse, etc
     GraphicsInternals::input();
 
@@ -72,8 +90,6 @@ int Graphics::game()
     GraphicsInternals::drawMap();         //Hex grid
     GraphicsInternals::drawEntities();    //Entites
     window.display();
-
-    return 1;
 }
 
 void Graphics::textualGraphics() const
