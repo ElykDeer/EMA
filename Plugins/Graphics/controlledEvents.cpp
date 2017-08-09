@@ -49,7 +49,6 @@ if (event.type == sf::Event::MouseMoved)
 
     // Move our view accordingly and update the window
     view.move(deltaPos);
-    view.setSize(window.getView().getSize());
     window.setView(view);
 
     // Save the new position as the old one
