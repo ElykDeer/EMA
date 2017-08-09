@@ -10,6 +10,9 @@ void GraphicsInternals::openWindow(const string& name)
 {
   //1000x1000 window, by default
   window.create(sf::VideoMode(1000, 1000), name, sf::Style::Default);
+  auto view = window.getView();
+  view.setCenter(bin->getWidth()/2, bin->getHeight()/2);
+  window.setView(view);
 }
 
 void GraphicsInternals::drawMap()
