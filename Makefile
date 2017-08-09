@@ -60,7 +60,6 @@ LXL: Compiler/Compiler.cpp configureLXL
 #To be run on Linux, to compile for Windows
 LXW: Compiler/Compiler.cpp configureLXW
 	g++ -Wall -Wextra -pedantic -std=c++1z Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
-	#x86_64-w64-mingw32-g++ -static -DSFML_STATIC -Wall -Wextra -pedantic -std=c++1z Main/main.cpp Main/dataStructure/dataStructure.cpp Main/Entity.cpp Main/ThreadManager.cpp Main/Graphics/Graphics.cpp Plugins/datTest/datTestTypes.cpp -o mainP.exe -pthread -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32
 
 #To be run on a Mac, to compile for a Mac
 MXM: Compiler/Compiler.cpp configureMXM
