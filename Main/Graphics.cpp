@@ -1,4 +1,4 @@
-#include "../Graphics.h"
+#include "Graphics.h"
 using namespace std;
 
 GraphicsInternals::GraphicsInternals(Bin* const bin, ThreadManager* const manager)
@@ -56,8 +56,20 @@ void GraphicsInternals::drawEntities()
     if (bin->count())
         for (const Entity& entity : bin->getAll())
         {
-          #include "../../Compiler/EntityDrawCode.cpp"
+          #include "../Compiler/EntityDrawCode.cpp"
         }
+}
+
+//Window resizing, closing
+void GraphicsInternals::basicEvents(sf::Event& event)
+{
+  #include "../Plugins/Graphics/events.cpp"
+}
+
+//Map movement, speed control
+void GraphicsInternals::controlledEvents(sf::Event& event)
+{
+  #include "../Plugins/Graphics/controlledEvents.cpp"
 }
 
 void GraphicsInternals::manageEvents()
@@ -66,13 +78,17 @@ void GraphicsInternals::manageEvents()
   sf::Event event;
   while (window.pollEvent(event))
   {
-    #include "Events.cpp"
+    //Get window events
+    basicEvents(event);
+    //get controls
+    controlledEvents(event);
   }
 }
 
+//Keyboard, mouse, etc
 void GraphicsInternals::input()
 {
-  #include "Input.cpp"
+    #include "../Plugins/Graphics/input.cpp"
 }
 
 void GraphicsInternals::pauseOverlay()
@@ -112,4 +128,4 @@ void GraphicsInternals::pauseOverlay()
     }
 }
 
-#include "../../Plugins/Graphics/Graphics.cpp"
+#include "../Plugins/Graphics/Graphics.cpp"

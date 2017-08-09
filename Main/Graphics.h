@@ -21,7 +21,9 @@ public:
   virtual void drawEntities();
 
   //These two should probably be built by the compiler based on some rules I'll think up later
-  virtual void manageEvents();  //Window resizing, closing, scrolling
+  virtual void basicEvents(sf::Event& event); //Window resizing, closing
+  virtual void controlledEvents(sf::Event& event); //Map movement, speed control
+  virtual void manageEvents();  //Loops top two
   virtual void input();  //Keyboard, mouse, etc
 
   void pauseOverlay();
