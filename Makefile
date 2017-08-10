@@ -53,7 +53,7 @@ firstTimeMXM:
 	echo "Downloading SFML"
 	mkdir -p Build/
 	wget -O Build/source.tar.gz "https://www.sfml-dev.org/files/SFML-2.4.2-osx-clang.tar.gz"
-	gunzip Build/source.tar.gz
+	gunzip -c Build/source.tar.gz | tar xopf -
 	#Move files to the right places
 	sudo cp -r Build/SFML-2.4.2/lib/ /usr/local/Cellar/gcc/7.1.0/lib/gcc/7/
 	sudo cp -r Build/SFML-2.4.2/include/ /usr/local/Cellar/gcc/7.1.0/include/c++/7.1.0/
