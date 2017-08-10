@@ -55,13 +55,11 @@ firstTimeMXM:
 	wget -O Build/source.zip "https://www.sfml-dev.org/files/SFML-2.4.2-osx-clang.tar.gz"
 	unzip Build/source.zip -d Build/
 	#Move files to the right places
-	sudo cp -r Build/SFML-2.4.2/lib/ /usr/local/g++-7/ #x86_64-w64-mingw32/
-	sudo cp -r Build/SFML-2.4.2/include/ /usr/local/g++-7/include
+	sudo cp -r Build/SFML-2.4.2/lib/ /usr/local/Cellar/gcc/7.1.0/lib/gcc/7/
+	sudo cp -r Build/SFML-2.4.2/include/ /usr/local/Cellar/gcc/7.1.0/include/c++/7.1.0/
 	#Give files the right permissions
-	sudo find /usr/local/g++-7/lib/ -type d -exec chmod 755 {} \;
-	sudo find /usr/local/g++-7/lib/ -type f -exec chmod 655 {} \;
-	sudo find /usr/local/g++-7/include/ -type d -exec chmod 755 {} \;
-	sudo find /usr/local/g++-7/include/ -type f -exec chmod 655 {} \;
+	sudo find /usr/local/Cellar/gcc/7.1.0/ -type d -exec chmod 755 {} \;
+	sudo find /usr/local/Cellar/gcc/7.1.0/ -type f -exec chmod 655 {} \;
 	echo "Cleaning up"
 	rm -r Build/
 
