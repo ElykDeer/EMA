@@ -44,10 +44,26 @@ firstTimeLXW: firstTimeLXL
 
 #To be run on a Mac, the first time trying to compile an EMA program
 firstTimeMXM:
+	echo "Installing Brew, and using brew to install dependancies"
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 	brew install sfml
 	brew install readline
 	brew install gcc
+	brew install wget
+	echo "Downloading SFML"
+	mkdir -p Build/
+	wget -O Build/source.zip "https://www.sfml-dev.org/files/SFML-2.4.2-osx-clang.tar.gz"
+	unzip Build/source.zip -d Build/
+	#Move files to the right places
+	sudo cp -r Build/SFML-2.4.2/lib/ /usr/local/g++-7/ #x86_64-w64-mingw32/
+	sudo cp -r Build/SFML-2.4.2/include/ /usr/local/g++-7/include
+	#Give files the right permissions
+	sudo find /usr/local/g++-7/lib/ -type d -exec chmod 755 {} \;
+	sudo find /usr/local/g++-7/lib/ -type f -exec chmod 655 {} \;
+	sudo find /usr/local/g++-7/include/ -type d -exec chmod 755 {} \;
+	sudo find /usr/local/g++-7/include/ -type f -exec chmod 655 {} \;
+	echo "Cleaning up"
+	rm -r Build/
 
 #
 #
