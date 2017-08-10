@@ -1,14 +1,10 @@
 Compiler/enabledPlugins\.conf
 Compiler/pluginTypes\.h
-compile
-mainP
-
 Compiler/EntityDrawCode\.cpp
-
 Compiler/init\.cpp
-
 Compiler/Compiler\.def
-
 Compiler/mingw\.thread\.h
 
+compile
+mainP
 mainP\.exe
