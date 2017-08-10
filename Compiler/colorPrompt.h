@@ -7,6 +7,7 @@
  * 3 - Yellow
  * 4 - Blue
  */
+ 
 #ifdef _WIN32
   void startPaint(const int color) {}
   void endPaint() {}
