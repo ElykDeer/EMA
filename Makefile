@@ -53,10 +53,12 @@ firstTimeMXM:
 	echo "Downloading SFML"
 	mkdir -p Build/
 	wget -O Build/source.tar.gz "https://www.sfml-dev.org/files/SFML-2.4.2-osx-clang.tar.gz"
-	gunzip -c Build/source.tar.gz | tar xopf -
+	cd Build
+	gunzip -c source.tar.gz | tar xopf -
+	cd ..
 	#Move files to the right places
-	sudo cp -r Build/SFML-2.4.2/lib/ /usr/local/Cellar/gcc/7.1.0/lib/gcc/7/
-	sudo cp -r Build/SFML-2.4.2/include/ /usr/local/Cellar/gcc/7.1.0/include/c++/7.1.0/
+	sudo cp -r Build/SFML-2.4.2-osx-clang/lib/ /usr/local/Cellar/gcc/7.1.0/lib/gcc/7/
+	sudo cp -r Build/SFML-2.4.2-osx-clang/include/ /usr/local/Cellar/gcc/7.1.0/include/c++/7.1.0/
 	#Give files the right permissions
 	sudo find /usr/local/Cellar/gcc/7.1.0/ -type d -exec chmod 755 {} \;
 	sudo find /usr/local/Cellar/gcc/7.1.0/ -type f -exec chmod 655 {} \;
