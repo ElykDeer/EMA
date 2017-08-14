@@ -6,6 +6,10 @@ class Graphics : public GraphicsInternals
 {
 public:
   using GraphicsInternals::GraphicsInternals;
+  Graphics(Bin* const bin, ThreadManager* const manager) : GraphicsInternals(bin, manager)
+  {
+    font.loadFromFile("/usr/share/fonts/truetype/takao-gothic/TakaoPGothic.ttf");
+  }
 
   //Required event loop function
   void eventLoop();
@@ -18,6 +22,7 @@ public:
 
 private:
   int menu = 0;
+  sf::Font font;
 };
 
 

@@ -78,31 +78,54 @@ void  Graphics::pauseMenu()
     hexa.setOutlineThickness(3);
     hexa.setFillColor(sf::Color::White);
 
-    //Middle Hex
-    hexa.setPosition(center.x, center.y);
-    window.draw(hexa);
+    hexa.setPosition(center.x, center.y); window.draw(hexa); //Middle Hex
+    hexa.setPosition(center.x, center.y+(2*hexRadius)); window.draw(hexa); //Bottom Hex
+    hexa.setPosition(center.x, center.y-(2*hexRadius)); window.draw(hexa); //Top Hex
+    hexa.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window.draw(hexa); //Bottom Right Hex
+    hexa.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window.draw(hexa); //Top Right Hex
+    hexa.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius)); window.draw(hexa); //Bottom Left Hex
+    hexa.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius)); window.draw(hexa); //Top Left Hex
 
-    //Bottom Hex
-    hexa.setPosition(center.x, center.y+(2*hexRadius));
-    window.draw(hexa);
-    //Top Hex
-    hexa.setPosition(center.x, center.y-(2*hexRadius));
-    window.draw(hexa);
+    sf::Text text("Controls", font, hexRadius/2..25);
+    text.setFillColor(sf::Color::Blue);
+    //Calculate what the text size needs to be
 
-    //Bottom Right Hex
-    hexa.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius));
-    window.draw(hexa);
-    //Top Right Hex
-    hexa.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius));
-    window.draw(hexa);
+    text.setString("Resume");
+    text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height);
+    text.setPosition(center.x, center.y)
+    window.draw(text); //Resume - Middle Hex
 
-    //Bottom Left Hex
-    hexa.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius));
-    window.draw(hexa);
-    //Top Left Hex
-    hexa.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius));
-    window.draw(hexa);
+    text.setString("Load");
+    text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height);
+    text.setPosition(center.x, center.y-(2*hexRadius));
+    window.draw(text); //Load - Top Hex
+
+    text.setString("Save");
+    text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height);
+    text.setPosition(center.x, center.y+(2*hexRadius));
+    window.draw(text); //Save - Bottom Hex
+
+    text.setString("Controls");
+    text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height);
+    text.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius));
+    window.draw(text); //Controls - Top Right Hex
+
+    text.setString("Options");
+    text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height);
+    text.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius));
+    window.draw(text); //Options - Bottom Right Hex
+
+    text.setString("About");
+    text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height);
+    text.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius));
+    window.draw(text); //About - Top Left Hex
+
+    text.setString("Credits");
+    text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height);
+    text.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius));
+    window.draw(text); //Credits - Bottom Left Hex
     /* </Menu-Graphics> */
+
 
     window.display();
 }
