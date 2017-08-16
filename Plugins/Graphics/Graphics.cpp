@@ -86,13 +86,13 @@ void  Graphics::pauseMenu()
     hexa.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius)); window.draw(hexa); //Bottom Left Hex
     hexa.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius)); window.draw(hexa); //Top Left Hex
 
-    sf::Text text("Controls", font, hexRadius/2..25);
+    sf::Text text("Controls", font, hexRadius/2.25);
     text.setFillColor(sf::Color::Blue);
     //Calculate what the text size needs to be
 
     text.setString("Resume");
     text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height);
-    text.setPosition(center.x, center.y)
+    text.setPosition(center.x, center.y);
     window.draw(text); //Resume - Middle Hex
 
     text.setString("Load");
