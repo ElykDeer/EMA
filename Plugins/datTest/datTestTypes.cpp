@@ -40,8 +40,11 @@ void Flower::update(unsigned int resolution)
   else
     size = maxSize; //safty net, incase the above has a bug
 
-  //Out-competed calculation
-
+  if (bin->getNearByCountOfType<Flower>(this, 10) > 10)
+  {
+    //Actually mark for death
+    bin->markForRemoval(this);
+  }
 
   //death timer:
   if (age > maxAge)

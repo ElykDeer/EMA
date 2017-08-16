@@ -84,16 +84,31 @@ public:
     byTypeIterNear<C> getAllOfTypeNear(Entity* entity, const unsigned int distance)
     {
         Hex* hexP = byTypeMap[typeid(C).hash_code()][entity]->getHexP();
-        return hexP->getAllOfTypeNear<C>(hexP->getCol(), hexP->getRow(), distance, &hexes);
+        return hexP->getAllOfTypeNear<C>(distance, &hexes);
     }
 
-////////////////////////////////////////////////////////////////////////////////
     //Iterstuff - non-const - everything - distance
     globalIterNear getAllNear(Entity* entity, const unsigned int distance)
     {
         Hex* hexP = byTypeMap[typeid(*entity).hash_code()][entity]->getHexP();
-        return hexP->getAllNear(hexP->getCol(), hexP->getRow(), distance, &hexes);
+        return hexP->getAllNear(distance, &hexes);
     }
+
+    ///Count - non-const - byType - distance
+    template<class C>
+    unsigned long int getNearByCountOfType(Entity* entity, const unsigned int distance)
+    {
+        Hex* hexP = byTypeMap[typeid(C).hash_code()][entity]->getHexP();
+        return hexP->nearByCountOfType<C>(distance, &hexes);
+    }
+
+    //Count - non-const - everything - distance
+    unsigned long int getNearByCount(Entity* entity, const unsigned int distance)
+    {
+        Hex* hexP = byTypeMap[typeid(*entity).hash_code()][entity]->getHexP();
+        return hexP->nearByCount(distance, &hexes);
+    }
+////////////////////////////////////////////////////////////////////////////////
 };
 
 #endif
