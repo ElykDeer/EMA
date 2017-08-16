@@ -10,6 +10,7 @@
 #include <set>
 #include <functional>
 #include <vector>
+#include <random>
 #include <cmath> //because hexagons
 
 #include <iostream>
@@ -53,6 +54,11 @@ public:
     unsigned long int count() const;
 
     ~Bin();
+
+    //Random Number Stuff
+    std::random_device seed;
+    std::mt19937 gen;
+    std::uniform_real_distribution<double> chanceGen;
 
     class Hex;//Now needs to be public - so the graphics can mess with it
   private:

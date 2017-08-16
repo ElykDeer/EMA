@@ -2,17 +2,19 @@
 #define TESTTYPES 1
 #include "../../Main/Entity.h"
 #include "../../Main/dataStructure.h"
+#include <cmath>
 
 #define TICKSINADAY 60*60*24 //Ticks in one day
 
 //Just two basic derived types to serve testing purposes
 class Flower : public Entity
 {
-public:
-    Flower(unsigned int x, unsigned int y, Bin* const bin);
-    void update(unsigned int resolution) override;
 
-    double getSize() const;
+public:
+  Flower(unsigned int x, unsigned int y, Bin* const bin);
+  void update(unsigned int resolution) override;
+
+  double getSize() const;
 
 private:
   //Age, in ticks, of the flower

@@ -12,7 +12,8 @@ using namespace std;
 Bin::Bin(const unsigned int width,
                  const unsigned int height,
                  const double hexRadius)
-: width(width),
+: seed(), gen(seed()), chanceGen(0.0, 1.0),
+  width(width),
   height(height),
   hexRadius(hexRadius),
 
