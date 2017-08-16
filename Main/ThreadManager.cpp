@@ -115,9 +115,9 @@ void ThreadManager::continueUpdatingMap()
 
         t2 = Clock::now();
 
-        //if (duration_cast<duration<double>>(t2 - t1) >= seconds(1))
-        if ( (t2 - t1) >= (nanoseconds(static_cast<int>(floor(1000000000.0/(speed/resolution))))) )
-            //If this has taken one second or more, double the resolution
+        //If this has taken one second or more, double the resolution, but not past half the speed
+        if ( (t2 - t1) >= (nanoseconds(static_cast<int>(floor(1000000000.0/(speed/resolution)))))
+            && resolution <= speed/2)
             resolution *= 2;
         else
             //timeout the rest of the second
