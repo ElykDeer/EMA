@@ -48,6 +48,7 @@ if (event.type == sf::Event::MouseMoved)
     const sf::Vector2f deltaPos = oldPos - newPos;
 
     // Move our view accordingly and update the window
+    sf::View view = window.getView();
     view.move(deltaPos);
     window.setView(view);
 

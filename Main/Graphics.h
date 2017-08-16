@@ -41,7 +41,6 @@ private:
   //Drag/drop
   sf::Vector2f oldPos;
   bool moving = false;
-  sf::View view = window.getView();
 };
 
 #include "../Plugins/Graphics/Graphics.h"
