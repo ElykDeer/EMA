@@ -32,14 +32,14 @@ void Flower::update(unsigned int resolution)
         size += (maxSize/(60.0*60.0*12.0))*resolution; //Grows to full size in 12 hours
 
       //safety
-      if (size > maxSize || size < 0)
+      if (size > maxSize)
         size = maxSize;
     }
   }
 
 /////////////////// Death Stuff ///////////////////
   //death timer:
-  if (age > maxAge || age < clear)
+  if (age > maxAge)
   {
     //One flower generates two on death - will change later
     bin->insert(new Flower(getX()+(bin->chanceGen(bin->gen)*gatherRadius), getY()+(bin->chanceGen(bin->gen)*gatherRadius), bin));
