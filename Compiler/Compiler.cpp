@@ -362,13 +362,13 @@ void compile(const unordered_set<string>& plugins)
     string compiler = "g++ ";
     string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
     string programName = "-o mainP ";
-    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system ";  //Linker dependencies
+    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-system ";  //Linker dependencies
 
     #elif defined(MAC_X_MAC)
     string compiler = "/usr/local/bin/g++-7 ";
     string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
     string programName = "-o mainP ";
-    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system ";  //Linker dependencies
+    string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-system ";  //Linker dependencies
 
     #elif defined(LINUX_X_WINDOWS)
     string compiler = "x86_64-w64-mingw32-g++ ";
