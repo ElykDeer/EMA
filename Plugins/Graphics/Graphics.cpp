@@ -35,7 +35,8 @@ void  Graphics::pauseMenu()
   }
 
   auto gameView = window->getView();
-  window->setView(window->getDefaultView());
+  auto pauseView = window->getView();
+ // window->setView(window->getView());
 
   while (window->isOpen())
   {
@@ -43,7 +44,26 @@ void  Graphics::pauseMenu()
     sf::Event event;
     while (window->pollEvent(event))
     {
-        GraphicsInternals::basicEvents(event); //Get window events
+        //Basic events for keeping the window responcive and reacting as desired
+
+        // "close requested" event: we close the window
+        if (event.type == sf::Event::Closed)
+        {
+            manager->kill();
+            window->close();
+        }
+        // catch the resize events
+        if (event.type == sf::Event::Resized)
+        {
+            //scale view to new window size
+            sf::View view = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
+            //set center to old center
+            view.setCenter(window->getView().getCenter());
+            //propogate
+            gameView = view;
+            pauseView = view;
+            window->setView(view);
+        }
 
         //Pause control
         if (event.type == sf::Event::KeyPressed)
@@ -65,7 +85,6 @@ void  Graphics::pauseMenu()
         //add click for menu options
     }
 
-    auto pauseView = window->getView();
     window->setView(gameView);
 
     //still draw the hexes, but don't have the interactivity of the map
