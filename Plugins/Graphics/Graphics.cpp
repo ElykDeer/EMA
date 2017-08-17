@@ -95,6 +95,7 @@ void  Graphics::pauseMenu()
 
     window->setView(pauseView);
     /* <Menu-Graphics>  */
+    //Center/proportion finding
     auto center = window->getView().getCenter();
     double hexRadius;
     if (window->getView().getSize().x < window->getView().getSize().y)
@@ -102,18 +103,17 @@ void  Graphics::pauseMenu()
     else
         hexRadius = window->getView().getSize().y/8;
 
+    //Draw Mini Sim
     //set a new view
-    auto miniView = window->getDefaultView();
-    miniView.setCenter(window->getView().getCenter());
+    sf::View miniView = window->getView();
+    miniView.zoom(.3);
+    miniView.setCenter(sf::Vector2f(pauseBin.getWidth()/2, pauseBin.getHeight()/2));
     window->setView(miniView);
-
     pauseBin.updateEntities(1);
     badIdea.drawMap();  //Hex grid
     badIdea.drawEntities();    //Entites
-
     //reset back to old view
     window->setView(pauseView);
-
 
     //Background hexes
     sf::CircleShape hexa(hexRadius, 6); //Each hex will be a circle with 6 sides
@@ -127,11 +127,12 @@ void  Graphics::pauseMenu()
     hexa.setPosition(center.x-(1.5*hexRadius), center.y+(hexRadius*sqrt(3)/2)); window->draw(hexa); //Bottom Left Hex
     hexa.setPosition(center.x-(1.5*hexRadius), center.y-(hexRadius*sqrt(3)/2)); window->draw(hexa); //Top Left Hex
 
-    //Reset to normal attributes
+    //Reset hex to normal attributes for next bit
     hexa.setOutlineColor(sf::Color::Blue);
     hexa.setOutlineThickness(3);
     hexa.setFillColor(sf::Color::White);
 
+    //Forground Hexes - the options
     hexa.setPosition(center.x, center.y+(2*hexRadius)); window->draw(hexa); //Bottom Hex
     hexa.setPosition(center.x, center.y-(2*hexRadius)); window->draw(hexa); //Top Hex
     hexa.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(hexa); //Bottom Right Hex
@@ -141,47 +142,26 @@ void  Graphics::pauseMenu()
     hexa.setFillColor(sf::Color::Transparent);
     hexa.setPosition(center.x, center.y); window->draw(hexa); //Middle Hex
 
+    //Text overlay
     sf::Text text("Controls", font, hexRadius/2.25);
     //Should be constant, otherwise affected by letters like 'p':
     auto textHeight = text.getLocalBounds().height;
     text.setFillColor(sf::Color::Blue);
-    //Calculate what the text size needs to be
-
-    text.setString("Resume");
-    text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x, center.y);
-    window->draw(text); //Resume - Middle Hex
-
-    text.setString("Load");
-    text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x, center.y-(2*hexRadius));
-    window->draw(text); //Load - Top Hex
-
-    text.setString("Save");
-    text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x, center.y+(2*hexRadius));
-    window->draw(text); //Save - Bottom Hex
-
-    text.setString("Controls");
-    text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius));
-    window->draw(text); //Controls - Top Right Hex
-
-    text.setString("Options");
-    text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius));
-    window->draw(text); //Options - Bottom Right Hex
-
-    text.setString("About");
-    text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius));
-    window->draw(text); //About - Top Left Hex
-
-    text.setString("Credits");
-    text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius));
-    window->draw(text); //Credits - Bottom Left Hex
-
+    /* Possibly add text size calculation */
+    text.setString("Resume"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x, center.y); window->draw(text); //Middle
+    text.setString("Load"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x, center.y-(2*hexRadius)); window->draw(text);//Top
+    text.setString("Save"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x, center.y+(2*hexRadius)); window->draw(text); //Bottom
+    text.setString("Controls"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window->draw(text); //Top Right
+    text.setString("Options"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(text); //Bottom Right
+    text.setString("About"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius)); window->draw(text); //Top Left
+    text.setString("Credits"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius)); window->draw(text); //Bottom Left
     window->display();
     /* </Menu-Graphics> */
 
