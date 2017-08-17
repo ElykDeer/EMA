@@ -28,7 +28,7 @@ void  Graphics::pauseMenu()
   Bin pauseBin(100, 100, 5);
   Graphics badIdea(&pauseBin, nullptr);
   badIdea.window = window;
-  const unsigned int numFloaters = 10;
+  const unsigned int numFloaters = 25;
   for(unsigned int numOfNodes = 0; numOfNodes < numFloaters; ++numOfNodes)
   {
       pauseBin.insert(new Floater((pauseBin.chanceGen(pauseBin.gen))*(pauseBin.getWidth()), (pauseBin.chanceGen(pauseBin.gen))*(pauseBin.getHeight()), &pauseBin));
@@ -106,7 +106,7 @@ void  Graphics::pauseMenu()
     //Draw Mini Sim
     //set a new view
     sf::View miniView = window->getView();
-    miniView.zoom(.3);
+    miniView.setSize(miniView.getSize().x*(pauseBin.getWidth()/2/hexRadius), miniView.getSize().y*(pauseBin.getHeight()/2/hexRadius));
     miniView.setCenter(sf::Vector2f(pauseBin.getWidth()/2, pauseBin.getHeight()/2));
     window->setView(miniView);
     pauseBin.updateEntities(1);
@@ -142,14 +142,17 @@ void  Graphics::pauseMenu()
     hexa.setFillColor(sf::Color::Transparent);
     hexa.setPosition(center.x, center.y); window->draw(hexa); //Middle Hex
 
+    //Play Button
+    hexa.setRadius(hexRadius/2); hexa.setOrigin(hexRadius/2, hexRadius/2);
+    hexa.setPointCount(3); hexa.rotate(60);
+    hexa.setFillColor(sf::Color(0, 0, 255, 100)); window->draw(hexa); //Middle Hex
+
     //Text overlay
     sf::Text text("Controls", font, hexRadius/2.25);
     //Should be constant, otherwise affected by letters like 'p':
     auto textHeight = text.getLocalBounds().height;
     text.setFillColor(sf::Color::Blue);
     /* Possibly add text size calculation */
-    text.setString("Resume"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x, center.y); window->draw(text); //Middle
     text.setString("Load"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
     text.setPosition(center.x, center.y-(2*hexRadius)); window->draw(text);//Top
     text.setString("Save"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
