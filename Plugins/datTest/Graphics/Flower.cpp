@@ -22,9 +22,9 @@ if ( (entity.getX() < rightBound + entSize) && (entity.getX() > leftBound - entS
 
         //Draw circle for petals
         circularEnt.setPosition(ent->getX(), ent->getY());
-        window.draw(circularEnt);
+        window->draw(circularEnt);
 
         //Draw point for center thing
         entCenter.setPosition(ent->getX(), ent->getY());
-        window.draw(entCenter);
+        window->draw(entCenter);
     }

@@ -4,15 +4,19 @@ using namespace std;
 GraphicsInternals::GraphicsInternals(Bin* const bin, ThreadManager* const manager)
   : bin(bin), manager(manager) {}
 
-GraphicsInternals::~GraphicsInternals() {}
+GraphicsInternals::~GraphicsInternals()
+{
+  if (window)
+    delete window;
+}
 
 void GraphicsInternals::openWindow(const string& name)
 {
   //1000x1000 window, by default
-  window.create(sf::VideoMode(1000, 1000), name, sf::Style::Default);
-  auto view = window.getView();
+  window = new sf::RenderWindow(sf::VideoMode(1000, 1000), name, sf::Style::Default);
+  auto view = window->getView();
   view.setCenter(bin->getWidth()/2, bin->getHeight()/2);
-  window.setView(view);
+  window->setView(view);
 }
 
 void GraphicsInternals::drawMap()
@@ -25,9 +29,9 @@ void GraphicsInternals::drawMap()
   hexa.setFillColor(sf::Color::White);
   hexa.setOrigin(hexRadius, hexRadius);
 
-  auto center = window.getView().getCenter();
-  auto xSize = window.getView().getSize().x/2;
-  auto ySize = window.getView().getSize().y/2;
+  auto center = window->getView().getCenter();
+  auto xSize = window->getView().getSize().x/2;
+  auto ySize = window->getView().getSize().y/2;
   auto leftBound = center.x - xSize - hexRadius;
   auto rightBound = center.x + xSize + hexRadius;
   auto topBound = center.y - ySize - hexRadius;
@@ -39,7 +43,7 @@ void GraphicsInternals::drawMap()
         if ( (hex.getY() < bottomBound) && (hex.getY() > topBound) )
         {
             hexa.setPosition(hex.getX(), hex.getY());
-            window.draw(hexa);
+            window->draw(hexa);
         }
 
   }
@@ -47,9 +51,9 @@ void GraphicsInternals::drawMap()
 
 void GraphicsInternals::drawEntities()
 {
-    auto center = window.getView().getCenter();
-    auto xSize = window.getView().getSize().x/2;
-    auto ySize = window.getView().getSize().y/2;
+    auto center = window->getView().getCenter();
+    auto xSize = window->getView().getSize().x/2;
+    auto ySize = window->getView().getSize().y/2;
     auto leftBound = center.x - xSize;
     auto rightBound = center.x + xSize;
     auto topBound = center.y - ySize;
@@ -79,7 +83,7 @@ void GraphicsInternals::manageEvents()
 {
   //check window events
   sf::Event event;
-  while (window.pollEvent(event))
+  while (window->pollEvent(event))
   {
     //Get window events
     basicEvents(event);
@@ -98,15 +102,15 @@ void GraphicsInternals::pauseOverlay()
 {
     if (manager->getPauseState())
     {
-      auto oldView = window.getView();
+      auto oldView = window->getView();
 
-      window.setView(window.getDefaultView());
+      window->setView(window->getDefaultView());
 
       // get the screen bounds
-      sf::Vector2i bottomRightPos(window.getSize().x, window.getSize().y);
+      sf::Vector2i bottomRightPos(window->getSize().x, window->getSize().y);
       // convert it to world coordinates
-      sf::Vector2f bottomRight = window.mapPixelToCoords(bottomRightPos);
-      sf::Vector2f topLeft = window.mapPixelToCoords(sf::Vector2i(0, 0));
+      sf::Vector2f bottomRight = window->mapPixelToCoords(bottomRightPos);
+      sf::Vector2f topLeft = window->mapPixelToCoords(sf::Vector2i(0, 0));
 
       int windowSize;
       if (bottomRight.x - topLeft.x > bottomRight.y - topLeft.y)
@@ -124,10 +128,10 @@ void GraphicsInternals::pauseOverlay()
       pauseGraying.setPosition(bottomRight.x/2, bottomRight.y/2);
 
       //Draw it
-      window.draw(pauseGraying);
+      window->draw(pauseGraying);
 
       //get the old view back
-      window.setView(oldView);
+      window->setView(oldView);
     }
 }
 

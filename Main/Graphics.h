@@ -32,7 +32,7 @@ protected:
   Bin* const bin;
   ThreadManager* const manager;
 
-  sf::RenderWindow window;
+  sf::RenderWindow* window;
 
 private:
   //Arrow keys move

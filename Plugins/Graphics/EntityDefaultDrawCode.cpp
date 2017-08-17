@@ -15,9 +15,9 @@ if ( (entity.getX() < rightBound + entSize) && (entity.getX() > leftBound - entS
 
         //Draw circle for entitiy
         circularEnt.setPosition(entity.getX(), entity.getY());
-        window.draw(circularEnt);
+        window->draw(circularEnt);
 
         //Draw point for center
         entCenter.setPosition(entity.getX(), entity.getY());
-        window.draw(entCenter);
+        window->draw(entCenter);
     }
