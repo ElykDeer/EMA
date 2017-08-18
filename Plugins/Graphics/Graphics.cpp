@@ -36,6 +36,7 @@ void  Graphics::pauseMenu()
 
   auto gameView = window->getView();
   auto pauseView = window->getView();
+  pauseView.setSize(window->getSize().x, window->getSize().y);
  // window->setView(window->getView());
 
   while (window->isOpen())
@@ -68,12 +69,9 @@ void  Graphics::pauseMenu()
         //Pause control
         if (event.type == sf::Event::KeyPressed)
         {
-          if (event.key.code == sf::Keyboard::Space)
+          if (event.key.code == sf::Keyboard::Escape)
           {
-            if(manager->getPauseState()) //paused
-              manager->resume();
-            else
-              manager->pause();
+            manager->resume();
 
             window->setView(gameView);
             badIdea.window = nullptr;
@@ -191,6 +189,10 @@ void Graphics::game()
             manager->resume();
           else
             manager->pause();
+        }
+        else if (event.key.code == sf::Keyboard::Escape)
+        {
+          manager->pause();
 
           menu = 0; //switch to the pause menu
           return;
@@ -204,6 +206,7 @@ void Graphics::game()
     window->clear();
     GraphicsInternals::drawMap();         //Hex grid
     GraphicsInternals::drawEntities();    //Entites
+    GraphicsInternals::pauseOverlay();    //Graying screen
     window->display();
 }
 
