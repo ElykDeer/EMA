@@ -6,14 +6,14 @@ GraphicsInternals::GraphicsInternals(Bin* const bin, ThreadManager* const manage
 
 GraphicsInternals::~GraphicsInternals()
 {
-  if (window)
-    delete window;
+  //if (window)
+    //delete window;
 }
 
 void GraphicsInternals::openWindow(const string& name)
 {
   //1000x1000 window, by default
-  window = new sf::RenderWindow(sf::VideoMode(1000, 1000), name, sf::Style::Default);
+  window = std::shared_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(1000, 1000), name, sf::Style::Default));
   auto view = window->getView();
   view.setCenter(bin->getWidth()/2, bin->getHeight()/2);
   window->setView(view);

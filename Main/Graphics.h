@@ -6,6 +6,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <memory> //shared pointer
 
 class GraphicsInternals
 {
@@ -32,7 +33,7 @@ protected:
   Bin* const bin;
   ThreadManager* const manager;
 
-  sf::RenderWindow* window;
+  std::shared_ptr<sf::RenderWindow> window;
 
 private:
   //Arrow keys move
