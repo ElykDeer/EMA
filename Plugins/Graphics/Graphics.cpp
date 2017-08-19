@@ -42,6 +42,7 @@ void  Graphics::pauseMenu()
   while (window->isOpen())
   {
     //check window events
+    bool mouseWasClicked = false;
     sf::Event event;
     while (window->pollEvent(event))
     {
@@ -79,8 +80,9 @@ void  Graphics::pauseMenu()
             return;
           }
         }
-
-        //add click for menu options
+        if (event.type == sf::Event::MouseButtonPressed)
+            if (event.mouseButton.button == sf::Mouse::Left)
+                mouseWasClicked = true;
     }
 
     window->setView(gameView);
@@ -197,6 +199,16 @@ void  Graphics::pauseMenu()
     if (sqrt(pow((mouseX - center.x), 2) + pow((mouseY - center.y), 2)) < hexRadius)
     {
         window->draw(hexa);
+
+        if (mouseWasClicked)
+        {
+            manager->resume();
+
+            window->setView(gameView);
+            badIdea.window = nullptr;
+            menu = 1; //switch to the game menu
+            return;
+        }
     }
     else
     {
