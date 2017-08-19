@@ -68,7 +68,6 @@ void  Graphics::pauseMenu()
   auto gameView = window->getView();
   auto pauseView = window->getView();
   pauseView.setSize(window->getSize().x, window->getSize().y);
- // window->setView(window->getView());
 
   while (window->isOpen())
   {
@@ -321,74 +320,80 @@ void Graphics::game()
 
 void Graphics::load()
 {
-    subMenuDefaultActions();
-
-    //Actually Draw!
     window->clear();
 
-    /* DRAW SHIT */
+    auto gameView = window->getView();
+    window->setView(window->getDefaultView());
+
+    subMenuDefaultActions();
 
     window->display();
+    window->setView(gameView);
 }
 
 void Graphics::save()
 {
-    subMenuDefaultActions();
-
-    //Actually Draw!
     window->clear();
 
-    /* DRAW SHIT */
+    auto gameView = window->getView();
+    window->setView(window->getDefaultView());
+
+    subMenuDefaultActions();
 
     window->display();
+    window->setView(gameView);
 }
 
 void Graphics::controls()
 {
-    subMenuDefaultActions();
-
-    //Actually Draw!
     window->clear();
 
-    /* DRAW SHIT */
+    auto gameView = window->getView();
+    window->setView(window->getDefaultView());
+
+    subMenuDefaultActions();
 
     window->display();
+    window->setView(gameView);
 }
 
 void Graphics::options()
 {
-    subMenuDefaultActions();
-
-    //Actually Draw!
     window->clear();
 
-    /* DRAW SHIT */
+    auto gameView = window->getView();
+    window->setView(window->getDefaultView());
+
+    subMenuDefaultActions();
 
     window->display();
+    window->setView(gameView);
 }
 
 void Graphics::about()
 {
-    subMenuDefaultActions();
-
-    //Actually Draw!
     window->clear();
 
-    /* DRAW SHIT */
+    auto gameView = window->getView();
+    window->setView(window->getDefaultView());
+
+    subMenuDefaultActions();
 
     window->display();
+    window->setView(gameView);
 }
 
 void Graphics::credits()
 {
-    subMenuDefaultActions();
-
-    //Actually Draw!
     window->clear();
 
-    /* DRAW SHIT */
+    auto gameView = window->getView();
+    window->setView(window->getDefaultView());
+
+    subMenuDefaultActions();
 
     window->display();
+    window->setView(gameView);
 }
 
 void Graphics::subMenuDefaultActions()
@@ -406,10 +411,53 @@ void Graphics::subMenuDefaultActions()
         if (event.key.code == sf::Keyboard::Escape)
         {
           menu = 0; //switch to the pause menu
-          return;
         }
       }
+
+      if (event.type == sf::Event::MouseButtonPressed)
+      {
+          if (event.mouseButton.button == sf::Mouse::Left)
+          {
+              auto mouseX = window->mapPixelToCoords(sf::Mouse::getPosition(*window)).x;
+              auto mouseY = window->mapPixelToCoords(sf::Mouse::getPosition(*window)).y;
+
+              if (sqrt(pow(mouseX - 85, 2) + pow(mouseY - 85, 2)) < 70)
+              {
+                menu = 0; //switch to the pause menu
+              }
+          }
+      }
+
     }
+
+    backButton();
+}
+
+void Graphics::backButton()
+{
+    //Back Button
+    sf::CircleShape backCirc(70);
+    backCirc.setPosition(15, 15);
+    backCirc.setFillColor(sf::Color(255, 0, 0, 100));
+    backCirc.setOutlineColor(sf::Color::Red);
+    backCirc.setOutlineThickness(3);
+    window->draw(backCirc);
+    sf::CircleShape backSqr(30, 4);
+    backSqr.rotate(45);
+    backSqr.setOrigin(30, 30);
+    backSqr.setPosition(102, 85);
+    backSqr.setFillColor(sf::Color::Blue);
+    backSqr.setOutlineColor(sf::Color::Green);
+    backSqr.setOutlineThickness(3);
+    window->draw(backSqr);
+    sf::CircleShape backArrow(30, 3);
+    backArrow.rotate(30);
+    backArrow.setOrigin(30, 30);
+    backArrow.setPosition(68, 85);
+    backArrow.setFillColor(sf::Color::Blue);
+    backArrow.setOutlineColor(sf::Color::Green);
+    backArrow.setOutlineThickness(3);
+    window->draw(backArrow);
 }
 
 void Graphics::textualGraphics() const

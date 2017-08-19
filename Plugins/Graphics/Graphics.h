@@ -26,6 +26,7 @@ public:
 
   //Helper for sub-pause menus
   void subMenuDefaultActions();
+  void backButton();
 
   void textualGraphics() const;
 
