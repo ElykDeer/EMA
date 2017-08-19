@@ -315,7 +315,7 @@ bool buildInit(const unordered_set<string>& plugins)
   }
 
   //File header:
-  initFile << "void init(Bin& bin, ostream& os = cout)\n{\n";
+  initFile << "void init(Bin& bin)\n{\n";
 
   //Beginning of each include:
   string linkP1 =

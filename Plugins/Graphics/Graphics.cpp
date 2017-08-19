@@ -2,7 +2,7 @@ using namespace std;
 
 void Graphics::eventLoop()
 {
-    manager->startDetachedThread(&Graphics::textualGraphics, this);
+    //manager->startDetachedThread(&Graphics::textualGraphics, this);
 
     GraphicsInternals::openWindow(string("Sim"));
 

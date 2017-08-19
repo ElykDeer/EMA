@@ -4,11 +4,7 @@ using namespace std;
 GraphicsInternals::GraphicsInternals(Bin* const bin, ThreadManager* const manager)
   : bin(bin), manager(manager) {}
 
-GraphicsInternals::~GraphicsInternals()
-{
-  //if (window)
-    //delete window;
-}
+GraphicsInternals::~GraphicsInternals() {}
 
 void GraphicsInternals::openWindow(const string& name)
 {
@@ -17,6 +13,8 @@ void GraphicsInternals::openWindow(const string& name)
   auto view = window->getView();
   view.setCenter(bin->getWidth()/2, bin->getHeight()/2);
   window->setView(view);
+  window->setFramerateLimit(0);
+  window->setVerticalSyncEnabled(false);
 }
 
 void GraphicsInternals::drawMap()

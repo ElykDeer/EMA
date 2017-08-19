@@ -1,5 +1,3 @@
-#include <iostream> //Temporary (for testing)
-
 Bin::pixToHex::pixToHex(const unsigned int width,
                  const unsigned int height,
                  const double hexRadius)
@@ -11,13 +9,6 @@ Bin::pixToHex::pixToHex(const unsigned int width,
 //Populate the guess grid
 void Bin::pixToHex::populate(const vector<vector<Hex*>>* const binP)
 {
-    cerr << "#################################################\n";
-    cerr << "# guessBinWidth: " << guessBinWidth << ",\tguessBinHeight:\t" << guessBinHeight << "\t#" << endl;
-    cerr << "# guessBinsRows: " << guessGrid[0].size() << ",\tguessBinsCols:\t" << guessGrid.size() << "\t#" << endl;
-    cerr << "# Bin's Rows:\t " << (*binP)[0].size() << ",\tBin's Cols:\t" << (*binP).size() << "\t#" << endl;
-    cerr << "# max X:\t " << guessBinWidth*guessGrid.size() << ",\tmax Y:\t\t" << guessBinHeight*guessGrid[0].size() << "\t#" << endl;
-    cerr << "#################################################\n";
-
     //Set up the guessGrid:
     //For each row
     int leftGridX = 0;
