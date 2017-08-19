@@ -9,6 +9,13 @@ void Graphics::eventLoop()
     //Menu numbers"
       // 0 - Pause
       // 1 - Game
+      // 2 - Load
+      // 3 - Save
+      // 4 - Controls
+      // 5 - Options
+      // 6 - About
+      // 7 - Credits
+
     while (window->isOpen())
     {
         if (menu == 0) //paused
@@ -18,6 +25,30 @@ void Graphics::eventLoop()
         else if (menu == 1) //running the game
         {
             game();
+        }
+        else if (menu == 2)
+        {
+            load();
+        }
+        else if (menu == 3)
+        {
+            save();
+        }
+        else if (menu == 4)
+        {
+            controls();
+        }
+        else if (menu == 5)
+        {
+            options();
+        }
+        else if (menu == 6)
+        {
+            about();
+        }
+        else if (menu == 7)
+        {
+            credits();
         }
     }
 }
@@ -75,7 +106,6 @@ void  Graphics::pauseMenu()
             manager->resume();
 
             window->setView(gameView);
-            badIdea.window = nullptr;
             menu = 1; //switch to the game menu
             return;
           }
@@ -166,29 +196,59 @@ void  Graphics::pauseMenu()
     auto mouseX = window->mapPixelToCoords(sf::Mouse::getPosition(*window)).x;
     auto mouseY = window->mapPixelToCoords(sf::Mouse::getPosition(*window)).y;
 
-    if (sqrt(pow((mouseX - (center.x-(1.75*hexRadius))), 2) + pow((mouseY - (center.y-(hexRadius))), 2)) < hexRadius)
-    {
-        hexa.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius)); window->draw(hexa); //Top Left Hex
-    }
-    else if (sqrt(pow((mouseX - (center.x-(1.75*hexRadius))), 2) + pow((mouseY - (center.y+(hexRadius))), 2)) < hexRadius)
-    {
-        hexa.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius)); window->draw(hexa); //Bottom Left Hex
-    }
-    else if (sqrt(pow((mouseX - (center.x+(1.75*hexRadius))), 2) + pow((mouseY - (center.y-(hexRadius))), 2)) < hexRadius)
-    {
-        hexa.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window->draw(hexa); //Top Right Hex
-    }
-    else if (sqrt(pow((mouseX - (center.x+(1.75*hexRadius))), 2) + pow((mouseY - (center.y+(hexRadius))), 2)) < hexRadius)
-    {
-        hexa.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(hexa); //Bottom Right Hex
-    }
-    else if (sqrt(pow((mouseX - center.x), 2) + pow((mouseY - (center.y-(2*hexRadius))), 2)) < hexRadius)
+    if (sqrt(pow((mouseX - center.x), 2) + pow((mouseY - (center.y-(2*hexRadius))), 2)) < hexRadius)
     {
         hexa.setPosition(center.x, center.y-(2*hexRadius)); window->draw(hexa); //Top Hex
+        if (mouseWasClicked)
+        {
+            menu = 2; //switch to the Load "menu"
+            return;
+        }
     }
     else if (sqrt(pow((mouseX - center.x), 2) + pow((mouseY - (center.y+(2*hexRadius))), 2)) < hexRadius)
     {
         hexa.setPosition(center.x, center.y+(2*hexRadius)); window->draw(hexa); //Bottom Hex
+        if (mouseWasClicked)
+        {
+            menu = 3; //switch to the Save "menu"
+            return;
+        }
+    }
+    else if (sqrt(pow((mouseX - (center.x+(1.75*hexRadius))), 2) + pow((mouseY - (center.y-(hexRadius))), 2)) < hexRadius)
+    {
+        hexa.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window->draw(hexa); //Top Right Hex
+        if (mouseWasClicked)
+        {
+            menu = 4; //switch to the Controls "menu"
+            return;
+        }
+    }
+    else if (sqrt(pow((mouseX - (center.x+(1.75*hexRadius))), 2) + pow((mouseY - (center.y+(hexRadius))), 2)) < hexRadius)
+    {
+        hexa.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(hexa); //Bottom Right Hex
+        if (mouseWasClicked)
+        {
+            menu = 5; //switch to the Options "menu"
+            return;
+        }
+    }
+    else if (sqrt(pow((mouseX - (center.x-(1.75*hexRadius))), 2) + pow((mouseY - (center.y-(hexRadius))), 2)) < hexRadius)
+    {
+        hexa.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius)); window->draw(hexa); //Top Left Hex
+        if (mouseWasClicked)
+        {
+            menu = 6; //switch to the About "menu"
+            return;
+        }
+    }
+    else if (sqrt(pow((mouseX - (center.x-(1.75*hexRadius))), 2) + pow((mouseY - (center.y+(hexRadius))), 2)) < hexRadius)
+    {
+        hexa.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius)); window->draw(hexa); //Bottom Left Hex
+        if (mouseWasClicked)
+        {
+            menu = 7; //switch to the Credits "menu"
+            return;
+        }
     }
 
     //Play Button
@@ -205,7 +265,6 @@ void  Graphics::pauseMenu()
             manager->resume();
 
             window->setView(gameView);
-            badIdea.window = nullptr;
             menu = 1; //switch to the game menu
             return;
         }
@@ -258,6 +317,99 @@ void Graphics::game()
     GraphicsInternals::drawEntities();    //Entites
     GraphicsInternals::pauseOverlay();    //Graying screen
     window->display();
+}
+
+void Graphics::load()
+{
+    subMenuDefaultActions();
+
+    //Actually Draw!
+    window->clear();
+
+    /* DRAW SHIT */
+
+    window->display();
+}
+
+void Graphics::save()
+{
+    subMenuDefaultActions();
+
+    //Actually Draw!
+    window->clear();
+
+    /* DRAW SHIT */
+
+    window->display();
+}
+
+void Graphics::controls()
+{
+    subMenuDefaultActions();
+
+    //Actually Draw!
+    window->clear();
+
+    /* DRAW SHIT */
+
+    window->display();
+}
+
+void Graphics::options()
+{
+    subMenuDefaultActions();
+
+    //Actually Draw!
+    window->clear();
+
+    /* DRAW SHIT */
+
+    window->display();
+}
+
+void Graphics::about()
+{
+    subMenuDefaultActions();
+
+    //Actually Draw!
+    window->clear();
+
+    /* DRAW SHIT */
+
+    window->display();
+}
+
+void Graphics::credits()
+{
+    subMenuDefaultActions();
+
+    //Actually Draw!
+    window->clear();
+
+    /* DRAW SHIT */
+
+    window->display();
+}
+
+void Graphics::subMenuDefaultActions()
+{
+    //check window events
+    sf::Event event;
+    while (window->pollEvent(event))
+    {
+      //Get window events
+      GraphicsInternals::basicEvents(event);
+
+      //Pause control
+      if (event.type == sf::Event::KeyPressed)
+      {
+        if (event.key.code == sf::Keyboard::Escape)
+        {
+          menu = 0; //switch to the pause menu
+          return;
+        }
+      }
+    }
 }
 
 void Graphics::textualGraphics() const

@@ -17,6 +17,15 @@ public:
   //Menus
   void pauseMenu();
   void game();
+  void load();
+  void save();
+  void controls();
+  void options();
+  void about();
+  void credits();
+
+  //Helper for sub-pause menus
+  void subMenuDefaultActions();
 
   void textualGraphics() const;
 
