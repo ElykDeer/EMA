@@ -6,9 +6,12 @@ class Graphics : public GraphicsInternals
 {
 public:
   using GraphicsInternals::GraphicsInternals;
+
   Graphics(Bin* const bin, ThreadManager* const manager) : GraphicsInternals(bin, manager)
   {
     font.loadFromFile("/usr/share/fonts/truetype/takao-gothic/TakaoPGothic.ttf");
+    warningText.setString("Warning, unsaved progress will be lost.\n Press Enter to continue or Escape to go back.");
+    warningText.setFont(font);
   }
 
   //Required event loop function
@@ -19,7 +22,7 @@ public:
   void game();
   void load();
   void save();
-  void controls();
+  void quit();
   void options();
   void about();
   void credits();
@@ -33,6 +36,8 @@ public:
 private:
   int menu = 0;
   sf::Font font;
+
+  sf::Text warningText;
 };
 
 

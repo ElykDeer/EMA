@@ -171,24 +171,26 @@ void  Graphics::pauseMenu()
     hexa.setPosition(center.x, center.y); window->draw(hexa); //Middle Hex
     hexa.setFillColor(sf::Color(0, 255, 0, 100));
 
-    //Text overlay
-    sf::Text text("Controls", font, hexRadius/2.25);  //"Controls" doesn't exist
+    //Text overlays
+    sf::Text menuItemsText("Controls", font); //"Controls" doesn't exist
+    menuItemsText.setCharacterSize(hexRadius/2.25);
+    auto textHeight = menuItemsText.getLocalBounds().height;
     //Should be constant, otherwise affected by letters like 'p':
-    auto textHeight = text.getLocalBounds().height;
-    text.setFillColor(sf::Color::Blue);
 
-    text.setString("Save"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x, center.y-(2*hexRadius)); window->draw(text);//Top
-    text.setString("Load"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x, center.y+(2*hexRadius)); window->draw(text); //Bottom
-    text.setString("About"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window->draw(text); //Top Right
-    text.setString("Quit"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(text); //Bottom Right
-    text.setString("Options"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius)); window->draw(text); //Top Left
-    text.setString("Credits"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius)); window->draw(text); //Bottom Left
+    menuItemsText.setFillColor(sf::Color::Blue);
+
+    menuItemsText.setString("Save"); menuItemsText.setOrigin(menuItemsText.getLocalBounds().width/2, textHeight);
+    menuItemsText.setPosition(center.x, center.y-(2*hexRadius)); window->draw(menuItemsText);//Top
+    menuItemsText.setString("Load"); menuItemsText.setOrigin(menuItemsText.getLocalBounds().width/2, textHeight);
+    menuItemsText.setPosition(center.x, center.y+(2*hexRadius)); window->draw(menuItemsText); //Bottom
+    menuItemsText.setString("About"); menuItemsText.setOrigin(menuItemsText.getLocalBounds().width/2, textHeight);
+    menuItemsText.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window->draw(menuItemsText); //Top Right
+    menuItemsText.setString("Quit"); menuItemsText.setOrigin(menuItemsText.getLocalBounds().width/2, textHeight);
+    menuItemsText.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(menuItemsText); //Bottom Right
+    menuItemsText.setString("Options"); menuItemsText.setOrigin(menuItemsText.getLocalBounds().width/2, textHeight);
+    menuItemsText.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius)); window->draw(menuItemsText); //Top Left
+    menuItemsText.setString("Credits"); menuItemsText.setOrigin(menuItemsText.getLocalBounds().width/2, textHeight);
+    menuItemsText.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius)); window->draw(menuItemsText); //Bottom Left
     /* </Menu-Graphics> */
 
     //Input
@@ -218,7 +220,7 @@ void  Graphics::pauseMenu()
         hexa.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(hexa); //Bottom Right Hex
         if (mouseWasClicked)
         {
-            menu = 6; //switch to the Quit "menu"
+            menu = 4; //switch to the Quit "menu"
             return;
         }
     }
@@ -351,7 +353,29 @@ void Graphics::quit()
     auto gameView = window->getView();
     window->setView(window->getDefaultView());
 
-    subMenuDefaultActions();
+    //check window events
+    sf::Event event;
+    while (window->pollEvent(event))
+    {
+      //Get window events
+      GraphicsInternals::basicEvents(event);
+
+      //Pause control
+      if (event.type == sf::Event::KeyPressed)
+      {
+        if (event.key.code == sf::Keyboard::Escape)
+        {
+          menu = 0; //switch to the pause menu
+        }
+        if (event.key.code == sf::Keyboard::Return)
+        {
+            manager->kill();
+            window->close();
+        }
+      }
+    }
+
+    window->draw(warningText);
 
     window->display();
     window->setView(gameView);
