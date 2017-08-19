@@ -11,7 +11,7 @@ void Graphics::eventLoop()
       // 1 - Game
       // 2 - Load
       // 3 - Save
-      // 4 - Controls
+      // 4 - Quit
       // 5 - Options
       // 6 - About
       // 7 - Credits
@@ -36,7 +36,7 @@ void Graphics::eventLoop()
         }
         else if (menu == 4)
         {
-            controls();
+            quit();
         }
         else if (menu == 5)
         {
@@ -172,20 +172,20 @@ void  Graphics::pauseMenu()
     hexa.setFillColor(sf::Color(0, 255, 0, 100));
 
     //Text overlay
-    sf::Text text("Controls", font, hexRadius/2.25);
+    sf::Text text("Controls", font, hexRadius/2.25);  //"Controls" doesn't exist
     //Should be constant, otherwise affected by letters like 'p':
     auto textHeight = text.getLocalBounds().height;
     text.setFillColor(sf::Color::Blue);
 
-    text.setString("Load"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x, center.y-(2*hexRadius)); window->draw(text);//Top
     text.setString("Save"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x, center.y-(2*hexRadius)); window->draw(text);//Top
+    text.setString("Load"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
     text.setPosition(center.x, center.y+(2*hexRadius)); window->draw(text); //Bottom
-    text.setString("Controls"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window->draw(text); //Top Right
-    text.setString("Options"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
-    text.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(text); //Bottom Right
     text.setString("About"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window->draw(text); //Top Right
+    text.setString("Quit"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
+    text.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(text); //Bottom Right
+    text.setString("Options"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
     text.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius)); window->draw(text); //Top Left
     text.setString("Credits"); text.setOrigin(text.getLocalBounds().width/2, textHeight);
     text.setPosition(center.x-(1.75*hexRadius), center.y+(hexRadius)); window->draw(text); //Bottom Left
@@ -195,30 +195,21 @@ void  Graphics::pauseMenu()
     auto mouseX = window->mapPixelToCoords(sf::Mouse::getPosition(*window)).x;
     auto mouseY = window->mapPixelToCoords(sf::Mouse::getPosition(*window)).y;
 
-    if (sqrt(pow((mouseX - center.x), 2) + pow((mouseY - (center.y-(2*hexRadius))), 2)) < hexRadius)
-    {
-        hexa.setPosition(center.x, center.y-(2*hexRadius)); window->draw(hexa); //Top Hex
-        if (mouseWasClicked)
-        {
-            menu = 2; //switch to the Load "menu"
-            return;
-        }
-    }
-    else if (sqrt(pow((mouseX - center.x), 2) + pow((mouseY - (center.y+(2*hexRadius))), 2)) < hexRadius)
+    if (sqrt(pow((mouseX - center.x), 2) + pow((mouseY - (center.y+(2*hexRadius))), 2)) < hexRadius)
     {
         hexa.setPosition(center.x, center.y+(2*hexRadius)); window->draw(hexa); //Bottom Hex
         if (mouseWasClicked)
         {
-            menu = 3; //switch to the Save "menu"
+            menu = 2; //switch to the load "menu"
             return;
         }
     }
-    else if (sqrt(pow((mouseX - (center.x+(1.75*hexRadius))), 2) + pow((mouseY - (center.y-(hexRadius))), 2)) < hexRadius)
+    else if (sqrt(pow((mouseX - center.x), 2) + pow((mouseY - (center.y-(2*hexRadius))), 2)) < hexRadius)
     {
-        hexa.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window->draw(hexa); //Top Right Hex
+        hexa.setPosition(center.x, center.y-(2*hexRadius)); window->draw(hexa); //Top Hex
         if (mouseWasClicked)
         {
-            menu = 4; //switch to the Controls "menu"
+            menu = 3; //switch to the Save "menu"
             return;
         }
     }
@@ -227,13 +218,22 @@ void  Graphics::pauseMenu()
         hexa.setPosition(center.x+(1.75*hexRadius), center.y+(hexRadius)); window->draw(hexa); //Bottom Right Hex
         if (mouseWasClicked)
         {
-            menu = 5; //switch to the Options "menu"
+            menu = 6; //switch to the Quit "menu"
             return;
         }
     }
     else if (sqrt(pow((mouseX - (center.x-(1.75*hexRadius))), 2) + pow((mouseY - (center.y-(hexRadius))), 2)) < hexRadius)
     {
         hexa.setPosition(center.x-(1.75*hexRadius), center.y-(hexRadius)); window->draw(hexa); //Top Left Hex
+        if (mouseWasClicked)
+        {
+            menu = 5; //switch to the Option "menu"
+            return;
+        }
+    }
+    else if (sqrt(pow((mouseX - (center.x+(1.75*hexRadius))), 2) + pow((mouseY - (center.y-(hexRadius))), 2)) < hexRadius)
+    {
+        hexa.setPosition(center.x+(1.75*hexRadius), center.y-(hexRadius)); window->draw(hexa); //Top Right Hex
         if (mouseWasClicked)
         {
             menu = 6; //switch to the About "menu"
@@ -344,7 +344,7 @@ void Graphics::save()
     window->setView(gameView);
 }
 
-void Graphics::controls()
+void Graphics::quit()
 {
     window->clear();
 
