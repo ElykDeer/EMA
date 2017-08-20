@@ -1,28 +1,28 @@
 #ifndef SIM_ENTITY
 #define SIM_ENTITY 1
 
-class Bin; //Forward dec for derived entities 
+class Bin; //Forward dec for derived entities
 
 class Entity
 {
     friend class Bin;
 public:
     //Simple Constructor
-    Entity(const unsigned int x, const unsigned int y, Bin* const bin);
+    Entity(const double x, const double y, Bin* const bin);
 
     virtual void update(unsigned int resolution) = 0;
 
     //Deconstructor for derived classes
     virtual ~Entity();
 
-    unsigned int getX() const;
+    double getX() const;
 
-    unsigned int getY() const;
+    double getY() const;
 
 protected:
     // X/Y Locations
-    unsigned int x;
-    unsigned int y;
+    double x;
+    double y;
 
     Bin* const bin;
 };

@@ -7,10 +7,12 @@
 class Floater : public Entity
 {
 public:
-    using Entity::Entity;
+    Floater(const double x, const double y, Bin* const bin);
     void update(unsigned int resolution) override;
 
 private:
+    const double moveX;
+    const double moveY;
 };
 
 #endif

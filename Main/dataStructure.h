@@ -40,7 +40,7 @@ public:
     void removeAll();
 
     //How to move an object in the dataStructure
-    void move(Entity* entity, unsigned int newX, unsigned int newY);
+    void move(Entity* entity, double newX, double newY);
 
     //Update All Entities In The Structure
     void updateEntities(unsigned int resolution);

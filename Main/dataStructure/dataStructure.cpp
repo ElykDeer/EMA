@@ -35,10 +35,10 @@ Bin::Bin(const unsigned int width,
 void Bin::insert(Entity* const entity)
 {
     if (entity->getX() >= width)
-        entity->x = entity->x % width;
+        entity->x = int(entity->x) % width;
 
     if (entity->getY() >= height)
-        entity->y = entity->y % height;
+        entity->y = int(entity->y) % height;
 
     //First Convert coordinates
     vector<unsigned int> cords = hexCords.hexOffsetCord(entity->getX(), entity->getY());
@@ -95,14 +95,14 @@ void Bin::removeAll()
 }
 
 //How to move an object in the dataStructure
-void Bin::move(Entity* entity, unsigned int newX, unsigned int newY)
+void Bin::move(Entity* entity, double newX, double newY)
 {
     //Adjust coordinates if needed
     if (newX >= width)
-        newX = newX % width;
+        newX = int(newX) % width;
 
     if (newY >= height)
-        newY = newY % height;
+        newY = int(newY) % height;
 
     //First Convert Coordinates
     vector<unsigned int> oldCords = hexCords.hexOffsetCord(entity->getX(), entity->getY());

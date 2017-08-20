@@ -1,23 +1,24 @@
 #include "pausedFloatersTypes.h"
 using namespace std;
 
+Floater::Floater(const double x, const double y, Bin* const bin)
+: Entity::Entity(x, y, bin), moveX((bin->chanceGen(bin->gen)*3)-1.5),
+moveY((bin->chanceGen(bin->gen)*3)-1.5) {}
+
 void Floater::update(unsigned int resolution)
 {
   if (resolution)
   {
-    unsigned int newX;
-    unsigned int newY;
-
-    double moveX = (bin->chanceGen(bin->gen)-0.5)*2;
-    double moveY = (bin->chanceGen(bin->gen)-0.5)*2;
+    double newX;
+    double newY;
 
     if ( moveX+getX() < 0 )
-      newX = getX() + (moveX + bin->getWidth());
+      newX = getX() + (moveX + double(bin->getWidth()));
     else
       newX = getX() + moveX;
 
     if ( moveY+getY() < 0 )
-      newY = getY() + (moveY + bin->getWidth());
+      newY = getY() + (moveY + double(bin->getWidth()));
     else
       newY = getY() + moveY;
 
