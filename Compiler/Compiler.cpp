@@ -1,8 +1,6 @@
 //This is the program that is supposed to pull together the resources of the
   //various pluggins and compile them before runtime
 
-#include "Compiler.def" //The define for what platform is compilign for what
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -360,19 +358,19 @@ void compile(const unordered_set<string>& plugins)
 
     #if defined(LINUX_X_LINUX)
     string compiler = "g++ ";
-    string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
+    string gccOptions = "-DLINUX_X_LINUX -Wall -Wextra -pedantic -std=c++1y ";
     string programName = "-o mainP ";
     string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-system ";  //Linker dependencies
 
     #elif defined(MAC_X_MAC)
     string compiler = "/usr/local/bin/g++-7 ";
-    string gccOptions = "-Wall -Wextra -pedantic -std=c++1y ";
+    string gccOptions = "-DMAC_X_MAC -Wall -Wextra -pedantic -std=c++1y ";
     string programName = "-o mainP ";
     string links = "-pthread -lsfml-graphics -lsfml-window -lsfml-system ";  //Linker dependencies
 
     #elif defined(LINUX_X_WINDOWS)
     string compiler = "x86_64-w64-mingw32-g++ ";
-    string gccOptions = "-static -DSFML_STATIC -Wall -Wextra -pedantic -std=c++1y ";
+    string gccOptions = "-static -DLINUX_X_WINDOWS -DSFML_STATIC -Wall -Wextra -pedantic -std=c++1y ";
     string programName = "-o mainP.exe ";
     string links = "-pthread -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -ljpeg -lwinmm -lgdi32 ";  //Linker dependencies
 

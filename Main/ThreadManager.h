@@ -3,7 +3,6 @@
 
 #include "dataStructure.h"
 
-#include "../Compiler/Compiler.def"
 #ifdef LINUX_X_WINDOWS
     #include "../Compiler/mingw.thread.h"
 #else

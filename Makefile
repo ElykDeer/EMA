@@ -1,18 +1,6 @@
 help:
 	#Please see the readme for how to compile this project
 
-#Set up defines for compiling on linux for windows
-configureLXW:
-	echo "#define LINUX_X_WINDOWS 1" > Compiler/Compiler.def
-
-#Set up defines for compiling on linux for windows
-configureLXL:
-	echo "#define LINUX_X_LINUX 1" > Compiler/Compiler.def
-
-#Set up defines for compiling on linux for windows
-configureMXM:
-	echo "#define MAC_X_MAC 1" > Compiler/Compiler.def
-
 #This is outdated, was intended for the "Linux for Windows" subsystem, but
 #  SFML would be using and linking Linux graphics things and that doesn't work on Windows
 #Compile: Compiler/Compiler.cpp
@@ -68,16 +56,16 @@ firstTimeMXM:
 #
 
 #To be run on Linux, to comple for Linux
-LXL: Compiler/Compiler.cpp configureLXL
-	g++ -Wall -Wextra -pedantic -std=c++1z Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
+LXL: Compiler/Compiler.cpp
+	g++ -DLINUX_X_LINUX -Wall -Wextra -pedantic -std=c++1z Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
 
 #To be run on Linux, to compile for Windows
-LXW: Compiler/Compiler.cpp configureLXW
-	g++ -Wall -Wextra -pedantic -std=c++1z Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
+LXW: Compiler/Compiler.cpp
+	g++ -DLINUX_X_WINDOWS -Wall -Wextra -pedantic -std=c++1z Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
 
 #To be run on a Mac, to compile for a Mac
-MXM: Compiler/Compiler.cpp configureMXM
-	/usr/local/bin/g++-7 -Wall -Wextra -pedantic -std=c++17 -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
+MXM: Compiler/Compiler.cpp
+	/usr/local/bin/g++-7 -DMAC_X_MAC -Wall -Wextra -pedantic -std=c++17 -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include Compiler/Compiler.cpp -o compile -lstdc++fs -lreadline
 
 #
 #
