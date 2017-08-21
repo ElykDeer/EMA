@@ -323,9 +323,7 @@ void Graphics::game()
 void Graphics::load()
 {
     window->clear();
-
     auto gameView = window->getView();
-    window->setView(window->getDefaultView());
 
     subMenuDefaultActions();
 
@@ -336,9 +334,7 @@ void Graphics::load()
 void Graphics::save()
 {
     window->clear();
-
     auto gameView = window->getView();
-    window->setView(window->getDefaultView());
 
     subMenuDefaultActions();
 
@@ -349,9 +345,7 @@ void Graphics::save()
 void Graphics::quit()
 {
     window->clear();
-
     auto gameView = window->getView();
-    window->setView(window->getDefaultView());
 
     //check window events
     sf::Event event;
@@ -384,9 +378,7 @@ void Graphics::quit()
 void Graphics::options()
 {
     window->clear();
-
     auto gameView = window->getView();
-    window->setView(window->getDefaultView());
 
     subMenuDefaultActions();
 
@@ -397,9 +389,7 @@ void Graphics::options()
 void Graphics::about()
 {
     window->clear();
-
     auto gameView = window->getView();
-    window->setView(window->getDefaultView());
 
     subMenuDefaultActions();
 
@@ -410,9 +400,7 @@ void Graphics::about()
 void Graphics::credits()
 {
     window->clear();
-
     auto gameView = window->getView();
-    window->setView(window->getDefaultView());
 
     subMenuDefaultActions();
 
@@ -422,12 +410,25 @@ void Graphics::credits()
 
 void Graphics::subMenuDefaultActions()
 {
+    auto newView = window->getDefaultView();
+    newView.setSize(window->getView().getSize().x, window->getView().getSize().y);
+    newView.setCenter(window->getView().getSize().x/2, window->getView().getSize().y/2);
+    window->setView(newView);
+
     //check window events
     sf::Event event;
     while (window->pollEvent(event))
     {
       //Get window events
       GraphicsInternals::basicEvents(event);
+
+      if (event.type == sf::Event::Resized)
+      {
+        auto newView = window->getDefaultView();
+        newView.setSize(window->getView().getSize().x, window->getView().getSize().y);
+        newView.setCenter(window->getView().getSize().x/2, window->getView().getSize().y/2);
+        window->setView(newView);
+      }
 
       //Pause control
       if (event.type == sf::Event::KeyPressed)
