@@ -346,6 +346,10 @@ void Graphics::quit()
 {
     window->clear();
     auto gameView = window->getView();
+    auto newView = window->getView();
+    newView.setSize(window->getSize().x, window->getSize().y);
+    newView.setCenter(window->getSize().x/2, window->getSize().y/2);
+    window->setView(newView);
 
     //check window events
     sf::Event event;
@@ -410,9 +414,9 @@ void Graphics::credits()
 
 void Graphics::subMenuDefaultActions()
 {
-    auto newView = window->getDefaultView();
-    newView.setSize(window->getView().getSize().x, window->getView().getSize().y);
-    newView.setCenter(window->getView().getSize().x/2, window->getView().getSize().y/2);
+    auto newView = window->getView();
+    newView.setSize(window->getSize().x, window->getSize().y);
+    newView.setCenter(window->getSize().x/2, window->getSize().y/2);
     window->setView(newView);
 
     //check window events
@@ -421,14 +425,6 @@ void Graphics::subMenuDefaultActions()
     {
       //Get window events
       GraphicsInternals::basicEvents(event);
-
-      if (event.type == sf::Event::Resized)
-      {
-        auto newView = window->getDefaultView();
-        newView.setSize(window->getView().getSize().x, window->getView().getSize().y);
-        newView.setCenter(window->getView().getSize().x/2, window->getView().getSize().y/2);
-        window->setView(newView);
-      }
 
       //Pause control
       if (event.type == sf::Event::KeyPressed)
