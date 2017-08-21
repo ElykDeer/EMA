@@ -10,7 +10,7 @@ public:
   Graphics(Bin* const bin, ThreadManager* const manager) : GraphicsInternals(bin, manager)
   {
     font.loadFromFile("/usr/share/fonts/truetype/takao-gothic/TakaoPGothic.ttf");
-    warningText.setString("Warning, unsaved progress will be lost.\n Press Enter to continue or Escape to go back.");
+    warningText.setString("Warning, unsaved progress will be lost.\nPress Enter to continue or Escape to go back.");
     warningText.setFont(font);
   }
 
