@@ -402,8 +402,10 @@ void compile(const unordered_set<string>& plugins)
 }
 
 
-vector<string> vectorize(string commandString)
+vector<string> vectorize(const string& commandString)
 {
+    if (commandString.length() == 0)
+        return {""};
     istringstream commandStream(commandString);
 
     string word = "";
@@ -463,6 +465,7 @@ int main(int argc, char* argv[])
     //enable auto-complete
     rl_bind_key('\t', rl_complete);
 
+    //Make every word of the command into a different item in a vector
     command = vectorize(rawCommand);
 
     if (command[0] == "enable")
@@ -519,6 +522,13 @@ int main(int argc, char* argv[])
     else if(command[0] == "help")
     {
         help();
+    }
+
+    else if (command[0] == "")
+    {
+        startPaint(1);
+        cerr << "No entered command.\n";
+        endPaint();
     }
 
     else
