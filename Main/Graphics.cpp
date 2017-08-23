@@ -68,13 +68,13 @@ void GraphicsInternals::drawEntities()
 //Window resizing, closing
 void GraphicsInternals::basicEvents(sf::Event& event)
 {
-  #include "../Plugins/Graphics/events.cpp"
+  #include "../Plugins/Graphics/WindowedEvents.cpp"
 }
 
 //Map movement, speed control
 void GraphicsInternals::controlledEvents(sf::Event& event)
 {
-  #include "../Plugins/Graphics/controlledEvents.cpp"
+  #include "../Plugins/Graphics/ControlledEvents.cpp"
 }
 
 void GraphicsInternals::manageEvents()
@@ -93,7 +93,7 @@ void GraphicsInternals::manageEvents()
 //Keyboard, mouse, etc
 void GraphicsInternals::input()
 {
-    #include "../Plugins/Graphics/input.cpp"
+    #include "../Plugins/Graphics/Input.cpp"
 }
 
 void GraphicsInternals::pauseOverlay()

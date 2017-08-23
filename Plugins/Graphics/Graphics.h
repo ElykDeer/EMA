@@ -1,5 +1,3 @@
-#include <string>
-#include <iostream>
 #include <sstream>
 
 class Graphics : public GraphicsInternals
