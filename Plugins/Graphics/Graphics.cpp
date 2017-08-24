@@ -481,6 +481,7 @@ void Graphics::backButton()
     window->draw(backArrow);
 }
 
+/*
 void Graphics::textualGraphics() const
 {
     manager->sleep(1000000000); //Wait for window to open
@@ -513,3 +514,4 @@ void Graphics::textualGraphics() const
         }
     }
 }
+*/

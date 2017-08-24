@@ -29,7 +29,7 @@ public:
   void subMenuDefaultActions();
   void backButton();
 
-  void textualGraphics() const;
+ // void textualGraphics() const;
 
 private:
   int menu = 0;
