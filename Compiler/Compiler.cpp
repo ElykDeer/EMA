@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string.h>
+#include <string>
 #include <vector>
 #include <unordered_set>
 
