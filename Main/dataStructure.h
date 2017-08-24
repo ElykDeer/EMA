@@ -13,8 +13,6 @@
 #include <random>
 #include <cmath> //because hexagons
 
-#include <iostream>
-
 //Ability to:
     //insert
     //remove
@@ -52,6 +50,9 @@ public:
     unsigned int getWidth() const;
     unsigned int getHeight() const;
     unsigned long int count() const;
+
+    void save();
+//    Bin load(std::string filename);
 
     ~Bin();
 

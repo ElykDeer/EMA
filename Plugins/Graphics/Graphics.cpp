@@ -32,7 +32,8 @@ void Graphics::eventLoop()
         }
         else if (menu == 3)
         {
-            save();
+            bin->save();
+            menu = 0;
         }
         else if (menu == 4)
         {

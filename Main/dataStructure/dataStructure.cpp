@@ -132,6 +132,8 @@ void Bin::updateHexes(unsigned int resolution)
     hex.update(resolution);
 }
 
+#include "Save.cpp"
+
 Bin::~Bin()
 {
     //Cycle through all Entities/Enticaps and delete them
