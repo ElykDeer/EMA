@@ -7,3 +7,5 @@ Compiler/mingw\.thread\.h
 compile
 mainP
 mainP\.exe
+
+*.dat
