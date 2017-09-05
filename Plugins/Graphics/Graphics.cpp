@@ -28,7 +28,8 @@ void Graphics::eventLoop()
         }
         else if (menu == 2)
         {
-            load();
+            bin->load("Saves/Turtle.dat");
+            menu = 0;
         }
         else if (menu == 3)
         {
