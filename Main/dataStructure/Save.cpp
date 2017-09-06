@@ -37,96 +37,115 @@ void Bin::save()
     ofstream file(saveFilename.str());
     if (!file)
     {
-        cerr << "Could not create file.\n" << saveFilename.str() << endl;
+        cerr << "Could not create file: \"" << saveFilename.str() << "\"." << endl;
         return;
     }
 
     /* <Write Data> */
 
     //Super basic data
-    file << "width: " << width << endl;
-    file << "height: " << height << endl;
-    file << "hexRadius: " << hexRadius <<endl;
+    file << width << ' ' << height << ' ' << hexRadius << ' ';
 
     //Save hex data
-    file << "Hexes:\n";
-    for (vector<Hex*> hexV : hexes)
-    {
+    for (vector<Hex*>& hexV : hexes)
         for (Hex* hexP : hexV)
-        {
-            auto hexSize = sizeof(*hexP);
-            ostringstream byteStream;
-
-            //Say which one it is
-            file << hexP->getRow() << " x " << hexP->getCol() << " , " << hexSize << " : ";
-
-            char* const byteP = reinterpret_cast<char*>(hexP);
-
-            for (unsigned int byteCount = 0; byteCount <= hexSize; ++byteCount)
-            {
-                byteStream << *(byteCount + byteP);
-            }
-            file << byteStream.str() << endl;
-        }
-    }
+            file.write((char *)hexP, sizeof(Hex));
 
     //Save entites
-    file << "Entities:\n";
     for (Entity& entity : getAll())
     {
-        Entity* entityP = &entity;
-        auto entitySize = sizeof(*entityP);
-        ostringstream byteStream;
-
-        //Say which one it is
-        file << entityP->getX() << " x " << entityP->getY() << " , " << entitySize << " : ";
-
-        char* const byteP = reinterpret_cast<char*>(entityP);
-
-        for (unsigned int byteCount = 0; byteCount <= entitySize; ++byteCount)
-        {
-            byteStream << *(byteCount + byteP);
-        }
-        file << byteStream.str() << endl;
+        #define SAVEHEADERS 1
+        #include "../../Compiler/EntityHeaders.cpp"
+        #undef SAVEHEADERS
     }
 
     /* </Write Data> */
 
     file.close();
 }
-//
-// Bin Bin::load(string filename) : seed(), gen(seed()), chanceGen(0.0, 1.0)
-// {
-//     //For now, actually just use one default name:
-//     ostringstream saveFilename;
-//     saveFilename << "Saves/Turtle.dat";
-//
-//     //Open the save file
-//     ifstream file(saveFilename.str());
-//     if (!file)
-//     {
-//         cerr << "File failed to open.\n";
-//         return;
-//     }
-//
-//     /* <Load Data> */
-//
-//     //Super basics
-//     string garbage;
-//     const unsigned int width;
-//     const unsigned int height;
-//     const double hexRadius;
-//     file >> garbage >> width >> garbage >> height >> garbage >> hexRadius;
-//
-//     //So now this is a copy of bin, except it doesn't have the entities it did
-//     Bin workingBin(width, height, hexRadius);
-//
-//     //Load hex data
-//
-//     //Load/insert entites
-//
-//     /* </Load Data> */
-//
-//     file.close();
-//     return workingBin;
-// }
+
+void Bin::load(string filename)
+{
+    //For now, actually just use one default name:
+    filename = "Saves/Turtle.dat";
+
+    //Open the save file
+    ifstream file(filename);
+    if (!file)
+    {
+        cerr << "File failed to open.\n";
+        return;
+    }
+
+    /* <Delete old map and entites> */
+    //clear all data, deconstructor:
+    //Cycle through all Entities/Enticaps and delete them
+    for(auto& outerPair : byTypeMap) //Every Different type
+        for(auto& innerPair : outerPair.second) //Every single element
+            delete innerPair.second; //Delete enticaps, since they delete the entity
+
+    for(auto& col : hexes)
+        for(Hex* hex : col)
+            delete hex;
+
+    byTypeMap.clear();
+    hexes.clear();
+    //All heap elements are deleted
+    /* </Delete old map and entites> */
+
+    /* <Load Data> */
+
+    //Super basics
+    file >> width >> height >> hexRadius;
+
+    //Generate new map
+    hexes = std::move(vector<vector<Hex*>>(ceil( (width+(hexRadius*0.5)) / (1.5*hexRadius)), vector<Hex*>( ceil((height+hexRadius) / (sqrt(3)*hexRadius)), nullptr )));
+
+    //Populate hex grid:
+    for (size_t col = 0; col < hexes.size(); col++)
+      for (size_t row = 0; row < hexes[col].size(); row++)
+          hexes[col][row] = new Hex(col, row, hexRadius);
+
+    //read the space seperator
+    char byte = ' ';
+    file.read(&byte, 1);
+
+    //Load hex data into those new hexes
+    for (vector<Hex*>& hexV : hexes)
+        for (Hex* hexP : hexV)
+        {
+            file.read((char *)hexP, sizeof(Hex));
+
+            //cout << hexP->byTypeMap.size() << endl;
+            //cout << hexP->nearBy.size() << endl;
+
+            //Reset old variables
+            auto* newByTypeMap = new std::map< const std::size_t, std::map<Entity* const, Enticap*> >;
+            auto* newByNear = new std::map<const unsigned int, std::vector<std::map< const std::size_t, std::map<Entity* const, Enticap*>>* >>;
+
+            for (size_t byteCount = 0; byteCount < sizeof(*newByTypeMap); ++byteCount)
+            {
+                *((char *)&hexP->nearBy + byteCount) = *( (char*)newByTypeMap + byteCount);
+            }
+            for (size_t byteCount = 0; byteCount < sizeof(*newByNear); ++byteCount)
+            {
+                *((char *)&hexP->nearBy + byteCount) = *( (char*)newByNear + byteCount);
+            }
+
+        }
+
+    //Now that hexes are loaded, the  hex cords can be set properly
+    hexCords.postInit(width, height, hexRadius);
+    hexCords.populate(&hexes);
+
+    //Load/insert entites
+    #define LOADHEADERS 1
+    #include "../../Compiler/EntityHeaders.cpp"
+    #undef LOADHEADERS
+
+
+    /* </Load Data> */
+
+    file.close();
+
+}

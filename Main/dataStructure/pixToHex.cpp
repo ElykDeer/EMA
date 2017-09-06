@@ -1,3 +1,13 @@
+void Bin::pixToHex::postInit(const unsigned int width,
+                 const unsigned int height,
+                 const double hexRadius)
+{
+    guessBinWidth = hexRadius/4;
+    guessBinHeight = (sqrt(3)*hexRadius)/4;
+    guessGrid = std::vector< std::vector< std::vector<Hex*> >>( ceil(width/guessBinWidth), vector<vector<Hex*>>( ceil(height/guessBinHeight) ));
+}
+
+
 Bin::pixToHex::pixToHex(const unsigned int width,
                  const unsigned int height,
                  const double hexRadius)

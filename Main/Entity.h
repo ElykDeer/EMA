@@ -24,7 +24,7 @@ protected:
     double x;
     double y;
 
-    Bin* const bin;
+    Bin* bin;
 };
 
 #endif

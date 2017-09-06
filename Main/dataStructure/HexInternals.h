@@ -9,6 +9,7 @@ class Hex;
 
 class HexInternals
 {
+    friend class Bin;
 public:
     //Give it the matrix coordinates, and it will generate pixel coordinates
     HexInternals(const unsigned int col, const unsigned int row, const double hexRadius);

@@ -52,7 +52,7 @@ public:
     unsigned long int count() const;
 
     void save();
-//    Bin load(std::string filename);
+    void load(std::string filename); //Load
 
     ~Bin();
 
@@ -66,9 +66,9 @@ public:
     #include "dataStructure/Enticap.h"
 
     //For the bins:
-    const unsigned int width;
-    const unsigned int height;
-    const double hexRadius;
+    unsigned int width;
+    unsigned int height;
+    double hexRadius;
     std::vector<std::vector<Hex*>> hexes;
 
     //Setup: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >

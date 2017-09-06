@@ -6,6 +6,10 @@ class pixToHex
 public:
     pixToHex(const unsigned int, const unsigned int, const double);
 
+    void postInit(const unsigned int width,
+                     const unsigned int height,
+                     const double hexRadius);
+
     //See dataStructure.cpp for why this exists
       //Populate the guess grid
     void populate(const std::vector<std::vector<Hex*>>* const);

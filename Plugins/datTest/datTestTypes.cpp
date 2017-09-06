@@ -49,11 +49,11 @@ void Flower::update(unsigned int resolution)
     bin->markForRemoval(this);
   }
 
-  //If there are more than five flowers around me, I die
-  if (bin->getNearByCountOfType<Flower>(this, 10) > 10)
-  {
-    bin->markForRemoval(this);
-  }
+  // //If there are more than five flowers around me, I die
+  // if (bin->getNearByCountOfType<Flower>(this, 10) > 10)
+  // {
+  //   bin->markForRemoval(this);
+  // }
 }
 
 double Flower::getSize() const
