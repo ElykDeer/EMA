@@ -34,26 +34,43 @@ Bin::Bin(const unsigned int width,
 //How else do we put things in this monstrosity?
 void Bin::insert(Entity* const entity)
 {
+    std::cerr << "a\n";
     if (entity->getX() >= width)
         entity->x = int(entity->x) % width;
 
+    std::cerr << "b\n";
     if (entity->getY() >= height)
         entity->y = int(entity->y) % height;
 
+    std::cerr << "c\n";
+    std::cerr << "cords: " << entity->getX() << " " << entity->getY() << "\n";
     //First Convert coordinates
     vector<unsigned int> cords = hexCords.hexOffsetCord(entity->getX(), entity->getY());
 
+    std::cerr << "d\n";
     Enticap* enticap = new Enticap(entity, hexes[cords[0]][cords[1]]);
 
     //byLocal (which in turn stores by type)
     //structure: [col][row][Hex*]
+    std::cerr << "e\n";
+    if (cords[0] != -1)
+    {
+        std::cerr << "e.1\n";
+    }
+    if (cords[1] != -1)
+    {
+        std::cerr << "e.2\n";
+
+    }
     hexes[cords[0]][cords[1]]->insert(entity, enticap);
 
     //byType
     //structure: <typeid.HashCode: <pointerToEntity:pointerToEnticap> >
+    std::cerr << "f\n";
     byTypeMap[typeid(*entity).hash_code()][entity] = enticap;
 
     //adjust the count
+    std::cerr << "g\n";
     ++entityCount;
 }
 

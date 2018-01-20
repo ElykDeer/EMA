@@ -6,6 +6,8 @@
 //All Active Plugins need to be registered in this file
 #include "../Compiler/pluginTypes.h"
 
+#include <iostream>
+
 #include <map>
 #include <set>
 #include <functional>

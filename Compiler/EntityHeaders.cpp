@@ -30,10 +30,18 @@ while (file >> entityType)
 
     if (entityType == "datTestFlower")
     {
+        cerr << "1\n";
         Flower* entityP = new Flower(0,0,this);
+        cerr << "2\n";
+        auto* stuff = &typeid(*entityP);
+        std::cerr << stuff << std::endl;
         file.read((char *)entityP, sizeof(Flower));
+        cerr << "3\n";
+        // std::cerr << &typeid(*entityP) << std::endl;
         entityP->bin = this;
+        cerr << "4\n";
         insert(entityP);
+        cerr << "5\n";
     }
     else if (entityType == "datTestBunny")
     {

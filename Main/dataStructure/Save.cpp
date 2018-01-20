@@ -77,6 +77,8 @@ void Bin::load(string filename)
         return;
     }
 
+    std::cerr << "entity-free\n";
+
     /* <Delete old map and entites> */
     //clear all data, deconstructor:
     //Cycle through all Entities/Enticaps and delete them
@@ -84,10 +86,19 @@ void Bin::load(string filename)
         for(auto& innerPair : outerPair.second) //Every single element
             delete innerPair.second; //Delete enticaps, since they delete the entity
 
+    std::cerr << "Hexes-free\n";
+
+    // int num = 0;
     for(auto& col : hexes)
         for(Hex* hex : col)
             delete hex;
+// {
+//     std::cerr << num;
+//
+//     ++num;
+// }
 
+    std::cerr << "Clear\n";
     byTypeMap.clear();
     hexes.clear();
     //All heap elements are deleted
@@ -98,9 +109,12 @@ void Bin::load(string filename)
     //Super basics
     file >> width >> height >> hexRadius;
 
+    std::cerr << "Move\n";
+
     //Generate new map
     hexes = std::move(vector<vector<Hex*>>(ceil( (width+(hexRadius*0.5)) / (1.5*hexRadius)), vector<Hex*>( ceil((height+hexRadius) / (sqrt(3)*hexRadius)), nullptr )));
 
+    std::cerr << "Populate hex-grid\n";
     //Populate hex grid:
     for (size_t col = 0; col < hexes.size(); col++)
       for (size_t row = 0; row < hexes[col].size(); row++)
@@ -109,6 +123,8 @@ void Bin::load(string filename)
     //read the space seperator
     char byte = ' ';
     file.read(&byte, 1);
+
+    std::cerr << "load hexes\n";
 
     //Load hex data into those new hexes
     for (vector<Hex*>& hexV : hexes)
@@ -134,15 +150,20 @@ void Bin::load(string filename)
 
         }
 
+    std::cerr << "hexcords\n";
+
     //Now that hexes are loaded, the  hex cords can be set properly
     hexCords.postInit(width, height, hexRadius);
     hexCords.populate(&hexes);
+
+    std::cerr << "load ents\n";
 
     //Load/insert entites
     #define LOADHEADERS 1
     #include "../../Compiler/EntityHeaders.cpp"
     #undef LOADHEADERS
 
+    std::cerr << "done\n";
 
     /* </Load Data> */
 

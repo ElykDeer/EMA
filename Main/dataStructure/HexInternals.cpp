@@ -10,13 +10,33 @@ Bin::HexInternals::HexInternals(const unsigned int col, const unsigned int row, 
   col(col),
   row(row) {}
 
-Bin::HexInternals::~HexInternals() {}
+Bin::HexInternals::~HexInternals()
+{
+//     std::cerr << " 1";
+//     std::cerr << " count: " << count() << " ";
+//
+//     for (std::pair< const std::size_t, std::map<Entity* const, Enticap*> > typePair : byTypeMap)
+//         //{std::cerr << typePair.second.begin() << '\n'; std::cerr << typePair.second.end(); ++entiPair);}
+//         //for (std::pair<Entity* const, Enticap*> entiPair : typePair.second)
+//         for (auto entiPair = typePair.second.begin(); entiPair != typePair.second.end(); ++entiPair)
+//         {std::cerr << " begin: " << &*typePair.second.begin() << " end: " << &*typePair.second.end() << " current: " << &*entiPair << std::endl; }
+// //{           /*entMap.second = nullptr;*/ std::cerr << &*entiPair << " ";}
+//             //for (auto pair : entMap.second)
+//             //    pair.second = nullptr;
+//             std::cerr << "2 ";
+//     byTypeMap.clear();
+//     std::cerr << "3 ";
+//     nearBy.clear();
+}
 
 void Bin::HexInternals::insert(Entity* const entity, Enticap* enticap)
 {
     //Insert into our map structure:
       //<typeid.HashCode: <pointerToEntity:pointerToEnticap> >
+    //This died: std::cerr << "adding: " << typeid(*entity).hash_code() << std::endl;
+    std::cerr << "adding: " << entity << std::endl;
     byTypeMap[typeid(*entity).hash_code()][entity] = enticap;
+    std::cerr << "added\n";
 
     ++entityCount;
 }
